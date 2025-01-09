@@ -2,18 +2,9 @@
   <div>
     <h1>Employee ( {{ sumEmployee }} )</h1>
     <div class="searchMenu">
-      <!-- การส่งค่า เข้าออกให้บอกtype ของมัน-->
-      <!-- ตรง v-model ไม่ได้ใส่ื่อทำให้ค่าที่รับ selectedTeam ชื่อ modelValue (เป็นชื่อdefault) -->
       <Dropdown :list="teams" v-model="selectedTeam" />
-      <Dropdown
-        :list="postions"
-        :modelValue="selectedPosition"
-        @update:modelValue="selectedPosition = $event"
-      />
-      <!-- -->
-
+      <Dropdown :list="postions" v-model="selectedPosition" />
       <SearchBar header="SearchBar" v-model:input="searchEmployee" />
-
       <div class="resetButton">
         <button @click="resetFilters">Reset</button>
       </div>
@@ -21,11 +12,17 @@
   </div>
   <hr />
   <div>
-    <!-- <EmployeeTable :employee="selectedEmployees" /> -->
     <Table :headers="selectedHeaders" :data="selectedEmployees">
       <template #header="{ header }">
-        <strong>{{ header["Name"] }}</strong>
+        <strong>{{ header['Name'] }}</strong>
       </template>
+
+      <!-- <template #cell="{ row, header }">
+        <span v-if="header === 'Name'">{{ row.first_name }} {{ row.last_name }}</span>
+        <span v-else-if="header === 'Email'">{{ row.email }}</span>
+        <span v-else-if="header === 'Team'">{{ row.team_name }}</span>
+        <span v-else-if="header === 'Position'">{{ row.position_name }}</span>
+      </template> -->
     </Table>
   </div>
 </template>
@@ -36,25 +33,25 @@ import { teamList, postionList, employeeList } from "../assets/data/firstData";
 import type { Employ1Details } from "../types";
 import Dropdown from "./Dropdown.vue";
 import SearchBar from "./SearchBar.vue";
-import EmployeeTable from "./EmployeeTable.vue";
 
 import Table from "./Table.vue";
 import type { Header } from "./TableInterface";
+
 const teams = ref(teamList);
 const postions = ref(postionList);
 const employees = ref(employeeList);
-const selectedTeam = ref<number>(2);
+const selectedTeam = ref<number>(0);
 const selectedPosition = ref<number>(0);
 const searchEmployee = ref<string>("");
 const sumEmployee = computed(() => selectedEmployees.value.length);
-
-const selectedEmployees = ref<Employ1Details[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "FirstName", Key: "first_name" },
   { Name: "Email", Key: "email" },
   { Name: "Team", Key: "team_name" },
   { Name: "Position", Key: "position_name" },
 ]);
+
+const selectedEmployees = ref<Employ1Details[]>([]);
 
 const getTeamName = (teamId: number) => {
   const team = teams.value.find((t) => t.id === teamId);
