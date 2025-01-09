@@ -1,14 +1,14 @@
 <template>
-  <select @change="updateSelected" :value="modelValue" >
+  <select @change="updateSelected" :value="modelValue">
     <option value="0">ทั้งหมด</option>
-    <option v-for="item in list" :key="item.id" :value="item.id" >
+    <option v-for="item in list" :key="item.id" :value="item.id">
       {{ item.name }}
     </option>
   </select>
 </template>
 
 <script setup lang="ts">
-import type { Dropdown } from "../types";
+import type { Dropdown } from "../../types/types";
 
 defineProps<{
   list: Dropdown<number>[];
@@ -18,8 +18,8 @@ defineProps<{
 // const emit = defineEmits(["update:modelValue"]);
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: number): void
-}>()
+  (e: "update:modelValue", value: number): void;
+}>();
 const updateSelected = (event: Event) => {
   emit("update:modelValue", Number((event.target as HTMLInputElement).value));
 };

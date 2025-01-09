@@ -14,7 +14,7 @@
   <div>
     <Table :headers="selectedHeaders" :data="selectedEmployees">
       <template #header="{ header }">
-        <strong>{{ header['Name'] }}</strong>
+        <strong>{{ header["Name"] }}</strong>
       </template>
 
       <!-- <template #cell="{ row, header }">
@@ -29,13 +29,17 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { teamList, postionList, employeeList } from "../assets/data/firstData";
-import type { Employ1Details } from "../types";
-import Dropdown from "./Dropdown.vue";
-import SearchBar from "./SearchBar.vue";
+import {
+  teamList,
+  postionList,
+  employeeList,
+} from "../../assets/data/firstData";
+import type { Employ1Details } from "../../types/types";
+import Dropdown from "./atoms/Dropdown.vue";
+import SearchBar from "./atoms/SearchBar.vue";
 
-import Table from "./Table.vue";
-import type { Header } from "./TableInterface";
+import Table from "./atoms/Table.vue";
+import type { Header } from "../../types/tableTypes.ts";
 
 const teams = ref(teamList);
 const postions = ref(postionList);

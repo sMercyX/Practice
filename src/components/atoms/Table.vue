@@ -4,7 +4,9 @@
       <tr>
         <!-- Customizable header using a slot with a fallback -->
         <th v-for="(header, index) in headers" :key="index">
-          <slot name="header" :header="header">{{ header.Name.toUpperCase() }}</slot>
+          <slot name="header" :header="header">{{
+            header.Name.toUpperCase()
+          }}</slot>
         </th>
       </tr>
     </thead>
@@ -13,7 +15,7 @@
         <!-- Flexible data rendering with slot fallback -->
         <td v-for="(header, colIndex) in headers" :key="colIndex">
           <slot name="cell" :row="row" :header="header">
-           {{ row[header.Key as K]}}
+            {{ row[header.Key as K] }}
           </slot>
         </td>
       </tr>
@@ -22,15 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import type {  Employ1Details } from "../types";
-import type {  Header } from "./TableInterface";
+import type { Employ1Details } from "../../types/types";
+import type { Header } from "../../types/tableTypes.ts";
 
 defineProps<{
   headers: Header[];
   data: Employ1Details[];
 }>();
 
-type K = keyof Employ1Details
+type K = keyof Employ1Details;
 </script>
 
 <style scoped>

@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import InputText from "./InputText.vue";
+import InputText from "./atoms/InputText.vue";
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
 
-const fullname = computed<string>(() => firstName.value.toLocaleUpperCase() + " " + lastName.value.toLocaleUpperCase());
+const fullname = computed<string>(
+  () =>
+    firstName.value.toLocaleUpperCase() +
+    " " +
+    lastName.value.toLocaleUpperCase()
+);
 </script>
 
 <template>
@@ -13,7 +18,7 @@ const fullname = computed<string>(() => firstName.value.toLocaleUpperCase() + " 
     <p>firstname</p>
     <InputText v-model:input="firstName" />
     <p>lastname</p>
-    <InputText v-model:input="lastName"/>
+    <InputText v-model:input="lastName" />
     <p>{{ fullname }}</p>
   </container>
 </template>

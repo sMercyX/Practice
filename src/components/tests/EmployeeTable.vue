@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import type {  Employ1Details } from "../types";
+import type { Employ1Details } from "../../types/types";
 
 defineProps<{
   employee: Employ1Details[];
@@ -30,7 +30,6 @@ defineProps<{
 </script>
 
 <style scoped>
-
 table {
   width: 100%;
 }
