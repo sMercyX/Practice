@@ -44,7 +44,6 @@ const employeesWithDetails = computed(() =>
         </div>
       </Card>
     </div>
-
   </div>
 </template>
 <style scoped>

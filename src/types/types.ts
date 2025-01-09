@@ -13,7 +13,7 @@ export interface Pos extends Dropdown<string>{
   
 }
 
-type Gender = "Male" | "Female" | "Polygender" | "Agender" | "Genderqueer" | "Bigender" | "Genderfluid" | "Non-binary"
+export type Gender = "Male" | "Female" | "Polygender" | "Agender" | "Genderqueer" | "Bigender" | "Genderfluid" | "Non-binary"
 export interface Employ1 {
   id: string;
   first_name: string;
