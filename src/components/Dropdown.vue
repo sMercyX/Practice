@@ -1,8 +1,8 @@
 <template>
-  <select @change="updateSelected">
-    <option value="">ทั้งหมด</option>
-    <option v-for="team in list" :key="team.id" :value="team.name">
-      {{ team.name }}
+  <select @change="updateSelected" :value="selected" >
+    <option value="0">ทั้งหมด</option>
+    <option v-for="item in list" :key="item.id" :value="item.id" >
+      {{ item.name }}
     </option>
   </select>
 </template>
@@ -11,9 +11,8 @@
 import type { Dropdown } from "../types";
 
 defineProps<{
-  header: string;
   list: Dropdown<number>[];
-  selected: string;
+  selected: number;
 }>();
 const emit = defineEmits(["update:selected"]);
 const updateSelected = (event: Event) => {

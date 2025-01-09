@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import InputText from "./InputText.vue";
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
@@ -13,17 +14,11 @@ const handleFullname = () => {
 <template>
   <container>
     <p>firstname</p>
-    <input 
-      type="text" 
-      v-model="firstName" 
-      @blur="handleFullname"
-    />
+    <InputText v-model:input="firstName" @blur="handleFullname" />
+
     <p>lastname</p>
-    <input 
-      type="text" 
-      v-model="lastName" 
-      @blur="handleFullname"
-    />
+    <InputText v-model:input="lastName" @blur="handleFullname" />
+
     <p>{{ fullName }}</p>
   </container>
 </template>

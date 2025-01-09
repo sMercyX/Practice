@@ -2,20 +2,9 @@
   <div>
     <h1>Employee ( {{ sumEmployee }} )</h1>
     <div class="searchMenu">
-      <Dropdown
-        header="Team"
-        :list="teams"
-        v-model:selected="selectedTeam"
-      />
-      <Dropdown
-        header="Position"
-        :list="postions"
-        v-model:selected="selectedPosition"
-      />
-      <SearchBar
-        header="SearchBar"
-        v-model:input="searchEmployee"
-      />
+      <Dropdown :list="teams" v-model:selected="selectedTeam" />
+      <Dropdown :list="postions" v-model:selected="selectedPosition" />
+      <SearchBar header="SearchBar" v-model:input="searchEmployee" />
       <div class="resetButton">
         <button @click="resetFilters">Reset</button>
       </div>
@@ -38,8 +27,8 @@ import EmployeeTable from "./EmployeeTable.vue";
 const teams = ref(teamList);
 const postions = ref(postionList);
 const employees = ref(employeeList);
-const selectedTeam = ref<string>("");
-const selectedPosition = ref<string>("");
+const selectedTeam = ref<number>(0);
+const selectedPosition = ref<number>(0);
 const searchEmployee = ref<string>("");
 const sumEmployee = computed(() => selectedEmployees.value.length);
 
@@ -68,9 +57,8 @@ const employeesWithDetails = computed(() =>
 const filterEmployees = () => {
   selectedEmployees.value = employeesWithDetails.value.filter(
     (data) =>
-      (!selectedTeam.value || data.team_name === selectedTeam.value) &&
-      (!selectedPosition.value ||
-        data.position_name === selectedPosition.value) &&
+      (!selectedTeam.value || data.team_id === selectedTeam.value) &&
+      (!selectedPosition.value || data.position_id === selectedPosition.value) &&
       (searchEmployee.value
         ? data.first_name
             .toLowerCase()
@@ -84,8 +72,8 @@ const filterEmployees = () => {
 };
 
 const resetFilters = () => {
-  selectedTeam.value = "";
-  selectedPosition.value = "";
+  selectedTeam.value = 0;
+  selectedPosition.value = 0;
   searchEmployee.value = "";
   filterEmployees();
 };

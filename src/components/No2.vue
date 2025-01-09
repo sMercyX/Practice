@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import InputText from "./InputText.vue";
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
@@ -10,9 +11,9 @@ const fullname = computed<string>(() => firstName.value.toLocaleUpperCase() + " 
 <template>
   <container>
     <p>firstname</p>
-    <input type="text" v-model="firstName" />
+    <InputText v-model:input="firstName" />
     <p>lastname</p>
-    <input type="text" v-model="lastName" />
+    <InputText v-model:input="lastName"/>
     <p>{{ fullname }}</p>
   </container>
 </template>

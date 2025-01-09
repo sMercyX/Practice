@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { teamList, postionList } from "../assets/data/firstData";
+import Dropdown from "./Dropdown.vue";
 
 const teams = ref(teamList);
 const postions = ref(postionList);
-const selectedTeam = ref<string>("");
-const selectedPosition = ref<string>("");
+const selectedTeam = ref<number>(0);
+const selectedPosition = ref<number>(2);
 
 const handleTeamSelection = () => {
 };
@@ -18,20 +19,15 @@ const handlePositionSelection = () => {
   <container>
     <div class="team">
       <p>Team</p>
-      <select v-model="selectedTeam" @change="handleTeamSelection">
-        <option v-for="team in teams" :key="team.id" :value="team.name">
-          {{ team.name }}
-        </option>
-      </select>
+      <Dropdown v-model:selected="selectedTeam" :list="teams"/>
+  
     </div>
 
     <div class="position">
       <p>Position</p>
-      <select v-model="selectedPosition" @change="handlePositionSelection">
-        <option v-for="position in postions" :key="position.id" :value="position.name">
-          {{ position.name }}
-        </option>
-      </select>
+      <Dropdown v-model:selected="selectedPosition" :list="postions"/>
+
+     
     </div>
   </container>
 </template>
