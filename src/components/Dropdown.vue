@@ -16,7 +16,7 @@ defineProps<{
 }>();
 const emit = defineEmits(["update:selected"]);
 const updateSelected = (event: Event) => {
-  emit("update:selected", (event.target as HTMLInputElement).value);
+  emit("update:selected", Number((event.target as HTMLInputElement).value));
 };
 
 //   const selected = defineModel<string>('selected');
