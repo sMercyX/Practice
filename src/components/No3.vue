@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import InputText from "./templates/InputText.vue";
+import InputText from "./atoms/InputText.vue";
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
