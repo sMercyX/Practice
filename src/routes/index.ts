@@ -2,12 +2,13 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../components/pages/HomePage.vue";
 import SettingPage from "../components/pages/SettingPage.vue";
 import EmployeePage from "../modules/employee/pages/EmployeePage.vue";
-import No1 from "../components/No1.vue";
-import No2 from "../components/No2.vue";
-import No3 from "../components/No3.vue";
-import No4 from "../components/No4.vue";
-import No5 from "../components/No5.vue";
-import EmployeeList from "../components/No7EmployeeList.vue";
+import No1 from "../components/practice/No1.vue";
+import No2 from "../components/practice/No2.vue";
+import No3 from "../components/practice/No3.vue";
+import No4 from "../components/practice/No4.vue";
+import No5 from "../components/practice/No5.vue";
+import No6 from "../components/practice/No6.vue";
+import EmployeeList from "../components/practice/No7EmployeeList.vue";
 import EmployeeForm from "../modules/employee/forms/EmployeeForm.vue";
 import TeamForm from "../modules/team/Form/TeamForm.vue";
 import TeamList from "../modules/team/pages/TeamList.vue";
@@ -94,6 +95,11 @@ const router = createRouter(
             path: "no5",
             name: "no5",
             component: No5,
+          },
+          {
+            path: "no6",
+            name: "no6",
+            component: No6,
           },
           {
             path: "no7",

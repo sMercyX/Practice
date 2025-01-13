@@ -62,12 +62,12 @@ import {
   teamList,
   postionList,
   employeeList,
-} from "../assets/data/firstData.ts";
-import type { Employ1Details } from "../types/types.ts";
-import Dropdown from "./Dropdown/Dropdown.vue";
-import SearchBar from "./SearchInput/SearchBar.vue";
-import Table from "./atoms/Table.vue";
-import type { Header } from "../types/tableTypes.ts";
+} from "../../assets/data/firstData.ts";
+import type { Employ1Details } from "../../types/types.ts";
+import Dropdown from "../Dropdown/Dropdown.vue";
+import SearchBar from "../SearchInput/SearchBar.vue";
+import Table from "../atoms/Table.vue";
+import type { Header } from "../../types/tableTypes.ts";
 
 const teams = ref(teamList);
 const postions = ref(postionList);

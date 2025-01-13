@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { teamList, postionList, employeeList } from "../assets/data/firstData";
-import Card from "./Card.vue";
+import { teamList, postionList, employeeList } from "../../assets/data/firstData";
+import Card from "../practice/Card.vue";
 
 const teams = ref(teamList);
 const positions = ref(postionList);
