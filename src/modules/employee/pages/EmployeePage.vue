@@ -29,9 +29,17 @@
   <hr />
   <div>
     <!-- <EmployeeTable :employee="selectedEmployees" /> -->
-    <Table :headers="selectedHeaders" :data="selectedEmployees">
+    <Table
+      :headers="selectedHeaders"
+      :data="selectedEmployees"
+      @edit="navigateToEmployee"
+      @view="navigateToView"
+    >
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
+      </template>
+      <template #Button="{ row }">
+        <button @click="navigateToEmployee(row.id)">Edit</button>
       </template>
     </Table>
   </div>
@@ -45,18 +53,18 @@ import {
   teamList,
   postionList,
   employeeList,
-} from "../../assets/data/firstData";
-import type { Employ1Details } from "../../types/types";
-import Dropdown from "../atoms/Dropdown.vue";
-import SearchBar from "../atoms/SearchBar.vue";
+} from "../../../assets/data/firstData.ts";
+import type { Employ1Details } from "../../../types/types.ts";
+import Dropdown from "../../../components/Dropdown/Dropdown.vue";
+import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
-import Table from "../atoms/Table.vue";
-import type { Header } from "../../types/tableTypes.ts";
+import Table from "../../../components/atoms/Table.vue";
+import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 const teams = ref(teamList);
 const postions = ref(postionList);
 const employees = ref(employeeList);
-const selectedTeam = ref<number>(2);
+const selectedTeam = ref<number>(0);
 const selectedPosition = ref<number>(0);
 const searchEmployee = ref<string>("");
 const sumEmployee = computed(() => selectedEmployees.value.length);
@@ -68,15 +76,26 @@ const selectedHeaders = ref<Header[]>([
   { Name: "Team", Key: "team_name" },
   { Name: "Position", Key: "position_name" },
 ]);
+const router = useRouter();
 
+const navigateTo = (nameRoute: string) => {
+  router.push({ name: nameRoute });
+};
+const navigateToEmployee = (id: string) => {
+  router.push({ name: "editEmployee", params: { employeeId: id } });
+};
+
+const navigateToView = (id: string) => {
+  router.push({ name: "viewEmployee", params: { employeeId: id } });
+};
 const getTeamName = (teamId: number) => {
   const team = teams.value.find((t) => t.id === teamId);
-  return team ? team.name : "Unknown Team";
+  return team!.name;
 };
 
 const getPositionName = (positionId: number) => {
   const position = postions.value.find((p) => p.id === positionId);
-  return position ? position.name : "Unknown Position";
+  return position!.name;
 };
 
 const employeesWithDetails = computed(() =>
@@ -112,12 +131,6 @@ const resetFilters = () => {
   filterEmployees();
 };
 
-const router = useRouter();
-const navigateTo = (nameRoute: string) => {
-  router.push({ name: nameRoute });
-};
-
-
 watch([selectedTeam, selectedPosition, searchEmployee], filterEmployees);
 
 filterEmployees();
@@ -128,8 +141,7 @@ filterEmployees();
   display: flex;
   justify-content: space-between;
   margin: 0px 10px;
-  .left{
-
+  .left {
     display: flex;
     gap: 10px;
   }

@@ -1,13 +1,13 @@
 <template>
   <nav class="navbar">
-    <div class="navbar-logo">
-      <a>Logo</a>
-    </div>
-    <ul class="navbar-links">
+    <ul class="left">
       <li @click="navigateTo('home')">Home</li>
       <li @click="navigateTo('employee')">Employee</li>
-      <li @click="navigateTo('setting')">Setting</li>
     </ul>
+
+    <div class="right">
+      <div @click="navigateTo('settingTeam')">Setting</div>
+    </div>
   </nav>
 </template>
 
@@ -24,7 +24,33 @@ const navigateTo = (nameRoute: string) => {
 .navbar {
   display: flex;
   justify-content: space-between;
-  padding:16px;
+  padding: 5px 25px 5px 0px;
+  align-items: center;
+  background: #333;
+  color: white;
+  max-height: 10vh;
+
+  position: sticky;
+  top: 0;
+  .left {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+    color: white;
+    cursor: pointer;
+  }
+  .right {
+    display: flex;
+    list-style: none;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+/* .navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
   align-items: center;
   background: #333;
   color: white;
@@ -33,8 +59,13 @@ const navigateTo = (nameRoute: string) => {
   position: sticky;
   top: 0;
 }
+.navbar-left{
+  list-style: none;
+  display: flex;
 
+}
 .navbar li {
+  display: flex;
   text-decoration: none;
   color: white;
   cursor: pointer;
@@ -53,5 +84,5 @@ const navigateTo = (nameRoute: string) => {
 
 .navbar-links li:hover {
   text-decoration: underline;
-}
+} */
 </style>

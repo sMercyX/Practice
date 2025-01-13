@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import InputText from "./atoms/InputText.vue";
+import InputText from "./Input/InputText.vue";
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
@@ -16,9 +16,9 @@ const fullname = computed<string>(
 <template>
   <container>
     <p>firstname</p>
-    <InputText v-model:input="firstName" />
+    <InputText v-model:input="firstName" :required="false"/>
     <p>lastname</p>
-    <InputText v-model:input="lastName" />
+    <InputText v-model:input="lastName" :required="false"/>
     <p>{{ fullname }}</p>
   </container>
 </template>

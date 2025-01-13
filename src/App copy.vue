@@ -37,7 +37,7 @@ import No3 from "./components/No3.vue";
 import No4 from "./components/No4.vue";
 import No5 from "./components/No5.vue";
 
-import EmployeeList from "./components/EmployeeList.vue";
+import EmployeeList from "./components/No7EmployeeList.vue";
 import Slot from "./components/tests/Slot.vue";
 
 const alerrt = () => {

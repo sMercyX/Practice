@@ -5,15 +5,15 @@
       <form @submit.prevent="handleSubmit">
         <!-- First Name -->
         <label for="first_name">First Name</label>
-        <InputText v-model:input="firstName" />
+        <InputText v-model:input="firstName" :required="true"/>
 
         <!-- Last Name -->
         <label for="last_name">Last Name</label>
-        <InputText v-model:input="lastName" />
+        <InputText v-model:input="lastName" :required="true"/>
 
         <!-- Email -->
         <label for="email">Email</label>
-        <InputText v-model:input="email" />
+        <InputText v-model:input="email" :required="true"/>
 
         <!-- Gender -->
         <label for="gender">Gender</label>
@@ -43,16 +43,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import Dropdown from "./Dropdown.vue";
-import type { Employ1, Gender } from "../../types/types";
-import { teamList, postionList } from "../../assets/data/firstData";
-import InputText from "./InputText.vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import Dropdown from "../../../components/Dropdown/Dropdown.vue";
+import type { Employ1, Gender } from "../../../types/types";
+import {
+  teamList,
+  postionList,
+  employeeList,
+} from "../../../assets/data/firstData";
+import InputText from "../../../components/Input/InputText.vue";
+import { useRoute, useRouter } from "vue-router";
+import { uuid } from "vue-uuid";
 
 const teams = ref(teamList);
 const postions = ref(postionList);
-const genders = ref(["Male" , "Female" , "Polygender" , "Agender" , "Genderqueer" , "Bigender" , "Genderfluid" , "Non-binary"]);
+const genders = ref([
+  "Male",
+  "Female",
+  "Polygender",
+  "Agender",
+  "Genderqueer",
+  "Bigender",
+  "Genderfluid",
+  "Non-binary",
+]);
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
@@ -62,24 +76,62 @@ const age = ref<number>(0);
 const selectedTeam = ref<number>(1);
 const selectedPosition = ref<number>(1);
 const router = useRouter();
+const route = useRoute();
+
+const isEditing = ref<boolean>(false);
+const employeeId = ref<string | null>(null);
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
+onMounted(() => {
+  employeeId.value = route.params.employeeId as string;
+  if (employeeId.value) {
+    isEditing.value = true;
+    const employee = employeeList.find((e) => e.id === employeeId.value);
+    if (employee) {
+      firstName.value = employee.first_name;
+      lastName.value = employee.last_name;
+      email.value = employee.email;
+      gender.value = employee.gender;
+      age.value = employee.age;
+      selectedTeam.value = employee.team_id;
+      selectedPosition.value = employee.position_id;
+    }
+  }
+});
+
+// **Handle Submit for Both Add & Edit**
 const handleSubmit = () => {
-  const formData = ref<Employ1>({
-    id: "",
-    first_name: firstName.value,
-    last_name: lastName.value,
-    email: email.value,
-    gender: gender.value,
-    age: age.value,
-    team_id: selectedTeam.value,
-    position_id: selectedPosition.value,
-  });
-  navigateTo('employee')
-  console.log("Submitted Data:", formData.value);
+  if (isEditing.value && employeeId.value) {
+    const index = employeeList.findIndex((e) => e.id === employeeId.value);
+    if (index !== -1) {
+      employeeList[index] = {
+        id: employeeId.value,
+        first_name: firstName.value,
+        last_name: lastName.value,
+        email: email.value,
+        gender: gender.value,
+        age: age.value,
+        team_id: selectedTeam.value,
+        position_id: selectedPosition.value,
+      };
+    }
+  } else {
+    const formData: Employ1 = {
+      id: uuid.v1(),
+      first_name: firstName.value,
+      last_name: lastName.value,
+      email: email.value,
+      gender: gender.value,
+      age: age.value,
+      team_id: selectedTeam.value,
+      position_id: selectedPosition.value,
+    };
+    employeeList.push(formData);
+  }
+  navigateTo("employee");
 };
 </script>
 

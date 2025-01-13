@@ -1,18 +1,16 @@
 <template>
-  <input type="text" :value="input" @input="updateInput" />
+  <input type="text" :value="input" @input="updateInput" :required="required" />
 </template>
 
 <script setup lang="ts">
 defineProps<{
   input: string; 
+  required:boolean
 }>();
-
 const emit = defineEmits(["update:input"]);
-
 const updateInput = (event: Event) => {
   emit("update:input", (event.target as HTMLInputElement).value);
 };
-// const searched = defineModel<string>('seachingValue');
 </script>
 
 <style scoped></style>

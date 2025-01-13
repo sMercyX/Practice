@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { teamList, postionList } from "../assets/data/firstData";
-import Dropdown from "./atoms/Dropdown.vue";
+import Dropdown from "./Dropdown/Dropdown.vue";
 
 const teams = ref(teamList);
 const postions = ref(postionList);

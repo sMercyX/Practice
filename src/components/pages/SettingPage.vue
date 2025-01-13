@@ -1,18 +1,22 @@
 <template>
   <div class="container">
     <div class="LeftSide">
-      <div @click="navigateTo('no1')">Team Management</div>
-      <div @click="navigateTo('no1')">Position Management</div>
-      <div @click="navigateTo('no1')">test basic vue 1</div>
-      <div @click="navigateTo('no2')">test basic vue 2</div>
-      <div @click="navigateTo('no3')">test basic vue 3</div>
-      <div @click="navigateTo('no4')">test basic vue 4</div>
-      <div @click="navigateTo('no5')">test basic vue 5</div>
-      <div @click="navigateTo('no6')">test basic vue 6</div>
-      <div @click="navigateTo('no7')">test basic vue 7</div>
+      <div @click="navigateTo('settingTeam')">Team</div>
+      <div @click="navigateTo('settingPosition')">Position</div>
+      <div @click="navigateTo('no1')">No.1</div>
+      <div @click="navigateTo('no2')">No.2</div>
+      <div @click="navigateTo('no3')">No.3</div>
+      <div @click="navigateTo('no4')">No.4</div>
+      <div @click="navigateTo('no5')">No.5</div>
+      <div @click="navigateTo('no6')">No.6</div>
+      <div @click="navigateTo('no7')">No.7</div>
     </div>
     <div class="RightSide">
-      <RouterView />
+      <RouterView >
+        <template #default="{ Component}">
+            <Component :is="Component"/>
+        </template>
+      </RouterView>
     </div>
   </div>
 </template>
@@ -36,25 +40,27 @@ const navigateTo = (nameRoute: string) => {
   position: sticky;
   top: 10vh;
   height: 85vh;
-  width: 250px;
-  background: #333;
-  color: white;
+  width: 150px;
+  background: #f7f7f7;
+  color: rgb(0, 0, 0);
   padding: 20px;
-  border-right: 2px solid black;
   div {
     cursor: pointer;
-    padding: 10px;
+    padding: 8px;
     margin-bottom: 10px;
-    background: #444;
     border-radius: 5px;
-    text-align: center;
+    text-align: left;
     transition: background 0.3s;
   }
+
+  
 }
 
 .LeftSide div:hover {
-  background: #555;
+  background: #f6ecff;
+  color: purple;
 }
+
 
 .RightSide {
   flex: 1;

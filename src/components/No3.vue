@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import InputText from "./atoms/InputText.vue";
+import InputText from "./Input/InputText.vue";
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
@@ -14,10 +14,10 @@ const handleFullname = () => {
 <template>
   <container>
     <p>firstname</p>
-    <InputText v-model:input="firstName" @blur="handleFullname" />
+    <InputText v-model:input="firstName" @blur="handleFullname" :required="false"/>
 
     <p>lastname</p>
-    <InputText v-model:input="lastName" @blur="handleFullname" />
+    <InputText v-model:input="lastName" @blur="handleFullname" :required="false" />
 
     <p>{{ fullName }}</p>
   </container>
