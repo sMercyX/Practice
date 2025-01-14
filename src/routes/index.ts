@@ -14,6 +14,7 @@ import TeamForm from "../modules/team/Form/TeamForm.vue";
 import TeamList from "../modules/team/pages/TeamList.vue";
 import PositionList from "../modules/position/pages/PositionList.vue";
 import PositionForm from "../modules/position/Form/PositionForm.vue";
+import DeleteForm from "../components/DeleteForm/DeleteForm.vue";
 
 const router = createRouter(
   {
@@ -32,7 +33,6 @@ const router = createRouter(
         path: "/employee",
         name: "employee",
         component: EmployeePage,
-     
       },
       {
         path: "/employee/create",
@@ -117,6 +117,12 @@ const router = createRouter(
         name: "settingEditTeam",
         component: TeamForm,
       },
+      {
+        path: "/setting/team/delete/:teamName",
+        name: "settingDeleteTeam",
+        component: DeleteForm,
+      },
+
       {
         path: "/setting/position/create",
         name: "settingCreatePosition",

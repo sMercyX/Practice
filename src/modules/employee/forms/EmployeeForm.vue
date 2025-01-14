@@ -5,7 +5,9 @@
       <h2>{{ isEditing ? "Edit" : "Create" }} Employee</h2>
     </div>
     <div class="Right">
-      <button @click="navigateTo('employee')" class="cancelButton">Cancel</button>
+      <button @click="navigateTo('employee')" class="cancelButton">
+        Cancel
+      </button>
       <button type="submit" form="myForm" class="confirmButton">Save</button>
     </div>
   </div>
@@ -20,21 +22,21 @@
         <h2>Basic Info</h2>
       </div>
 
-      
       <form @submit.prevent="handleSubmit" class="Content" id="myForm">
-        <div class="nameForm">
+        <div class="breakHalf">
           <div class="up">
-            <label for="first_name">First Name</label>
+            <label for="first_name">First Name <span>*</span></label>
             <InputText v-model:input="firstName" :required="true" />
           </div>
           <div class="up">
-            <label for="last_name">Last Name</label>
+            <label for="last_name">Last Name <span>*</span></label>
             <InputText v-model:input="lastName" :required="true" />
           </div>
         </div>
-
-        <label for="email">Email</label>
-        <InputText v-model:input="email" :required="true" />
+        <div class="up">
+          <label for="email">Email <span>*</span></label>
+          <InputText v-model:input="email" :required="true" />
+        </div>
 
         <!-- Gender -->
         <!-- <label for="gender">Gender</label>
@@ -47,18 +49,17 @@
         <!-- Age -->
         <!-- <label for="age">Age</label>
         <input v-model="age" type="number" id="age" required /> -->
-        <div class="nameForm">
+        <div class="breakHalf">
           <div class="up">
-            <label for="team_id">Team</label>
+            <label for="team_id">Team <span>*</span></label>
             <Dropdown v-model="selectedTeam" :list="teams" />
           </div>
           <div class="up">
-            <label for="position_id">Position</label>
+            <label for="position_id">Position <span>*</span></label>
             <Dropdown v-model="selectedPosition" :list="postions" />
           </div>
         </div>
         <hr />
-
       </form>
     </div>
   </div>
@@ -170,11 +171,11 @@ const handleSubmit = () => {
     display: flex;
     gap: 10px;
 
-    .leftArrow{
+    .leftArrow {
       cursor: pointer;
       transition: all 0.3s;
     }
-    .leftArrow:hover{
+    .leftArrow:hover {
       scale: 110%;
     }
     h2 {
@@ -187,8 +188,7 @@ const handleSubmit = () => {
     display: flex;
     gap: 10px;
 
-  
-    .confirmButton{
+    .confirmButton {
       background-color: #5119f0;
       color: white;
     }
@@ -202,7 +202,7 @@ button {
   border-radius: 5px;
   padding: 5px 25px;
 
-  transition: all 0.3s ;
+  transition: all 0.3s;
 
   cursor: pointer;
 }
@@ -257,21 +257,24 @@ button:hover {
     border-radius: 5px;
   }
 
-  .nameForm {
+  .breakHalf {
     display: flex;
     gap: 10px;
-
     justify-content: space-between;
     width: 100%;
-    .up {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
+  }
+  .up {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 
-      input {
-        width: auto;
-      }
+    input {
+      width: auto;
     }
   }
+}
+
+span{
+color: red;
 }
 </style>
