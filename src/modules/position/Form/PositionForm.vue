@@ -39,7 +39,6 @@ const Description = ref<string>("");
 
 const router = useRouter();
 const route = useRoute();
-console.log("Current Path:", route.path);
 const isEditing = ref<boolean>(false);
 const positionId = ref<number>();
 

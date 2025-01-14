@@ -18,7 +18,7 @@
     <!-- <EmployeeTable :employee="selectedEmployees" /> -->
     <Table
       :headers="selectedHeaders"
-      :data="selectedPosition"
+      :data="paginationData"
       @edit="navigateToEdit"
     >
       <template #header="{ header }">
@@ -28,6 +28,9 @@
         <button @click="navigateToEdit(row.id)">Edit</button>
       </template>
     </Table>
+
+ <Pagination :data="selectedPosition" @newData="handleNewData" /> 
+
   </div>
 </template>
 
@@ -40,6 +43,7 @@ import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
+import Pagination from "../../../components/Pagination/Pagination.vue";
 
 const positions = ref(postionList);
 const searchPosition = ref<string>("");
@@ -62,6 +66,12 @@ const filterEmployees = () => {
       ? data.name.toLowerCase().includes(searchPosition.value.toLowerCase())
       : true
   );
+};
+
+const paginationData = ref<DropdownType<number>[]>([]);
+
+const handleNewData = (data: DropdownType<number>[]) => {
+  paginationData.value = data;
 };
 
 watch([searchPosition], filterEmployees);

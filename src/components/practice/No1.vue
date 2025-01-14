@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Test from "./Test.vue";
+import Test from "./FixTest.vue";
 
 const count = ref<number>(0);
 
-interface AB  {
-  a:string
+interface AB {
+  a: string;
 }
 
-const ab: AB = null!
+const ab: AB = null!;
 </script>
 
 <template>
@@ -18,7 +18,7 @@ const ab: AB = null!
     <button type="button" @click="count++">&plus;</button>
   </container>
   <Test :data="ab" @data="console.log($event)">
-    <template #="{value}"> {{value}} </template>
+    <template #="{ value }"> {{ value }} </template>
   </Test>
 </template>
 

@@ -49,9 +49,6 @@ const selectedTeam = ref<number>(0);
 const selectedPosition = ref<number>(0);
 const searchEmployee = ref<string>("");
 
-const currentPage = ref<number>(1);
-const pageSize = ref<number>(10);
-
 const sumEmployee = computed(() => selectedEmployees.value.length);
 const selectedEmployees = ref<Employ1Details[]>([]);
 const selectedHeaders = ref<Header[]>([

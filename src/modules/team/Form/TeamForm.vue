@@ -2,7 +2,7 @@
   <div class="modal-overlay">
       <form @submit.prevent="handleSubmit">
         <div class="Head">
-          <h3>Create Team</h3>
+          <h3>{{ isEditing ? "Editing" : "Create" }} Team</h3>
           <div class="close" @click="router.go(-1)">&times;</div>
         </div>
         <!-- First Name -->
@@ -39,7 +39,6 @@ const Description = ref<string>("");
 
 const router = useRouter();
 const route = useRoute();
-console.log("Current Path:", route.path);
 const isEditing = ref<boolean>(false);
 const teamId = ref<number>();
 

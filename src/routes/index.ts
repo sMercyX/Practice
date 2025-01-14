@@ -32,23 +32,22 @@ const router = createRouter(
         path: "/employee",
         name: "employee",
         component: EmployeePage,
-        children: [
-          {
-            path: "/employee/create",
-            name: "createEmployee",
-            component: EmployeeForm,
-          },
-          {
-            path: "/employee/edit/:employeeId",
-            name: "editEmployee",
-            component: EmployeeForm,
-          },
-          // {
-          //   path: "/employee/view/:employeeId",
-          //   name: "viewEmployee",
-          //   component: No2,
-          // },
-        ],
+     
+      },
+      {
+        path: "/employee/create",
+        name: "createEmployee",
+        component: EmployeeForm,
+      },
+      {
+        path: "/employee/edit/:employeeId",
+        name: "editEmployee",
+        component: EmployeeForm,
+      },
+      {
+        path: "/employee/view/:employeeId",
+        name: "viewEmployee",
+        component: No2,
       },
       {
         path: "/setting",

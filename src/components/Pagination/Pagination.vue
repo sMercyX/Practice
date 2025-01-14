@@ -4,6 +4,7 @@
       <p>
         Show
         <select v-model.number="pageSize" @change="updatePageSize($event)">
+          <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
           <option value="50">50</option>
@@ -39,10 +40,10 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 
-import type { Employ1Details } from "../../types/types.ts";
+import type { Dropdown, Employ1Details } from "../../types/types.ts";
 
 const props = defineProps<{
-  data: Employ1Details[];
+  data: any[];
 }>();
 
 const currentPage = ref<number>(1);
@@ -101,7 +102,7 @@ watch(
 );
 
 const emit = defineEmits<{
-  (e: "newData", newData: Employ1Details[]): void;
+  (e: "newData", newData: any[]): void;
 }>();
 emit("newData", newData.value);
 </script>
@@ -147,3 +148,15 @@ p {
   margin: 0px;
 }
 </style>
+
+<!-- HOW TO USE  -->
+
+<!-- <Pagination :data="selectedEmployees" @newData="handleNewData" /> -->
+
+<!-- const paginationData = ref<Employ1Details[]>([]);
+
+const handleNewData = (data: Employ1Details[]) => {
+  paginationData.value = data;
+}; -->
+
+<!-- ------------- -->

@@ -31,7 +31,7 @@
     <!-- <EmployeeTable :employee="selectedEmployees" /> -->
     <Table
       :headers="selectedHeaders"
-      :data="selectedEmployees"
+      :data="paginationData"
       @edit="navigateToEmployee"
       @delete="navigateToEmployee"
       @view="navigateToView"
@@ -43,6 +43,7 @@
         <button @click="navigateToEmployee(row.id)">Edit</button>
       </template>
     </Table>
+    <Pagination :data="selectedEmployees" @newData="handleNewData" /> 
   </div>
 
   <RouterView />
@@ -62,6 +63,7 @@ import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
+import Pagination from "../../../components/Pagination/Pagination.vue";
 const teams = ref(teamList);
 const postions = ref(postionList);
 const employees = ref(employeeList);
@@ -80,6 +82,12 @@ const selectedHeaders = ref<Header[]>([
 
 ]);
 const router = useRouter();
+
+const paginationData = ref<Employ1Details[]>([]);
+
+const handleNewData = (data: Employ1Details[]) => {
+  paginationData.value = data;
+}; 
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
