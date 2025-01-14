@@ -48,7 +48,7 @@ const sumPosition = computed(() => selectedPosition.value.length);
 
 const selectedPosition = ref<DropdownType<number>[]>([]);
 
-const selectedHeaders = ref<Header[]>([{ Name: "TeamName", Key: "name" }]);
+const selectedHeaders = ref<Header[]>([{ Name: "TeamName", Key: "name" },{ Name: "Manage", Key: "manage" }]);
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });

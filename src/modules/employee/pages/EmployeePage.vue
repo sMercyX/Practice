@@ -33,6 +33,7 @@
       :headers="selectedHeaders"
       :data="selectedEmployees"
       @edit="navigateToEmployee"
+      @delete="navigateToEmployee"
       @view="navigateToView"
     >
       <template #header="{ header }">
@@ -75,6 +76,8 @@ const selectedHeaders = ref<Header[]>([
   { Name: "Email", Key: "email" },
   { Name: "Team", Key: "team_name" },
   { Name: "Position", Key: "position_name" },
+  { Name: "Manage", Key: "manage" },
+
 ]);
 const router = useRouter();
 

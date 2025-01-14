@@ -11,18 +11,20 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="row" v-for="(row, rowIndex) in data" :key="rowIndex" >
+      <tr class="row" v-for="(row, rowIndex) in data" :key="rowIndex">
         <!-- Flexible data rendering with slot fallback -->
-        <td v-for="(header, colIndex) in headers" :key="colIndex" @click="$emit('view',row.id)">
+        <td v-for="(header, colIndex) in headers" :key="colIndex">
           <slot name="cell" :row="row" :header="header">
             {{ row[header.Key as K] }}
+            <template v-if="header.Name === 'Manage'">
+              <button @click="$emit('edit', row.id)">Edit</button>
+              <button @click="$emit('delete', row.id)">Delete</button>
+            </template>
+        
           </slot>
         </td>
-        <td>
-          <slot name="Button" :row="row">
-            <button @click="$emit('edit', row.id)">Edit</button>
-          </slot>
-        </td>
+
+       
       </tr>
     </tbody>
   </table>
@@ -37,10 +39,13 @@ defineProps<{
   data: any[];
 }>();
 
-
-defineEmits(['edit','view']);
-
-type K = keyof Employ1Details ;
+// defineEmits(["edit","delete", "view"]);
+defineEmits<{
+  (e: 'edit', id: any): void
+  (e: 'delete', id: any): void
+  (e: 'view', id: any): void
+}>()
+type K = keyof Employ1Details;
 </script>
 
 <style scoped>
@@ -53,11 +58,10 @@ td {
   padding: 10px;
   text-align: left;
 }
-.row{
+.row {
   transition: all 0.3s;
 }
-.row:hover{
+.row:hover {
   background-color: rgb(230, 228, 228);
 }
-
 </style>

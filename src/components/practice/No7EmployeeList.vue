@@ -17,42 +17,14 @@
   </div>
   <hr />
 
-  <!-- Employee Table with Pagination -->
   <div>
-    <Table :headers="selectedHeaders" :data="paginatedEmployees">
+    <Table :headers="selectedHeaders" :data="paginationData">
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
     </Table>
 
-    <div class="pagination">
-      <div>
-        <p>
-          Show
-          <select v-model.number="pageSize">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
-
-          {{ (currentPage - 1) * pageSize + 1 }} -
-          {{
-            sumEmployee < (currentPage - 1) * pageSize + pageSize
-              ? sumEmployee
-              : (currentPage - 1) * pageSize + pageSize
-          }}
-          of
-          {{ sumEmployee }}
-        </p>
-      </div>
-      <div class="currPage">
-        <button @click="prevPage" :disabled="currentPage === 1">&lt;</button>
-        <span><input  type="text" v-model="currentPage"> / {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage >= totalPages">
-          &gt;
-        </button>
-      </div>
-    </div>
+    <Pagination :data="selectedEmployees" @newData="handleNewData" />
   </div>
 </template>
 
@@ -68,6 +40,7 @@ import Dropdown from "../Dropdown/Dropdown.vue";
 import SearchBar from "../SearchInput/SearchBar.vue";
 import Table from "../atoms/Table.vue";
 import type { Header } from "../../types/tableTypes.ts";
+import Pagination from "../Pagination/Pagination.vue";
 
 const teams = ref(teamList);
 const postions = ref(postionList);
@@ -87,6 +60,12 @@ const selectedHeaders = ref<Header[]>([
   { Name: "Team", Key: "team_name" },
   { Name: "Position", Key: "position_name" },
 ]);
+
+const paginationData = ref<Employ1Details[]>([]);
+
+const handleNewData = (data: Employ1Details[]) => {
+  paginationData.value = data;
+};
 
 const getTeamName = (teamId: number) => {
   const team = teams.value.find((t) => t.id === teamId);
@@ -124,25 +103,9 @@ const filterEmployees = () => {
           data.email.toLowerCase().includes(searchEmployee.value.toLowerCase())
         : true)
   );
-  currentPage.value = 1;
 };
 
-const paginatedEmployees = computed(() => {
-  const startIndex = (currentPage.value - 1) * pageSize.value;
-  return selectedEmployees.value.slice(startIndex, startIndex + pageSize.value);
-});
 
-const totalPages = computed(() =>
-  Math.ceil(selectedEmployees.value.length / pageSize.value)
-);
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++;
-};
-
-const prevPage = () => {
-  if (currentPage.value > 1) currentPage.value--;
-};
 
 const resetFilters = () => {
   selectedTeam.value = 0;
@@ -175,15 +138,13 @@ filterEmployees();
     cursor: not-allowed;
   }
 }
-.currPage{
+.currPage {
   display: flex;
   gap: 10px;
-  input{
+  input {
     width: 20px;
   }
-  
 }
-
 
 table {
   width: 100%;
@@ -193,8 +154,6 @@ th,
 td {
   padding: 10px;
   text-align: left;
-
-  
 }
 p {
   margin: 0px;
