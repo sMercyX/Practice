@@ -1,38 +1,40 @@
 <template>
   <div class="modal-overlay">
-      <form @submit.prevent="handleSubmit">
-        <div class="Head">
-          <h3>{{ isEditing ? "Editing" : "Create" }} Team</h3>
-          <div class="close" @click="router.go(-1)">&times;</div>
-        </div>
-        <!-- First Name -->
-        <div class="Content">
-          <p>Fields Marked with an <span>*</span> are required</p>
+    <form @submit.prevent="handleSubmit">
+      <div class="Head">
+        <h3>{{ isEditing ? "Editing" : "Create" }} Team</h3>
+        <div class="close" @click="router.go(-1)">&times;</div>
+      </div>
+      <!-- First Name -->
+      <div class="Content">
+        <p>Fields Marked with an <span>*</span> are required</p>
 
-          <label for="name" >Team Name <span>*</span> </label>
-          <InputText v-model:input="Name" :required="true"/>
+        <label for="name">Team Name <span>*</span> </label>
+        <InputText v-model:input="Name" :required="true" />
 
-          <label for="describtion">Describtion</label>
-          <InputText v-model:input="Description" :required="false"/>
-        </div>
+        <label for="description">Description</label>
+        <InputText v-model:input="Description" :required="false" />
+      </div>
 
-        <!-- Submit Button -->
-        <div class="Footer">
-          <button class="cancel" type="button" @click="router.go(-1)">Cancel</button>
-          <button class="save" type="submit">Save</button>
-        </div>
-      </form>
-    </div>
+      <!-- Submit Button -->
+      <div class="Footer">
+        <button class="cancel" type="button" @click="router.go(-1)">
+          Cancel
+        </button>
+        <button class="save" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { Dropdown } from "../../../types/types";
-import { teamList } from "../../../assets/data/firstData";
+import type { Dropdown, Team as TeamType } from "../../../types/types";
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
+import { postItem } from "../../../utils/fetch";
 
-const teams = ref(teamList);
+const teams = ref();
 
 const Name = ref<string>("");
 const Description = ref<string>("");
@@ -40,42 +42,83 @@ const Description = ref<string>("");
 const router = useRouter();
 const route = useRoute();
 const isEditing = ref<boolean>(false);
-const teamId = ref<number>();
+const teamId = ref<string>();
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
-onMounted(() => {
-  teamId.value = parseInt(route.params.teamId as string);
-  if (teamId.value) {
-    isEditing.value = true;
-    const team = teams.value.find((e) => e.id === teamId.value);
-    if (team) {
-      Name.value = team.name;
-    }
+const loadData = async () => {
+  const formatted = {
+    pageIndex: 0,
+    pageSize: 0,
+    search: {},
+  };
+  try {
+    const createdTask = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/team/index`,
+      formatted
+    );
+    teams.value = createdTask.data;
+  } catch (error) {
+    console.error("Error loading data:", error);
   }
-});
+};
 
-// **Handle Submit for Both Add & Edit**
+const uploadData = async (data: Dropdown) => {
+  try {
+    await postItem(`${import.meta.env.VITE_BASE_URL}/team/create`, data);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+const updateData = async (data: TeamType) => {
+  try {
+    await postItem(`${import.meta.env.VITE_BASE_URL}/team/update`, data);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+
 const handleSubmit = () => {
   if (isEditing.value && teamId.value) {
-    const index = teams.value.findIndex((e) => e.id === teamId.value);
+    const index = teams.value.findIndex((e: any) => e.teamId === teamId.value);
     if (index !== -1) {
-      teams.value[index] = {
-        id: teamId.value,
+      const formData = {
         name: Name.value,
+        description: Description.value,
+        teamId: teamId.value,
       };
+      teams.value[index] = formData
+      updateData(formData);
     }
   } else {
-    const formData: Dropdown<number> = {
-      id: teams.value.length + 1,
+    const formData: Dropdown = {
       name: Name.value,
+      description: Description.value,
     };
-    teams.value.push(formData);
+    uploadData(formData);
   }
   navigateTo("settingTeam");
 };
+
+onMounted(async () => {
+  await loadData();
+
+  teamId.value = route.params.teamId as string;
+
+  if (teamId.value) {
+    isEditing.value = true;
+    const team = teams.value.find((e:any) => e.teamId === teamId.value);
+    if (team) {
+      Name.value = team.name;
+      Description.value = team.description
+    }
+  }
+  const index = teams.value.findIndex((e: any) => e.teamId === teamId.value);
+  console.log(isEditing.value && teamId.value)
+  console.log(index)
+});
 </script>
 
 <style scoped>
@@ -125,7 +168,6 @@ span {
   margin: 5px 0;
   gap: 4px;
   height: 20%;
-
 }
 form {
   display: flex;
@@ -167,7 +209,7 @@ button {
   cursor: pointer;
 }
 
-p{
+p {
   padding: 0;
   margin: 0;
 }

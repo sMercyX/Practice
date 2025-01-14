@@ -17,14 +17,13 @@
           <slot name="cell" :row="row" :header="header">
             {{ row[header.Key as K] }}
             <template v-if="header.Name === 'Manage'">
-              <button @click="$emit('edit', row.id)">Edit</button>
-              <button @click="$emit('delete', row.id)">Delete</button>
+              <slot name="AddEdit" :row="row">
+                <button @click="$emit('edit', row.id)">Edit</button>
+                <button @click="$emit('delete', row.id)">Delete</button>
+              </slot>
             </template>
-        
           </slot>
         </td>
-
-       
       </tr>
     </tbody>
   </table>
@@ -41,10 +40,10 @@ defineProps<{
 
 // defineEmits(["edit","delete", "view"]);
 defineEmits<{
-  (e: 'edit', id: any): void
-  (e: 'delete', id: any): void
-  (e: 'view', id: any): void
-}>()
+  (e: "edit", id: any): void;
+  (e: "delete", id: any): void;
+  (e: "view", id: any): void;
+}>();
 type K = keyof Employ1Details;
 </script>
 

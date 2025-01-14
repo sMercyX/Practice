@@ -29,30 +29,46 @@
       </template>
     </Table>
 
- <Pagination :data="selectedPosition" @newData="handleNewData" /> 
-
+    <Pagination :data="selectedPosition" @newData="handleNewData" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { postionList } from "../../../assets/data/firstData.ts";
+import { ref, computed, watch, onMounted } from "vue";
 import type { Dropdown as DropdownType } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
-
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
+import { postItem } from "../../../utils/fetch.ts";
 
-const positions = ref(postionList);
+const positions = ref();
 const searchPosition = ref<string>("");
 const router = useRouter();
 const sumPosition = computed(() => selectedPosition.value.length);
-
 const selectedPosition = ref<DropdownType<number>[]>([]);
+const selectedHeaders = ref<Header[]>([
+  { Name: "TeamName", Key: "name" },
+  { Name: "Manage", Key: "manage" },
+]);
 
-const selectedHeaders = ref<Header[]>([{ Name: "TeamName", Key: "name" },{ Name: "Manage", Key: "manage" }]);
+const loadData = async () => {
+  const formatted = {
+    pageIndex: 0,
+    pageSize: 0,
+    search: {},
+  };
+  try {
+    const createdTask = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/position/index`,
+      formatted
+    );
+    positions.value = createdTask.data;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
@@ -61,7 +77,7 @@ const navigateToEdit = (id: number) => {
   router.push({ name: "settingEditPosition", params: { positionId: id } });
 };
 const filterEmployees = () => {
-  selectedPosition.value = positions.value.filter((data) =>
+  selectedPosition.value = positions.value.filter((data:any) =>
     searchPosition.value
       ? data.name.toLowerCase().includes(searchPosition.value.toLowerCase())
       : true
@@ -76,7 +92,10 @@ const handleNewData = (data: DropdownType<number>[]) => {
 
 watch([searchPosition], filterEmployees);
 
-filterEmployees();
+onMounted(async () => {
+  await loadData();
+  filterEmployees();
+});
 </script>
 
 <style scoped>

@@ -1,15 +1,17 @@
 
 
-export interface Dropdown<idType> {
-  id: idType;
+export interface Dropdown {
   name: string;
+  description:string;
 }
 
-export interface Team extends Dropdown<string>{
+export interface Team extends Dropdown{
+  teamId:string
   
 }
 
-export interface Pos extends Dropdown<string>{
+export interface Pos extends Dropdown{
+  positionId:string
   
 }
 

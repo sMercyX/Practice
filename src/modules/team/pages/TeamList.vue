@@ -16,17 +16,19 @@
     <div class="right"></div>
   </div>
   <div>
-    <!-- <EmployeeTable :employee="selectedEmployees" /> -->
     <Table
       :headers="selectedHeaders"
       :data="paginationData"
       @edit="navigateToEdit"
-      @delete="navigateToDelete"
     >
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
-  
+
+      <template #AddEdit="{row}">
+        <button @click="navigateToEdit(row.teamId)">Edit</button>
+        <button @click="navigateToEdit(row.teamId)">Delete</button>
+      </template>
     </Table>
 
     <Pagination :data="selectedTeam" @newData="handleNewData" />
@@ -34,43 +36,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { teamList } from "../../../assets/data/firstData.ts";
-import type { Dropdown as DropdownType } from "../../../types/types.ts";
+import { ref, computed, watch, onMounted } from "vue";
+import type {
+  Dropdown as DropdownType,
+  Team as TeamType,
+} from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
-import DeleteForm from "../../../components/DeleteForm/DeleteForm.vue";
+import { postItem } from "../../../utils/fetch.ts";
 
-const teams = ref(teamList);
+const teams = ref();
 const searchTeam = ref<string>("");
 const router = useRouter();
 const sumTeam = computed(() => selectedTeam.value.length);
-
-const selectedTeam = ref<DropdownType<number>[]>([]);
-
+const selectedTeam = ref<TeamType[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Manage", Key: "manage" },
 ]);
 
-const teamIdToDelete = ref<number>(0);
-
-// Confirm Deletion
-const confirmDelete = () => {
-  if (teamIdToDelete.value !== null) {
-    const index = teams.value.findIndex(
-      (team) => team.id === teamIdToDelete.value
+const loadData = async () => {
+  const formatted = {
+    pageIndex: 0,
+    pageSize: 0,
+    search: {},
+  };
+  try {
+    const createdTask = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/team/index`,
+      formatted
     );
-    if (index !== -1) {
-      teams.value.splice(index, 1);
-      filterEmployees();
-    } else {
-      alert("Team not found!");
-    }
+    teams.value = createdTask.data;
+  } catch (error) {
+    console.error("Error loading data:", error);
   }
 };
 
@@ -80,29 +82,27 @@ const navigateTo = (nameRoute: string) => {
 const navigateToEdit = (id: number) => {
   router.push({ name: "settingEditTeam", params: { teamId: id } });
 };
-const navigateToDelete = (id: number) => {
-  teamIdToDelete.value = id
-  const teamtoDelete = teams.value.find((d)=> d.id == teamIdToDelete.value)
-  
-  router.push({ name: "settingDeleteTeam", params: { teamName: teamtoDelete?.name } });
-};
+
 
 const filterEmployees = () => {
-  selectedTeam.value = teams.value.filter((data) =>
+  selectedTeam.value = teams.value.filter((data: any) =>
     searchTeam.value
       ? data.name.toLowerCase().includes(searchTeam.value.toLowerCase())
       : true
   );
 };
 
-const paginationData = ref<DropdownType<number>[]>([]);
+const paginationData = ref<TeamType[]>([]);
 
-const handleNewData = (data: DropdownType<number>[]) => {
+const handleNewData = (data: TeamType[]) => {
   paginationData.value = data;
 };
 watch([searchTeam], filterEmployees);
 
-filterEmployees();
+onMounted(async () => {
+  await loadData();
+  filterEmployees();
+});
 </script>
 
 <style scoped>
