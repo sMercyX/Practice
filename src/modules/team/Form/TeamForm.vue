@@ -89,7 +89,7 @@ const handleSubmit = () => {
         description: Description.value,
         teamId: teamId.value,
       };
-      teams.value[index] = formData
+      teams.value[index] = formData;
       updateData(formData);
     }
   } else {
@@ -106,18 +106,14 @@ onMounted(async () => {
   await loadData();
 
   teamId.value = route.params.teamId as string;
-
   if (teamId.value) {
     isEditing.value = true;
-    const team = teams.value.find((e:any) => e.teamId === teamId.value);
+    const team = teams.value.find((e: any) => e.teamId === teamId.value);
     if (team) {
       Name.value = team.name;
-      Description.value = team.description
+      Description.value = team.description;
     }
   }
-  const index = teams.value.findIndex((e: any) => e.teamId === teamId.value);
-  console.log(isEditing.value && teamId.value)
-  console.log(index)
 });
 </script>
 

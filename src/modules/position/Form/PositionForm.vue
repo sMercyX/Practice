@@ -1,38 +1,41 @@
 <template>
   <div class="modal-overlay">
-      <form @submit.prevent="handleSubmit">
-        <div class="Head">
-          <h3>{{ isEditing ? "Editing" : "Create" }} Position</h3>
-          <div class="close" @click="router.go(-1)">&times;</div>
-        </div>
-        <!-- First Name -->
-        <div class="Content">
-          <p>Fields Marked with an <span>*</span> are required</p>
+    <form @submit.prevent="handleSubmit">
+      <div class="Head">
+        <h3>{{ isEditing ? "Editing" : "Create" }} Position</h3>
+        <div class="close" @click="router.go(-1)">&times;</div>
+      </div>
+      <!-- First Name -->
+      <div class="Content">
+        <p>Fields Marked with an <span>*</span> are required</p>
 
-          <label for="name" >Position Name <span>*</span> </label>
-          <InputText v-model:input="Name" :required="true"/>
+        <label for="name">Position Name <span>*</span> </label>
+        <InputText v-model:input="Name" :required="true" />
 
-          <label for="describtion">Describtion</label>
-          <InputText v-model:input="Description" :required="false"/>
-        </div>
+        <label for="describtion">Describtion</label>
+        <InputText v-model:input="Description" :required="false" />
+      </div>
 
-        <!-- Submit Button -->
-        <div class="Footer">
-          <button class="cancel" type="button" @click="router.go(-1)">Cancel</button>
-          <button class="save" type="submit">Save</button>
-        </div>
-      </form>
-    </div>
+      <!-- Submit Button -->
+      <div class="Footer">
+        <button class="cancel" type="button" @click="router.go(-1)">
+          Cancel
+        </button>
+        <button class="save" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { Dropdown } from "../../../types/types";
+import type { Dropdown, Pos } from "../../../types/types";
 import { postionList } from "../../../assets/data/firstData";
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
+import { postItem } from "../../../utils/fetch";
 
-const postions = ref(postionList);
+const positions = ref(postionList);
 
 const Name = ref<string>("");
 const Description = ref<string>("");
@@ -40,42 +43,81 @@ const Description = ref<string>("");
 const router = useRouter();
 const route = useRoute();
 const isEditing = ref<boolean>(false);
-const positionId = ref<number>();
+const positionId = ref<string>();
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
-onMounted(() => {
-  positionId.value = parseInt(route.params.positionId as string);
-  if (positionId.value) {
-    isEditing.value = true;
-    const team = postions.value.find((e) => e.id === positionId.value);
-    if (team) {
-      Name.value = team.name;
-    }
+const loadData = async () => {
+  const formatted = {
+    pageIndex: 0,
+    pageSize: 0,
+    search: {},
+  };
+  try {
+    const createdTask = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/position/index`,
+      formatted
+    );
+    positions.value = createdTask.data;
+  } catch (error) {
+    console.error("Error loading data:", error);
   }
-});
+};
+
+
+const uploadData = async (data: Dropdown) => {
+  try {
+    await postItem(`${import.meta.env.VITE_BASE_URL}/position/create`, data);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+const updateData = async (data: Pos) => {
+  try {
+    await postItem(`${import.meta.env.VITE_BASE_URL}/position/update`, data);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 
 // **Handle Submit for Both Add & Edit**
 const handleSubmit = () => {
   if (isEditing.value && positionId.value) {
-    const index = postions.value.findIndex((e) => e.id === positionId.value);
+    const index = positions.value.findIndex((e:any) => e.positionId === positionId.value);
     if (index !== -1) {
-      postions.value[index] = {
-        id: positionId.value,
+      const formData= {
+        positionId: positionId.value,
         name: Name.value,
+        description: Description.value,
       };
+      positions.value[index] =formData
+      updateData(formData)
     }
   } else {
-    const formData: Dropdown<number> = {
-      id: postions.value.length + 1,
+    const formData: Dropdown = {
       name: Name.value,
+      description: Description.value,
     };
-    postions.value.push(formData);
+    uploadData(formData)
   }
   navigateTo("settingPosition");
 };
+
+onMounted(async () => {
+  await loadData();
+
+  positionId.value = route.params.positionId as string;
+  if (positionId.value) {
+    isEditing.value = true;
+    const team = positions.value.find((e) => e.positionId === positionId.value);
+    if (team) {
+      Name.value = team.name;
+      Description.value = team.description;
+    }
+  }
+});
 </script>
 
 <style scoped>
@@ -125,7 +167,6 @@ span {
   margin: 5px 0;
   gap: 4px;
   height: 20%;
-
 }
 form {
   display: flex;
@@ -167,7 +208,7 @@ button {
   cursor: pointer;
 }
 
-p{
+p {
   padding: 0;
   margin: 0;
 }

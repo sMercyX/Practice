@@ -24,8 +24,9 @@
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
-      <template #Button="{ row }">
-        <button @click="navigateToEdit(row.id)">Edit</button>
+      <template #AddEdit="{ row }">
+        <button @click="navigateToEdit(row.positionId)">Edit</button>
+        <button @click="navigateToEdit(row.positionId)">Delete</button>
       </template>
     </Table>
 

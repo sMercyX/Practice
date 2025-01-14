@@ -15,7 +15,7 @@ export async function fetchData(url: string, options = {}) {
   }
 }
 
-export const getItems = async (url:string, item:any) => {
+export const getItems = async (url:string, item?:any) => {
   try {
     return await fetchData(url, {
       method: "GET",
@@ -28,6 +28,7 @@ export const getItems = async (url:string, item:any) => {
     throw error;
   }
 };
+
 
 export const postItem = async (url:string, item:any) => {
   try {

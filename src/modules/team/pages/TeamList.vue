@@ -25,7 +25,7 @@
         <strong>{{ header["Name"] }}</strong>
       </template>
 
-      <template #AddEdit="{row}">
+      <template #AddEdit="{ row }">
         <button @click="navigateToEdit(row.teamId)">Edit</button>
         <button @click="navigateToEdit(row.teamId)">Delete</button>
       </template>
@@ -44,10 +44,10 @@ import type {
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
 import Table from "../../../components/atoms/Table.vue";
-import type { Header } from "../../../types/tableTypes.ts";
+import type { Header, HeaderTyoe } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
-import { postItem } from "../../../utils/fetch.ts";
+import { getItems, postItem } from "../../../utils/fetch.ts";
 
 const teams = ref();
 const searchTeam = ref<string>("");
@@ -58,6 +58,7 @@ const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Manage", Key: "manage" },
 ]);
+const selectedHeaders2 = ref<HeaderTyoe[]>([]);
 
 const loadData = async () => {
   const formatted = {
@@ -76,13 +77,25 @@ const loadData = async () => {
   }
 };
 
+const loadTeamDropDown = async () => {
+  try {
+    const Header = await getItems(
+      `${import.meta.env.VITE_BASE_URL}/team/getTeamDropdown`
+    );
+    selectedHeaders2.value = Header
+    console.log(selectedHeaders2.value);
+    // selectedHeaders.value = Header;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 const navigateToEdit = (id: number) => {
   router.push({ name: "settingEditTeam", params: { teamId: id } });
 };
-
 
 const filterEmployees = () => {
   selectedTeam.value = teams.value.filter((data: any) =>
@@ -101,6 +114,7 @@ watch([searchTeam], filterEmployees);
 
 onMounted(async () => {
   await loadData();
+  await loadTeamDropDown();
   filterEmployees();
 });
 </script>
