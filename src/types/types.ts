@@ -1,21 +1,43 @@
-
-
 export interface Dropdown {
   name: string;
-  description:string;
+  description: string;
 }
 
-export interface Team extends Dropdown{
-  teamId:string
-  
+export interface Team extends Dropdown {
+  teamId: string;
 }
 
-export interface Pos extends Dropdown{
-  positionId:string
-  
+export interface Pos extends Dropdown {
+  positionId: string;
 }
 
-export type Gender = "Male" | "Female" | "Polygender" | "Agender" | "Genderqueer" | "Bigender" | "Genderfluid" | "Non-binary"
+export interface Pagi {
+  pageIndex: number;
+  pageSize: number;
+  search: {};
+}
+
+export interface PagiData {
+  pageRow: number;
+  pageIndex: number;
+}
+
+export interface ImpData {
+  data: [];
+  rowCount: number;
+  pageIndex: number;
+  pageSize: number;
+}
+
+export type Gender =
+  | "Male"
+  | "Female"
+  | "Polygender"
+  | "Agender"
+  | "Genderqueer"
+  | "Bigender"
+  | "Genderfluid"
+  | "Non-binary";
 export interface Employ1 {
   id: string;
   first_name: string;
@@ -25,10 +47,9 @@ export interface Employ1 {
   age: number;
   team_id: number;
   position_id: number;
-
 }
 
-export interface Employ1Details extends Employ1{
+export interface Employ1Details extends Employ1 {
   team_name: string;
   position_name: string;
 }
@@ -40,12 +61,10 @@ export interface pos2 {
 
 export interface employ2 {
   team_id: number;
-  team:string;
+  team: string;
 
-  member:Member[]
+  member: Member[];
 }
-
-
 
 interface Member {
   id: string;
@@ -55,21 +74,19 @@ interface Member {
   age: number;
   team_id?: number;
   position_id: number;
-
 }
 
-interface MemberDetail extends  Member{
+interface MemberDetail extends Member {
   team_name: string;
   position_name: string;
-
 }
 
 // let mem1:Member = {
-   
+
 // }
 
 // let mem2:MemberDetail = {
-   
+
 // }
 
 // mem2 = mem1

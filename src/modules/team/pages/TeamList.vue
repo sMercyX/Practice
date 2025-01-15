@@ -2,7 +2,7 @@
   <div class="Head">
     <h2>Team ( {{ sumTeam }} )</h2>
     <div class="createEmployeeButton">
-      <button class="createButton" @click="openForm()">
+      <button class="createButton" @click="openFormCreate()">
         <span>&plus;</span> Create
       </button>
     </div>
@@ -16,52 +16,56 @@
     <div class="right"></div>
   </div>
   <div>
-    <Table
-      :headers="selectedHeaders"
-      :data="paginationData"
-      @edit="navigateToEdit"
-    >
+    <Table :headers="selectedHeaders" :data="paginationData">
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
 
       <template #AddEdit="{ row }">
         <button @click="openFormEdit(row.teamId)">Edit</button>
-        <button @click="navigateToEdit(row.teamId)">Delete</button>
+        <button @click="openFormDelete(row.teamId)">Delete</button>
       </template>
     </Table>
 
-    <Pagination :data="selectedTeam" @newData="handleNewData" />
+    <Pagination
+      :data="selectedTeam"
+      :pageData="pageData"
+      @newData="handleNewData"
+      @paginationData="loadData"
+    />
   </div>
 
-  <TeamForm
+  <Form1
     v-if="isFormOpen"
-    :data="teams"
-    :id="idToEdit"
+    :data="selectedTeam"
+    :id="idToEditDelete"
     :header="header"
     @back="close"
+  />
+
+  <Delete
+    v-if="isDeleteOpen"
+    :id="idToEditDelete"
+    @back="close"
+    @deleteSubmit="handleDelete"
   />
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import type {
-  Dropdown as DropdownType,
-  Team as TeamType,
-} from "../../../types/types.ts";
+import type { Pagi, PagiData, Team as TeamType } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
 import Table from "../../../components/atoms/Table.vue";
-import type { Header, HeaderTyoe } from "../../../types/tableTypes.ts";
-import { useRouter } from "vue-router";
+import type { Header } from "../../../types/tableTypes.ts";
 import Pagination from "../../../components/Pagination/Pagination.vue";
-import { getItems, postItem } from "../../../utils/fetch.ts";
-import TeamForm from "../../../components/atoms/Form1.vue";
+import { postItem } from "../../../utils/fetch.ts";
+import Form1 from "../../../components/atoms/Form1.vue";
+import Delete from "../../../components/atoms/Delete.vue";
 
-const teams = ref<any>();
+const teams = ref<TeamType>();
 const searchTeam = ref<string>("");
-const router = useRouter();
-const sumTeam = computed(() => selectedTeam.value.length);
+const sumTeam = computed(() => pageData.value.pageRow);
 const selectedTeam = ref<TeamType[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
@@ -69,82 +73,91 @@ const selectedHeaders = ref<Header[]>([
   { Name: "Manage", Key: "manage" },
 ]);
 const header = ref<string>("team");
-const selectedHeaders2 = ref<HeaderTyoe[]>([]);
 
-const idToEdit = ref<string>("");
+const idToEditDelete = ref<string>("");
+const isFormOpen = ref<boolean>(false);
+const isDeleteOpen = ref<boolean>(false);
+
+const pageData = ref<PagiData>({
+  pageRow: 0,
+  pageIndex: 0,
+});
 
 const openFormEdit = (id: string) => {
-  idToEdit.value = id;
-  isFormOpen.value = !isFormOpen.value;
-};
-
-const isFormOpen = ref<boolean>(false);
-
-const openForm = () => {
+  idToEditDelete.value = id;
   isFormOpen.value = true;
 };
 
-const close = () => {
-  idToEdit.value = "";
-  isFormOpen.value = false;
+const openFormCreate = () => {
+  isFormOpen.value = true;
 };
 
-const loadData = async () => {
+const openFormDelete = (id: string) => {
+  idToEditDelete.value = id;
+  isDeleteOpen.value = true;
+};
+
+const close = () => {
+  idToEditDelete.value = "";
+  isFormOpen.value = false;
+  isDeleteOpen.value = false;
+};
+
+const handleDelete = async (id: string) => {
   const formatted = {
-    pageIndex: 0,
-    pageSize: 0,
-    search: {},
+    teamId: id,
   };
   try {
-    const createdTask = await postItem(
+    const deleteItem = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/team/delete`,
+      formatted
+    );
+    console.log("deleteTeam", deleteItem);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+
+const formattedDefault = {
+  pageIndex: 0,
+  pageSize: 5,
+  search: {},
+};
+const loadData = async (pagiData: Pagi) => {
+  const formatted = pagiData;
+  try {
+    const datas = await postItem(
       `${import.meta.env.VITE_BASE_URL}/team/index`,
       formatted
     );
-    teams.value = createdTask.data;
+    selectedTeam.value = datas.data;
+    pageData.value = {
+      pageRow: datas.rowCount,
+      pageIndex: datas.pageIndex + 1,
+    };
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
 
-const loadTeamDropDown = async () => {
-  try {
-    const Header = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/team/getTeamDropdown`
-    );
-    selectedHeaders2.value = Header;
-    // console.log(selectedHeaders2.value);
-    // selectedHeaders.value = Header;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-
-const navigateTo = (nameRoute: string) => {
-  router.push({ name: nameRoute });
-};
-const navigateToEdit = (id: number) => {
-  router.push({ name: "settingEditTeam", params: { teamId: id } });
-};
-
-const filterEmployees = () => {
-  selectedTeam.value = teams.value!.filter((data: TeamType) =>
-    searchTeam.value
-      ? data.name.toLowerCase().includes(searchTeam.value.toLowerCase())
-      : true
-  );
-};
+// const filterEmployees = () => {
+//   selectedTeam.value = teams.value!.filter((data: TeamType) =>
+//     searchTeam.value
+//       ? data.name.toLowerCase().includes(searchTeam.value.toLowerCase())
+//       : true
+//   );
+// };
 
 const paginationData = ref<TeamType[]>([]);
 
 const handleNewData = (data: TeamType[]) => {
   paginationData.value = data;
 };
-watch([searchTeam], filterEmployees);
+// watch([searchTeam], filterEmployees);
 
 onMounted(async () => {
-  await loadData();
-  await loadTeamDropDown();
-  filterEmployees();
+  await loadData(formattedDefault);
+  // filterEmployees();
 });
 </script>
 

@@ -4,6 +4,7 @@
       <p>
         Show
         <select v-model.number="pageSize" @change="updatePageSize($event)">
+          <option value="1">1</option>
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
@@ -38,41 +39,47 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
+import type { Pagi } from "../../types/types";
 
 const props = defineProps<{
   data: any[];
+  pageData: any
+ 
 }>();
 
-const currentPage = ref<number>(1);
-const pageSize = ref<number>(10);
-
+const currentPage = ref<number>(props.pageData!.pageIndex);
+const pageSize = ref<number>(5);
 const localData = ref([...props.data]);
 
-const sumData = computed(() => localData.value.length);
+// const localData = computed(()=> props.data)
 
+const pagiData = computed(() => ({
+  pageIndex: currentPage.value - 1,
+  pageSize: pageSize.value,
+  search: {},
+}));
+
+const sumData = computed(() => props.pageData!.pageRow);
 const newData = computed(() => {
-  const startIndex = (currentPage.value - 1) * pageSize.value;
-  const slicedData = localData.value.slice(
-    startIndex,
-    startIndex + pageSize.value
-  );
-  emit("newData", slicedData);
-  return slicedData;
+  emit("newData", newData.value);
+  return localData.value
 });
 
-const totalPages = computed(() =>
-  Math.ceil(localData.value.length / pageSize.value)
-);
+const totalPages = computed(() => Math.ceil(props.pageData!.pageRow / pageSize.value));
 
 const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++;
+  currentPage.value++
   emit("newData", newData.value);
+  emit("paginationData", pagiData.value);
+  console.log(props.pageData.pageRow)
+
 };
 
 const prevPage = () => {
-  if (currentPage.value > 1) currentPage.value--;
+  currentPage.value--
   emit("newData", newData.value);
+  emit("paginationData", pagiData.value);
 };
 
 const updatePageSize = (event: Event) => {
@@ -80,6 +87,7 @@ const updatePageSize = (event: Event) => {
   pageSize.value = Number(target.value);
   currentPage.value = 1;
   emit("newData", newData.value);
+  emit("paginationData", pagiData.value);
 };
 
 const updateCurrentPage = (event: Event) => {
@@ -87,22 +95,31 @@ const updateCurrentPage = (event: Event) => {
   currentPage.value = Number(target.value);
 
   emit("newData", newData.value);
+  emit("paginationData", pagiData.value);
 };
 
 watch(
   () => props.data,
   (newD) => {
     localData.value = [...newD]; // Update the local copy
-    currentPage.value = 1;
+    currentPage.value = props.pageData!.pageIndex;
     emit("newData", newData.value);
+    // emit("paginationData", pagiData.value);
   },
   { deep: true }
 );
 
 const emit = defineEmits<{
   (e: "newData", newData: any[]): void;
+  (e: "paginationData", pagiData: Pagi): void;
 }>();
-emit("newData", newData.value);
+
+onMounted(()=>{
+  emit("newData", newData.value);
+  emit("paginationData", pagiData.value);
+
+
+})
 </script>
 
 <style scoped>

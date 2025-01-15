@@ -16,47 +16,54 @@
   </div>
   <div>
     <!-- <EmployeeTable :employee="selectedEmployees" /> -->
-    <Table
-      :headers="selectedHeaders"
-      :data="paginationData"
-      @edit="navigateToEdit"
-    >
+    <Table :headers="selectedHeaders" :data="paginationData">
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
       <template #AddEdit="{ row }">
         <button @click="openFormEdit(row.positionId)">Edit</button>
-        <button @click="navigateToEdit(row.positionId)">Delete</button>
+        <button @click="openFormDelete(row.positionId)">Delete</button>
       </template>
     </Table>
 
-    <Pagination :data="selectedPosition" @newData="handleNewData" />
+    <Pagination
+      :data="selectedPosition"
+      :pageData="pageData"
+      @newData="handleNewData"
+      @paginationData="loadData"
+    />
   </div>
 
-  <TeamForm
+  <Form1
     v-if="isFormOpen"
-    :data="positions"
-    :id="idToEdit"
+    :data="selectedPosition"
+    :id="idToEditDelete"
     :header="header"
     @back="close"
+  />
+
+  <Delete
+    v-if="isDeleteOpen"
+    :id="idToEditDelete"
+    @back="close"
+    @deleteSubmit="handleDelete"
   />
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
-import type { Pos } from "../../../types/types.ts";
+import { ref, computed, onMounted } from "vue";
+import type { ImpData, Pagi, PagiData, Pos } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
-import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
 import { postItem } from "../../../utils/fetch.ts";
-import TeamForm from "../../../components/atoms/Form1.vue";
+import Form1 from "../../../components/atoms/Form1.vue";
+import Delete from "../../../components/atoms/Delete.vue";
 
-const positions = ref();
+const positions = ref<Pos>();
 const searchPosition = ref<string>("");
-const router = useRouter();
-const sumPosition = computed(() => selectedPosition.value.length);
+const sumPosition = computed(() => pageData.value.pageRow);
 const selectedPosition = ref<Pos[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
@@ -65,54 +72,81 @@ const selectedHeaders = ref<Header[]>([
 ]);
 const header = ref<string>("position");
 
-const idToEdit = ref<string>("");
+const idToEditDelete = ref<string>("");
+const isFormOpen = ref<boolean>(false);
+const isDeleteOpen = ref<boolean>(false);
+
+const pageData = ref<PagiData>({
+  pageRow: 0,
+  pageIndex: 0,
+});
 
 const openFormEdit = (id: string) => {
-  idToEdit.value = id;
+  idToEditDelete.value = id;
   isFormOpen.value = !isFormOpen.value;
 };
-
-const isFormOpen = ref<boolean>(false);
 
 const openForm = () => {
   isFormOpen.value = true;
 };
 
-const close = () => {
-  idToEdit.value = "";
-  isFormOpen.value = false;
+const openFormDelete = (id: string) => {
+  idToEditDelete.value = id;
+  isDeleteOpen.value = true;
 };
 
-const loadData = async () => {
+const close = () => {
+  idToEditDelete.value = "";
+  isFormOpen.value = false;
+  isDeleteOpen.value = false;
+};
+
+const handleDelete = async (id: string) => {
   const formatted = {
-    pageIndex: 0,
-    pageSize: 0,
-    search: {},
+    positionId: id,
   };
   try {
-    const createdTask = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/position/index`,
+    const deleteItem = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/position/delete`,
       formatted
     );
-    positions.value = createdTask.data;
+    console.log("deletePosition", deleteItem);
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
 
-const navigateTo = (nameRoute: string) => {
-  router.push({ name: nameRoute });
+const formattedDefault = {
+  pageIndex: 0,
+  pageSize: 5,
+  search: {},
 };
-const navigateToEdit = (id: number) => {
-  router.push({ name: "settingEditPosition", params: { positionId: id } });
+
+const loadData = async (pagiData: Pagi) => {
+  const formatted = pagiData;
+  try {
+    const datas: ImpData = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/position/index`,
+      formatted
+    );
+    // positions.value = createdTask.data;
+    selectedPosition.value = datas.data;
+    pageData.value = {
+      pageRow: datas.rowCount,
+      pageIndex: datas.pageIndex + 1,
+    };
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
 };
-const filterEmployees = () => {
-  selectedPosition.value = positions.value.filter((data: any) =>
-    searchPosition.value
-      ? data.name.toLowerCase().includes(searchPosition.value.toLowerCase())
-      : true
-  );
-};
+
+// const filterEmployees = () => {
+//   selectedPosition.value = positions.value.filter((data: any) =>
+//     searchPosition.value
+//       ? data.name.toLowerCase().includes(searchPosition.value.toLowerCase())
+//       : true
+//   );
+// };
 
 const paginationData = ref<Pos[]>([]);
 
@@ -120,11 +154,11 @@ const handleNewData = (data: Pos[]) => {
   paginationData.value = data;
 };
 
-watch([searchPosition], filterEmployees);
+// watch([searchPosition], filterEmployees);
 
 onMounted(async () => {
-  await loadData();
-  filterEmployees();
+  await loadData(formattedDefault);
+  // filterEmployees();
 });
 </script>
 

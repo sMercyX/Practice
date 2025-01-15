@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { Dropdown, Team as TeamType } from "../../types/types";
+import type { Dropdown, Pos, Team as TeamType } from "../../types/types";
 import InputText from "../Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { postItem } from "../../utils/fetch";
@@ -50,7 +50,7 @@ const navigateTo = (nameRoute: string) => {
 
 const props = defineProps<{
   id: string;
-  data: TeamType[];
+  data: (TeamType | Pos)[] ;
   header: string;
 }>();
 const header = ref<string>(props.header);
@@ -112,7 +112,7 @@ const handleSubmit = () => {
 onMounted(async () => {
   dataId.value = props.id;
   datas.value = props.data;
-
+  console.log(props.data)
   if (dataId.value) {
     isEditing.value = true;
     const dataa = datas.value.find(
@@ -204,8 +204,12 @@ button {
   border: none;
   cursor: pointer;
   width: 30%;
+  transition: all 0.3s;
 }
 
+button:hover{
+  scale: 110%;
+}
 .close {
   display: flex;
   justify-content: right;

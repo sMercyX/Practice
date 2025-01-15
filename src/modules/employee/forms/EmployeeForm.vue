@@ -109,6 +109,10 @@ const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
+
+
+
+
 onMounted(() => {
   employeeId.value = route.params.employeeId as string;
   if (employeeId.value) {

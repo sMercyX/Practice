@@ -10,11 +10,8 @@ import No5 from "../components/practice/No5.vue";
 import No6 from "../components/practice/No6.vue";
 import EmployeeList from "../components/practice/No7EmployeeList.vue";
 import EmployeeForm from "../modules/employee/forms/EmployeeForm.vue";
-import TeamForm from "../components/atoms/Form1.vue";
 import TeamList from "../modules/team/pages/TeamList.vue";
 import PositionList from "../modules/position/pages/PositionList.vue";
-import PositionForm from "../modules/position/Form/PositionForm.vue";
-import DeleteForm from "../components/DeleteForm/DeleteForm.vue";
 
 const router = createRouter(
   {
@@ -107,32 +104,8 @@ const router = createRouter(
           },
         ],
       },
-      {
-        path: "/setting/team/create",
-        name: "settingCreateTeam",
-        component: TeamForm,
-      },
-      {
-        path: "/setting/team/edit/:teamId",
-        name: "settingEditTeam",
-        component: TeamForm,
-      },
-      {
-        path: "/setting/team/delete/:teamName",
-        name: "settingDeleteTeam",
-        component: DeleteForm,
-      },
 
-      {
-        path: "/setting/position/create",
-        name: "settingCreatePosition",
-        component: PositionForm,
-      },
-      {
-        path: "/setting/position/edit/:positionId",
-        name: "settingEditPosition",
-        component: PositionForm,
-      },
+
     ],
   }
   // {
