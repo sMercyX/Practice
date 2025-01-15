@@ -2,7 +2,7 @@
   <div class="Head">
     <h2>Position ( {{ sumPosition }} )</h2>
     <div class="createEmployeeButton">
-      <button class="createButton" @click="navigateTo('settingCreatePosition')">
+      <button class="createButton" @click="openForm">
         <span>&plus;</span> Create
       </button>
     </div>
@@ -25,34 +25,63 @@
         <strong>{{ header["Name"] }}</strong>
       </template>
       <template #AddEdit="{ row }">
-        <button @click="navigateToEdit(row.positionId)">Edit</button>
+        <button @click="openFormEdit(row.positionId)">Edit</button>
         <button @click="navigateToEdit(row.positionId)">Delete</button>
       </template>
     </Table>
 
     <Pagination :data="selectedPosition" @newData="handleNewData" />
   </div>
+
+  <TeamForm
+    v-if="isFormOpen"
+    :data="positions"
+    :id="idToEdit"
+    :header="header"
+    @back="close"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import type { Dropdown as DropdownType } from "../../../types/types.ts";
+import type { Pos } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
 import { postItem } from "../../../utils/fetch.ts";
+import TeamForm from "../../../components/atoms/Form1.vue";
 
 const positions = ref();
 const searchPosition = ref<string>("");
 const router = useRouter();
 const sumPosition = computed(() => selectedPosition.value.length);
-const selectedPosition = ref<DropdownType<number>[]>([]);
+const selectedPosition = ref<Pos[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
+  { Name: "Description", Key: "description" },
   { Name: "Manage", Key: "manage" },
 ]);
+const header = ref<string>("position");
+
+const idToEdit = ref<string>("");
+
+const openFormEdit = (id: string) => {
+  idToEdit.value = id;
+  isFormOpen.value = !isFormOpen.value;
+};
+
+const isFormOpen = ref<boolean>(false);
+
+const openForm = () => {
+  isFormOpen.value = true;
+};
+
+const close = () => {
+  idToEdit.value = "";
+  isFormOpen.value = false;
+};
 
 const loadData = async () => {
   const formatted = {
@@ -78,16 +107,16 @@ const navigateToEdit = (id: number) => {
   router.push({ name: "settingEditPosition", params: { positionId: id } });
 };
 const filterEmployees = () => {
-  selectedPosition.value = positions.value.filter((data:any) =>
+  selectedPosition.value = positions.value.filter((data: any) =>
     searchPosition.value
       ? data.name.toLowerCase().includes(searchPosition.value.toLowerCase())
       : true
   );
 };
 
-const paginationData = ref<DropdownType<number>[]>([]);
+const paginationData = ref<Pos[]>([]);
 
-const handleNewData = (data: DropdownType<number>[]) => {
+const handleNewData = (data: Pos[]) => {
   paginationData.value = data;
 };
 

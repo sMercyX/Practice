@@ -2,7 +2,7 @@
   <div class="Head">
     <h2>Team ( {{ sumTeam }} )</h2>
     <div class="createEmployeeButton">
-      <button class="createButton" @click="navigateTo('settingCreateTeam')">
+      <button class="createButton" @click="openForm()">
         <span>&plus;</span> Create
       </button>
     </div>
@@ -26,13 +26,21 @@
       </template>
 
       <template #AddEdit="{ row }">
-        <button @click="navigateToEdit(row.teamId)">Edit</button>
+        <button @click="openFormEdit(row.teamId)">Edit</button>
         <button @click="navigateToEdit(row.teamId)">Delete</button>
       </template>
     </Table>
 
     <Pagination :data="selectedTeam" @newData="handleNewData" />
   </div>
+
+  <TeamForm
+    v-if="isFormOpen"
+    :data="teams"
+    :id="idToEdit"
+    :header="header"
+    @back="close"
+  />
 </template>
 
 <script setup lang="ts">
@@ -48,17 +56,38 @@ import type { Header, HeaderTyoe } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
 import { getItems, postItem } from "../../../utils/fetch.ts";
+import TeamForm from "../../../components/atoms/Form1.vue";
 
-const teams = ref();
+const teams = ref<any>();
 const searchTeam = ref<string>("");
 const router = useRouter();
 const sumTeam = computed(() => selectedTeam.value.length);
 const selectedTeam = ref<TeamType[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
+  { Name: "Description", Key: "description" },
   { Name: "Manage", Key: "manage" },
 ]);
+const header = ref<string>("team");
 const selectedHeaders2 = ref<HeaderTyoe[]>([]);
+
+const idToEdit = ref<string>("");
+
+const openFormEdit = (id: string) => {
+  idToEdit.value = id;
+  isFormOpen.value = !isFormOpen.value;
+};
+
+const isFormOpen = ref<boolean>(false);
+
+const openForm = () => {
+  isFormOpen.value = true;
+};
+
+const close = () => {
+  idToEdit.value = "";
+  isFormOpen.value = false;
+};
 
 const loadData = async () => {
   const formatted = {
@@ -82,8 +111,8 @@ const loadTeamDropDown = async () => {
     const Header = await getItems(
       `${import.meta.env.VITE_BASE_URL}/team/getTeamDropdown`
     );
-    selectedHeaders2.value = Header
-    console.log(selectedHeaders2.value);
+    selectedHeaders2.value = Header;
+    // console.log(selectedHeaders2.value);
     // selectedHeaders.value = Header;
   } catch (error) {
     console.error("Error loading data:", error);
@@ -98,7 +127,7 @@ const navigateToEdit = (id: number) => {
 };
 
 const filterEmployees = () => {
-  selectedTeam.value = teams.value.filter((data: any) =>
+  selectedTeam.value = teams.value!.filter((data: TeamType) =>
     searchTeam.value
       ? data.name.toLowerCase().includes(searchTeam.value.toLowerCase())
       : true

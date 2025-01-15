@@ -2,8 +2,10 @@
   <div class="modal-overlay">
     <form @submit.prevent="handleSubmit">
       <div class="Head">
-        <h3>{{ isEditing ? "Editing" : "Create" }} Team</h3>
-        <div class="close" @click="router.go(-1)">&times;</div>
+        <h3>
+          {{ isEditing ? "Editing" : "Create" }} {{ header.toUpperCase() }}
+        </h3>
+        <div class="close" @click="goback">&times;</div>
       </div>
       <!-- First Name -->
       <div class="Content">
@@ -18,9 +20,7 @@
 
       <!-- Submit Button -->
       <div class="Footer">
-        <button class="cancel" type="button" @click="router.go(-1)">
-          Cancel
-        </button>
+        <button class="cancel" type="button" @click="goback">Cancel</button>
         <button class="save" type="submit">Save</button>
       </div>
     </form>
@@ -29,12 +29,12 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { Dropdown, Team as TeamType } from "../../../types/types";
-import InputText from "../../../components/Input/InputText.vue";
+import type { Dropdown, Team as TeamType } from "../../types/types";
+import InputText from "../Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
-import { postItem } from "../../../utils/fetch";
+import { postItem } from "../../utils/fetch";
 
-const teams = ref();
+const datas = ref();
 
 const Name = ref<string>("");
 const Description = ref<string>("");
@@ -42,54 +42,61 @@ const Description = ref<string>("");
 const router = useRouter();
 const route = useRoute();
 const isEditing = ref<boolean>(false);
-const teamId = ref<string>();
+const dataId = ref<string>();
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
-const loadData = async () => {
-  const formatted = {
-    pageIndex: 0,
-    pageSize: 0,
-    search: {},
-  };
-  try {
-    const createdTask = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/team/index`,
-      formatted
-    );
-    teams.value = createdTask.data;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
+const props = defineProps<{
+  id: string;
+  data: TeamType[];
+  header: string;
+}>();
+const header = ref<string>(props.header);
+const headerId = ref<string>(header.value + "Id");
+
+const goback = () => {
+  return emit("back", false);
 };
+
+const emit = defineEmits<{
+  (e: "back", value: boolean): void;
+}>();
 
 const uploadData = async (data: Dropdown) => {
   try {
-    await postItem(`${import.meta.env.VITE_BASE_URL}/team/create`, data);
+    await postItem(
+      `${import.meta.env.VITE_BASE_URL}/${header.value}/create`,
+      data
+    );
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
-const updateData = async (data: TeamType) => {
+const updateData = async (data: any) => {
   try {
-    await postItem(`${import.meta.env.VITE_BASE_URL}/team/update`, data);
+    await postItem(
+      `${import.meta.env.VITE_BASE_URL}/${header.value}/update`,
+      data
+    );
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
 
 const handleSubmit = () => {
-  if (isEditing.value && teamId.value) {
-    const index = teams.value.findIndex((e: any) => e.teamId === teamId.value);
+  if (isEditing.value && dataId.value) {
+    const index = datas.value.findIndex(
+      (e: any) => e[headerId.value] === dataId.value
+    );
     if (index !== -1) {
       const formData = {
         name: Name.value,
         description: Description.value,
-        teamId: teamId.value,
+        [headerId.value]: dataId.value,
       };
-      teams.value[index] = formData;
+      datas.value[index] = formData;
       updateData(formData);
     }
   } else {
@@ -99,19 +106,21 @@ const handleSubmit = () => {
     };
     uploadData(formData);
   }
-  navigateTo("settingTeam");
+  goback();
 };
 
 onMounted(async () => {
-  await loadData();
+  dataId.value = props.id;
+  datas.value = props.data;
 
-  teamId.value = route.params.teamId as string;
-  if (teamId.value) {
+  if (dataId.value) {
     isEditing.value = true;
-    const team = teams.value.find((e: any) => e.teamId === teamId.value);
-    if (team) {
-      Name.value = team.name;
-      Description.value = team.description;
+    const dataa = datas.value.find(
+      (e: any) => e[headerId.value] === dataId.value
+    );
+    if (dataa) {
+      Name.value = dataa.name;
+      Description.value = dataa.description;
     }
   }
 });

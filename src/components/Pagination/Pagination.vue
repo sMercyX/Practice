@@ -40,8 +40,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 
-import type { Dropdown, Employ1Details } from "../../types/types.ts";
-
 const props = defineProps<{
   data: any[];
 }>();
