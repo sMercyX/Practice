@@ -70,16 +70,21 @@ const uploadData = async (data: Dropdown) => {
       `${import.meta.env.VITE_BASE_URL}/${header.value}/create`,
       data
     );
+    datas.value.push(data)
+
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
-const updateData = async (data: any) => {
+const updateData = async (data: any,index:string) => {
   try {
     await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/update`,
       data
     );
+    datas.value[index] = data;
+
+
   } catch (error) {
     console.error("Error loading data:", error);
   }
@@ -96,8 +101,7 @@ const handleSubmit = () => {
         description: Description.value,
         [headerId.value]: dataId.value,
       };
-      datas.value[index] = formData;
-      updateData(formData);
+      updateData(formData,index);
     }
   } else {
     const formData: Dropdown = {
@@ -112,7 +116,6 @@ const handleSubmit = () => {
 onMounted(async () => {
   dataId.value = props.id;
   datas.value = props.data;
-  console.log(props.data)
   if (dataId.value) {
     isEditing.value = true;
     const dataa = datas.value.find(

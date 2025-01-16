@@ -1,10 +1,16 @@
 <template>
-  <input type="text" :value="input" @input="updateInput" placeholder="GradeName"/>
+  <input
+    type="text"
+    :value="input"
+    @input="updateInput"
+  
+    placeholder="GradeName"
+  />
 </template>
 
 <script setup lang="ts">
 defineProps<{
-  input: string; 
+  input: string;
 }>();
 
 const emit = defineEmits(["update:input"]);

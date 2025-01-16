@@ -15,14 +15,13 @@ export async function fetchData(url: string, options = {}) {
   }
 }
 
-export const getItems = async (url:string, item?:any) => {
+export const getItems = async (url:string) => {
   try {
     return await fetchData(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-      },
-      body: JSON.stringify(item),
+      }
     });
   } catch (error) {
     throw error;

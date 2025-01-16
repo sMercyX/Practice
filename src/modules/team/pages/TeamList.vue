@@ -11,7 +11,12 @@
 
   <div class="searchMenu">
     <div class="left">
-      <SearchBar header="SearchBar" v-model:input="searchTeam" />
+      <SearchBar
+        header="SearchBar"
+        v-model:input="searchTeam"
+        @blur="confirmInput"
+        @keyup.enter="confirmInput"
+      />
     </div>
     <div class="right"></div>
   </div>
@@ -42,7 +47,7 @@
     :header="header"
     @back="close"
   />
-
+  <!-- <input type="text" id="input1" /> -->
   <Delete
     v-if="isDeleteOpen"
     :id="idToEditDelete"
@@ -52,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, reactive } from "vue";
 import type { Pagi, PagiData, Team as TeamType } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
@@ -63,7 +68,10 @@ import { postItem } from "../../../utils/fetch.ts";
 import Form1 from "../../../components/atoms/Form1.vue";
 import Delete from "../../../components/atoms/Delete.vue";
 
-const teams = ref<TeamType>();
+// const a = 0
+// const teams = ref<TeamType>();
+// const a = reactive({})
+
 const searchTeam = ref<string>("");
 const sumTeam = computed(() => pageData.value.pageRow);
 const selectedTeam = ref<TeamType[]>([]);
@@ -81,6 +89,7 @@ const isDeleteOpen = ref<boolean>(false);
 const pageData = ref<PagiData>({
   pageRow: 0,
   pageIndex: 0,
+  pageSize: "",
 });
 
 const openFormEdit = (id: string) => {
@@ -118,30 +127,44 @@ const handleDelete = async (id: string) => {
   }
 };
 
-const formattedDefault = {
+const formattedDefault = ref({
   pageIndex: 0,
   pageSize: 5,
   search: {},
-};
+});
+
 const loadData = async (pagiData: Pagi) => {
-  const formatted = pagiData;
+  formattedDefault.value = pagiData;
   try {
     const datas = await postItem(
       `${import.meta.env.VITE_BASE_URL}/team/index`,
-      formatted
+      formattedDefault.value
     );
     selectedTeam.value = datas.data;
     pageData.value = {
       pageRow: datas.rowCount,
       pageIndex: datas.pageIndex + 1,
+      pageSize: datas.pageSize,
     };
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
 
+const confirmInput = () => {
+  const filter = {
+    pageIndex: 0,
+    pageSize: parseInt(pageData.value.pageSize),
+    search: {
+      text: searchTeam.value,
+    },
+  };
+  console.log(pageData.value.pageSize);
+  loadData(filter);
+};
+
 // const filterEmployees = () => {
-//   selectedTeam.value = teams.value!.filter((data: TeamType) =>
+//   selectedTeam.value!.filter((data: TeamType) =>
 //     searchTeam.value
 //       ? data.name.toLowerCase().includes(searchTeam.value.toLowerCase())
 //       : true
@@ -155,10 +178,43 @@ const handleNewData = (data: TeamType[]) => {
 };
 // watch([searchTeam], filterEmployees);
 
-onMounted(async () => {
-  await loadData(formattedDefault);
-  // filterEmployees();
-});
+const input1 = document.getElementById("input1");
+console.log(input1);
+console.log(paginationData.value);
+// console.log(input1);
+// console.log(input1);
+console.time("mounted");
+console.time("setup");
+
+
+(async()=>{
+  await loadData(formattedDefault.value);
+
+ })()
+
+//  async function name() { // function
+  
+//  }
+//  name() // call function
+
+//  const a = ()=> {}
+
+//  ()=> {} //anonymous function
+
+// ( ()=>{})  () ;//self-invoking function
+
+// (async ()=>{
+//   await loadData(formattedDefault.value);
+// })  () 
+
+// console.timeEnd("setup");
+
+// onMounted(async () => {
+//   console.timeEnd("mounted");
+//   await loadData(formattedDefault.value);
+
+//   // filterEmployees();
+// });
 </script>
 
 <style scoped>

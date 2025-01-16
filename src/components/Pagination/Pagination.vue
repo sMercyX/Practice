@@ -48,7 +48,7 @@ const props = defineProps<{
  
 }>();
 
-const currentPage = ref<number>(props.pageData!.pageIndex);
+const currentPage = ref<number>((props.pageData!.pageIndex ? props.pageData!.pageIndex  : 1 ));
 const pageSize = ref<number>(5);
 const localData = ref([...props.data]);
 
@@ -114,12 +114,15 @@ const emit = defineEmits<{
   (e: "paginationData", pagiData: Pagi): void;
 }>();
 
-onMounted(()=>{
+(()=>{
   emit("newData", newData.value);
   emit("paginationData", pagiData.value);
-
-
 })
+
+// onMounted(()=>{
+//   emit("newData", newData.value);
+//   emit("paginationData", pagiData.value);
+// })
 </script>
 
 <style scoped>

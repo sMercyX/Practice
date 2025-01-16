@@ -20,6 +20,7 @@ export interface Pagi {
 export interface PagiData {
   pageRow: number;
   pageIndex: number;
+  pageSize: string;
 }
 
 export interface ImpData {

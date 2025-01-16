@@ -25,6 +25,7 @@
     </Table>
 
     <Pagination :data="selectedEmployees" @newData="handleNewData" />
+    
   </div>
 </template>
 
