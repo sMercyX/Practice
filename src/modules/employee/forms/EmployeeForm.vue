@@ -24,42 +24,48 @@
 
       <form @submit.prevent="handleSubmit" class="Content" id="myForm">
         <div class="breakHalf">
-          <div class="up">
+          <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
             <InputText v-model:input="firstName" :required="true" />
           </div>
-          <div class="up">
+          <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
             <InputText v-model:input="lastName" :required="true" />
           </div>
         </div>
-        <div class="up">
+        <div class="groupUp">
           <label for="email">Email <span>*</span></label>
           <InputText v-model:input="email" :required="true" />
         </div>
 
-        <!-- Gender -->
-        <!-- <label for="gender">Gender</label>
-        <select v-model="gender" id="gender" required>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select> -->
-
-        <!-- Age -->
-        <!-- <label for="age">Age</label>
-        <input v-model="age" type="number" id="age" required /> -->
         <div class="breakHalf">
-          <div class="up">
+          <div class="groupUp">
             <label for="team_id">Team <span>*</span></label>
             <Dropdown v-model="selectedTeam" :list="teams" />
           </div>
-          <div class="up">
+          <div class="groupUp">
             <label for="position_id">Position <span>*</span></label>
             <Dropdown v-model="selectedPosition" :list="postions" />
           </div>
         </div>
+
         <hr />
+        <div class="breakHalf">
+          <label for="phone">Phone Numbers</label>
+          <div class="add-button" @click="addPhone()">&plus; Phone</div>
+        </div>
+        <div class="phone-list">
+          <div v-for="(phone, index) in phones" :key="index" class="phone-item">
+            <InputText v-model:input="phones[index]" :required="true" />
+            <button
+              v-if="phones.length > 1"
+              class="remove-button"
+              @click="removePhone(index)"
+            >
+              &minus;
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -77,10 +83,13 @@ import {
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
+import { getItems, postItem } from "../../../utils/fetch";
 // import PenLogo from "../../../assets/editPen.svg";
 
-const teams = ref(teamList);
-const postions = ref(postionList);
+const teams = ref();
+const postions = ref();
+const employee = ref();
+
 // const genders = ref([
 //   "Male",
 //   "Female",
@@ -95,10 +104,18 @@ const postions = ref(postionList);
 const firstName = ref<string>("");
 const lastName = ref<string>("");
 const email = ref<string>("");
-const gender = ref<Gender>("Male");
-const age = ref<number>(0);
-const selectedTeam = ref<number>(1);
-const selectedPosition = ref<number>(1);
+const dateOfBirth = ref<number>(0);
+const phones = ref<any>([]);
+
+const addPhone = () => {
+  phones.value.push(""); // Add a new empty phone number input
+};
+
+const removePhone = (index) => {
+  phones.value.splice(index, 1); // Remove the phone input at the specified index
+};
+const selectedTeam = ref<string>("");
+const selectedPosition = ref<string>("");
 const router = useRouter();
 const route = useRoute();
 
@@ -109,58 +126,129 @@ const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
-
-
-
-
-onMounted(() => {
-  employeeId.value = route.params.employeeId as string;
-  if (employeeId.value) {
-    isEditing.value = true;
-    const employee = employeeList.find((e) => e.id === employeeId.value);
-    if (employee) {
-      firstName.value = employee.first_name;
-      lastName.value = employee.last_name;
-      email.value = employee.email;
-      // gender.value = employee.gender;
-      // age.value = employee.age;
-      selectedTeam.value = employee.team_id;
-      selectedPosition.value = employee.position_id;
-    }
+const loadData = async (employeeId: string) => {
+  try {
+    const datas = await getItems(
+      `${import.meta.env.VITE_BASE_URL}/Employee/GetDetail?id=${employeeId}`
+    );
+    employee.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
   }
-});
+};
+const loadPositionDropDown = async () => {
+  try {
+    const datas = await getItems(
+      `${import.meta.env.VITE_BASE_URL}/position/getPositionDropdown`
+    );
+    postions.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+const loadTeamDropDown = async () => {
+  try {
+    const datas = await getItems(
+      `${import.meta.env.VITE_BASE_URL}/team/getTeamDropdown`
+    );
+    teams.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 
+const updateEmployee = async (employeeData: Employ1) => {
+  try {
+    const datas = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/Employee/Update`,
+      employeeData
+    );
+    employee.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+const createEmployee = async (employeeData: Employ1) => {
+  try {
+    const datas = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/Employee/Create`,
+      employeeData
+    );
+    employee.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 // **Handle Submit for Both Add & Edit**
 const handleSubmit = () => {
   if (isEditing.value && employeeId.value) {
-    const index = employeeList.findIndex((e) => e.id === employeeId.value);
-    if (index !== -1) {
-      employeeList[index] = {
-        id: employeeId.value,
-        first_name: firstName.value,
-        last_name: lastName.value,
+    // const index = employeeList.findIndex((e) => e.id === employeeId.value);
+    if (isEditing.value) {
+      const formData: Employ1 = {
+        employeeIdId: employeeId.value,
+        firstname: firstName.value,
+        lastname: lastName.value,
         email: email.value,
-        gender: "Male",
-        age: 0,
-        team_id: selectedTeam.value,
-        position_id: selectedPosition.value,
+        dateOfBirth: "",
+        phones: phones.value,
+        teamId: selectedTeam.value,
+        positionId: selectedPosition.value,
       };
+      updateEmployee(formData);
     }
   } else {
     const formData: Employ1 = {
-      id: uuid.v1(),
-      first_name: firstName.value,
-      last_name: lastName.value,
+      employeeIdId: uuid.v1(),
+      firstname: firstName.value,
+      lastname: lastName.value,
       email: email.value,
-      gender: gender.value,
-      age: age.value,
-      team_id: selectedTeam.value,
-      position_id: selectedPosition.value,
+      dateOfBirth: "",
+      phones: phones.value,
+      teamId: selectedTeam.value,
+      positionId: selectedPosition.value,
     };
-    employeeList.push(formData);
+    createEmployee(formData);
+    // employeeList.push(formData);
   }
   navigateTo("employee");
 };
+
+(async () => {
+  employeeId.value = route.params.employeeId as string;
+  await loadData(employeeId.value);
+  await loadTeamDropDown();
+  await loadPositionDropDown();
+
+  if (employeeId.value) {
+    isEditing.value = true;
+    if (employee.value) {
+      firstName.value = employee.value.firstname;
+      lastName.value = employee.value.lastname;
+      email.value = employee.value.email;
+      dateOfBirth.value = employee.value.dateOfBirth;
+      phones.value = employee.value.phones;
+      selectedTeam.value = employee.value.teamId;
+      selectedPosition.value = employee.value.positionId;
+    }
+  }
+})();
+
+// onMounted(() => {
+//   employeeId.value = route.params.employeeId as string;
+//   if (employeeId.value) {
+//     isEditing.value = true;
+//     const employee = employeeList.find((e) => e.id === employeeId.value);
+//     if (employee) {
+//       firstName.value = employee.first_name;
+//       lastName.value = employee.last_name;
+//       email.value = employee.email;
+//       // gender.value = employee.gender;
+//       // age.value = employee.age;
+//       selectedTeam.value = employee.teamId;
+//       selectedPosition.value = employee.positionId;
+//     }
+//   }
+// });
 </script>
 
 <style scoped>
@@ -265,9 +353,10 @@ button:hover {
     display: flex;
     gap: 10px;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
   }
-  .up {
+  .groupUp {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -278,7 +367,22 @@ button:hover {
   }
 }
 
-span{
-color: red;
+.add-button {
+  cursor: pointer;
+  color: #5119f0;
+}
+.phone-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phone-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+span {
+  color: red;
 }
 </style>

@@ -18,8 +18,8 @@
             {{ (row[header.Key as K] !== null ? row[header.Key as K] : "-" )}}
             <template v-if="header.Name === 'Manage'">
               <slot name="AddEdit" :row="row">
-                <button @click="$emit('edit', row.id)">Edit</button>
-                <button @click="$emit('delete', row.id)">Delete</button>
+                <button @click="$emit('edit', row.employeeId)">Edit</button>
+                <button @click="$emit('delete', row.employeeId)">Delete</button>
               </slot>
             </template>
           </slot>

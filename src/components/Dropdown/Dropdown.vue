@@ -1,8 +1,8 @@
 <template>
   <select @change="updateSelected" :value="modelValue">
-    <option value="0">ทั้งหมด</option>
-    <option v-for="item in list" :key="item.id" :value="item.id">
-      {{ item.name }}
+    <option value="">ทั้งหมด</option>
+    <option v-for="item in list" :key="item.value" :value="item.value">
+      {{ item.text }}
     </option>
   </select>
 </template>
@@ -11,17 +11,18 @@
 import type { Dropdown } from "../../types/types";
 
 defineProps<{
-  list: Dropdown<number>[];
+  // list: Dropdown<number>[];
+  list: any[];
   // modelValue คือชื่อ Default ของค่า v-model
-  modelValue: number;
+  modelValue: string;
 }>();
 // const emit = defineEmits(["update:modelValue"]);
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: number): void;
+  (e: "update:modelValue", value: string): void;
 }>();
 const updateSelected = (event: Event) => {
-  emit("update:modelValue", Number((event.target as HTMLInputElement).value));
+  emit("update:modelValue", ((event.target as HTMLInputElement).value));
 };
 
 //   const selected = defineModel<string>('selected');

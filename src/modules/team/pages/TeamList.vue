@@ -86,12 +86,6 @@ const idToEditDelete = ref<string>("");
 const isFormOpen = ref<boolean>(false);
 const isDeleteOpen = ref<boolean>(false);
 
-const pageData = ref<PagiData>({
-  pageRow: 0,
-  pageIndex: 0,
-  pageSize: "",
-});
-
 const openFormEdit = (id: string) => {
   idToEditDelete.value = id;
   isFormOpen.value = true;
@@ -132,12 +126,16 @@ const formattedDefault = ref({
   pageSize: 5,
   search: {},
 });
-
+const pageData = ref<PagiData>({
+  pageRow: 0,
+  pageIndex: 0,
+  pageSize: 0,
+});
 const loadData = async (pagiData: Pagi) => {
   formattedDefault.value = pagiData;
   try {
     const datas = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/team/index`,
+      `${import.meta.env.VITE_BASE_URL}/Team/Index`,
       formattedDefault.value
     );
     selectedTeam.value = datas.data;
@@ -154,12 +152,11 @@ const loadData = async (pagiData: Pagi) => {
 const confirmInput = () => {
   const filter = {
     pageIndex: 0,
-    pageSize: parseInt(pageData.value.pageSize),
+    pageSize: pageData.value.pageSize,
     search: {
       text: searchTeam.value,
     },
   };
-  console.log(pageData.value.pageSize);
   loadData(filter);
 };
 
@@ -179,21 +176,17 @@ const handleNewData = (data: TeamType[]) => {
 // watch([searchTeam], filterEmployees);
 
 const input1 = document.getElementById("input1");
-console.log(input1);
-console.log(paginationData.value);
 // console.log(input1);
 // console.log(input1);
 console.time("mounted");
 console.time("setup");
 
-
-(async()=>{
+(async () => {
   await loadData(formattedDefault.value);
-
- })()
+})();
 
 //  async function name() { // function
-  
+
 //  }
 //  name() // call function
 
@@ -205,7 +198,7 @@ console.time("setup");
 
 // (async ()=>{
 //   await loadData(formattedDefault.value);
-// })  () 
+// })  ()
 
 // console.timeEnd("setup");
 

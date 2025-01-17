@@ -76,10 +76,6 @@ const idToEditDelete = ref<string>("");
 const isFormOpen = ref<boolean>(false);
 const isDeleteOpen = ref<boolean>(false);
 
-const pageData = ref<PagiData>({
-  pageRow: 0,
-  pageIndex: 0,
-});
 
 const openFormEdit = (id: string) => {
   idToEditDelete.value = id;
@@ -121,12 +117,16 @@ const formattedDefault = {
   pageSize: 5,
   search: {},
 };
-
+const pageData = ref<PagiData>({
+  pageRow: 0,
+  pageIndex: 0,
+  pageSize: 0,
+});
 const loadData = async (pagiData: Pagi) => {
   const formatted = pagiData;
   try {
     const datas: ImpData = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/position/index`,
+      `${import.meta.env.VITE_BASE_URL}/Position/Index`,
       formatted
     );
     // positions.value = createdTask.data;
@@ -134,6 +134,8 @@ const loadData = async (pagiData: Pagi) => {
     pageData.value = {
       pageRow: datas.rowCount,
       pageIndex: datas.pageIndex + 1,
+      pageSize: datas.pageSize,
+
     };
   } catch (error) {
     console.error("Error loading data:", error);
@@ -155,11 +157,14 @@ const handleNewData = (data: Pos[]) => {
 };
 
 // watch([searchPosition], filterEmployees);
-
-onMounted(async () => {
+(async () => {
   await loadData(formattedDefault);
-  // filterEmployees();
-});
+})();
+
+// onMounted(async () => {
+//   await loadData(formattedDefault);
+//   // filterEmployees();
+// });
 </script>
 
 <style scoped>

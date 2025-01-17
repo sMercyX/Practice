@@ -44,11 +44,12 @@ import type { Pagi } from "../../types/types";
 
 const props = defineProps<{
   data: any[];
-  pageData: any
- 
+  pageData: any;
 }>();
 
-const currentPage = ref<number>((props.pageData!.pageIndex ? props.pageData!.pageIndex  : 1 ));
+const currentPage = ref<number>(
+  props.pageData!.pageIndex ? props.pageData!.pageIndex : 1
+);
 const pageSize = ref<number>(5);
 const localData = ref([...props.data]);
 
@@ -63,21 +64,22 @@ const pagiData = computed(() => ({
 const sumData = computed(() => props.pageData!.pageRow);
 const newData = computed(() => {
   emit("newData", newData.value);
-  return localData.value
+
+  return localData.value;
 });
 
-const totalPages = computed(() => Math.ceil(props.pageData!.pageRow / pageSize.value));
+const totalPages = computed(() =>
+  Math.ceil(props.pageData!.pageRow / pageSize.value)
+);
 
 const nextPage = () => {
-  currentPage.value++
+  currentPage.value++;
   emit("newData", newData.value);
   emit("paginationData", pagiData.value);
-  console.log(props.pageData.pageRow)
-
 };
 
 const prevPage = () => {
-  currentPage.value--
+  currentPage.value--;
   emit("newData", newData.value);
   emit("paginationData", pagiData.value);
 };
@@ -101,10 +103,9 @@ const updateCurrentPage = (event: Event) => {
 watch(
   () => props.data,
   (newD) => {
-    localData.value = [...newD]; // Update the local copy
+    localData.value = [...newD];
     currentPage.value = props.pageData!.pageIndex;
     emit("newData", newData.value);
-    // emit("paginationData", pagiData.value);
   },
   { deep: true }
 );
@@ -114,10 +115,10 @@ const emit = defineEmits<{
   (e: "paginationData", pagiData: Pagi): void;
 }>();
 
-(()=>{
+() => {
   emit("newData", newData.value);
   emit("paginationData", pagiData.value);
-})
+};
 
 // onMounted(()=>{
 //   emit("newData", newData.value);

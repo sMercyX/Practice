@@ -5,15 +5,25 @@
       <div class="left">
         <!-- การส่งค่า เข้าออกให้บอกtype ของมัน-->
         <!-- ตรง v-model ไม่ได้ใส่ื่อทำให้ค่าที่รับ selectedTeam ชื่อ modelValue (เป็นชื่อdefault) -->
-        <Dropdown :list="teams" v-model="selectedTeam" />
+        <Dropdown
+          :list="teams"
+          :modelValue="selectedTeam"
+          @update:modelValue="selectedTeam = $event"
+          @change="confirmInput"
+        />
         <Dropdown
           :list="postions"
           :modelValue="selectedPosition"
           @update:modelValue="selectedPosition = $event"
+          @change="confirmInput"
         />
         <!-- -->
 
-        <SearchBar header="SearchBar" v-model:input="searchEmployee" />
+        <SearchBar
+          header="SearchBar"
+          v-model:input="searchEmployee"
+          @change="confirmInput"
+        />
 
         <div class="resetButton">
           <button @click="resetFilters">Reset</button>
@@ -39,11 +49,17 @@
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
-      <template #Button="{ row }">
-        <button @click="navigateToEmployee(row.id)">Edit</button>
-      </template>
+      <!-- <template #Button="{ row }">
+        <button @click="navigateToEmployee(row.employeeId)">Edit</button>
+        <button @click="navigateToEmployee(row.employeeId)">Delete</button>
+      </template> -->
     </Table>
-    <Pagination :data="selectedEmployees" @newData="handleNewData" /> 
+    <Pagination
+      :data="employeesWithDetails"
+      :pageData="pageData"
+      @newData="handleNewData"
+      @paginationData="loadData"
+    />
   </div>
 
   <RouterView />
@@ -56,7 +72,7 @@ import {
   postionList,
   employeeList,
 } from "../../../assets/data/firstData.ts";
-import type { Employ1Details } from "../../../types/types.ts";
+import type { Employ1Details, Pagi, PagiData } from "../../../types/types.ts";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
@@ -64,22 +80,22 @@ import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
+import { getItems, postItem } from "../../../utils/fetch.ts";
 const teams = ref(teamList);
 const postions = ref(postionList);
 const employees = ref(employeeList);
-const selectedTeam = ref<number>(0);
-const selectedPosition = ref<number>(0);
+const selectedTeam = ref<string>("");
+const selectedPosition = ref<string>("");
 const searchEmployee = ref<string>("");
 const sumEmployee = computed(() => selectedEmployees.value.length);
 
 const selectedEmployees = ref<Employ1Details[]>([]);
 const selectedHeaders = ref<Header[]>([
-  { Name: "FirstName", Key: "first_name" },
+  { Name: "FirstName", Key: "firstname" },
   { Name: "Email", Key: "email" },
   { Name: "Team", Key: "team_name" },
   { Name: "Position", Key: "position_name" },
   { Name: "Manage", Key: "manage" },
-
 ]);
 const router = useRouter();
 
@@ -87,64 +103,135 @@ const paginationData = ref<Employ1Details[]>([]);
 
 const handleNewData = (data: Employ1Details[]) => {
   paginationData.value = data;
-}; 
+};
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
-const navigateToEmployee = (id: string) => {
-  router.push({ name: "editEmployee", params: { employeeId: id } });
+const navigateToEmployee = (employeeId: string) => {
+  router.push({ name: "editEmployee", params: { employeeId: employeeId } });
 };
 
 const navigateToView = (id: string) => {
   router.push({ name: "viewEmployee", params: { employeeId: id } });
 };
-const getTeamName = (teamId: number) => {
-  const team = teams.value.find((t) => t.id === teamId);
-  return team!.name;
+const getTeamName = (teamId: string) => {
+  const team = teams.value?.find((t: any) => t.value === teamId);
+  return team ? team.text : "Unknown Team";
 };
 
-const getPositionName = (positionId: number) => {
-  const position = postions.value.find((p) => p.id === positionId);
-  return position!.name;
+const getPositionName = (positionId: string) => {
+  const position = postions.value?.find((p: any) => p.value === positionId);
+  return position ? position.text : "Unknown Position";
 };
 
 const employeesWithDetails = computed(() =>
-  employees.value.map((emp) => ({
+  selectedEmployees.value.map((emp) => ({
     ...emp,
-    team_name: getTeamName(emp.team_id),
-    position_name: getPositionName(emp.position_id),
+    team_name: getTeamName(emp.teamId),
+    position_name: getPositionName(emp.positionId),
   }))
 );
 
-const filterEmployees = () => {
-  selectedEmployees.value = employeesWithDetails.value.filter(
-    (data) =>
-      (!selectedTeam.value || data.team_id === selectedTeam.value) &&
-      (!selectedPosition.value ||
-        data.position_id === selectedPosition.value) &&
-      (searchEmployee.value
-        ? data.first_name
-            .toLowerCase()
-            .includes(searchEmployee.value.toLowerCase()) ||
-          data.last_name
-            .toLowerCase()
-            .includes(searchEmployee.value.toLowerCase()) ||
-          data.email.toLowerCase().includes(searchEmployee.value.toLowerCase())
-        : true)
-  );
+const pageData = ref<PagiData>({
+  pageRow: 0,
+  pageIndex: 0,
+  pageSize: 0,
+});
+
+const formattedDefault = ref({
+  pageIndex: 0,
+  pageSize: 5,
+  search: {},
+});
+
+const loadData = async (pagiData: Pagi) => {
+  formattedDefault.value = pagiData;
+  try {
+    const datas = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/Employee/Index`,
+      formattedDefault.value
+    );
+    selectedEmployees.value = datas.data;
+    console.log(selectedEmployees.value);
+    pageData.value = {
+      pageRow: datas.rowCount,
+      pageIndex: datas.pageIndex + 1,
+      pageSize: datas.pageSize,
+    };
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
 };
+
+const loadPositionDropDown = async () => {
+  try {
+    const datas = await getItems(
+      `${import.meta.env.VITE_BASE_URL}/position/getPositionDropdown`
+    );
+    postions.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+const loadTeamDropDown = async () => {
+  try {
+    const datas = await getItems(
+      `${import.meta.env.VITE_BASE_URL}/team/getTeamDropdown`
+    );
+    teams.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+
+const confirmInput = () => {
+  const filter = {
+    pageIndex: 0,
+    pageSize: pageData.value.pageSize,
+    search: {
+      text: searchEmployee.value,
+      teamId: selectedTeam.value,
+      positionId: selectedPosition.value,
+    },
+  };
+  loadData(filter);
+};
+
+// const filterEmployees = () => {
+//   selectedEmployees.value = employeesWithDetails.value.filter(
+//     (data) =>
+//       (!selectedTeam.value || data.teamId === selectedTeam.value) &&
+//       (!selectedPosition.value ||
+//         data.positionId === selectedPosition.value) &&
+//       (searchEmployee.value
+//         ? data.first_name
+//             .toLowerCase()
+//             .includes(searchEmployee.value.toLowerCase()) ||
+//           data.last_name
+//             .toLowerCase()
+//             .includes(searchEmployee.value.toLowerCase()) ||
+//           data.email.toLowerCase().includes(searchEmployee.value.toLowerCase())
+//         : true)
+//   );
+// };
 
 const resetFilters = () => {
-  selectedTeam.value = 0;
-  selectedPosition.value = 0;
+  selectedTeam.value = "";
+  selectedPosition.value = "";
   searchEmployee.value = "";
-  filterEmployees();
+  confirmInput();
+  // filterEmployees();
 };
 
-watch([selectedTeam, selectedPosition, searchEmployee], filterEmployees);
+// watch([selectedTeam, selectedPosition, searchEmployee], filterEmployees);
+// filterEmployees();
 
-filterEmployees();
+(async () => {
+  await loadData(formattedDefault.value);
+  await loadPositionDropDown();
+  await loadTeamDropDown();
+})();
 </script>
 
 <style scoped>

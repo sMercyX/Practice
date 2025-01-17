@@ -20,7 +20,7 @@ export interface Pagi {
 export interface PagiData {
   pageRow: number;
   pageIndex: number;
-  pageSize: string;
+  pageSize: number;
 }
 
 export interface ImpData {
@@ -39,17 +39,21 @@ export type Gender =
   | "Bigender"
   | "Genderfluid"
   | "Non-binary";
-export interface Employ1 {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  gender: Gender;
-  age: number;
-  team_id: number;
-  position_id: number;
-}
 
+export interface Employ1 {
+  employeeIdId: string;
+  dateOfBirth: string;
+  email: string;
+  firstname: string;
+  lastname: string;
+  phones: Phone[];
+  positionId: string;
+  teamId: string;
+}
+export interface Phone {
+  type: string;
+  number: string;
+}
 export interface Employ1Details extends Employ1 {
   team_name: string;
   position_name: string;
