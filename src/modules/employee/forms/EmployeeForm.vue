@@ -55,10 +55,11 @@
           <div class="add-button" @click="addPhone()">&plus; Phone</div>
         </div>
         <div class="phone-list">
-          <div v-for="(phone, index) in phones" :key="index" class="phone-item">
-            <InputText v-model:input="phones[index].phoneNumber" :required="true" />
+          <InputText v-model:input="phones[0].phoneNumber" :required="true" />
+
+          <div v-if="phones.length > 1" v-for="(phone, index) in phones.slice(1)" :key="index + 1" class="phone-item">
+            <InputText v-model:input="phones[index + 1].phoneNumber" :required="true" />
             <button
-              v-if="phones.length > 1"
               class="remove-button"
               type="button"
               @click="removePhone(index)"
@@ -66,6 +67,7 @@
               &minus;
             </button>
           </div>
+          
         </div>
       </form>
     </div>
@@ -90,7 +92,7 @@ const firstName = ref<string>("");
 const lastName = ref<string>("");
 const email = ref<string>("");
 const dateOfBirth = ref<number>(0);
-const phones = ref<any>([]);
+const phones = ref<any>([{}]);
 
 const addPhone = () => {
   phones.value.push({}); // Add a new empty phone number input
@@ -365,6 +367,10 @@ button:hover {
 
 .phone-item {
   display: flex;
+  input{
+    width: 100%;
+
+  }
   align-items: center;
   gap: 10px;
 }
