@@ -33,16 +33,16 @@
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
-            <p>{{ firstName }}</p>
+            <p v-if="isView">{{ firstName }}</p>
             <InputText
               v-if="!isView"
-              v-model:input="lastName"
+              v-model:input="firstName"
               :required="true"
             />
           </div>
           <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
-            <p>{{ lastName }}</p>
+            <p v-if="isView">{{ lastName }}</p>
             <InputText
               v-if="!isView"
               v-model:input="lastName"
@@ -52,19 +52,19 @@
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
-          <p>{{ email }}</p>
+          <p v-if="isView">{{ email }}</p>
           <InputText v-if="!isView" v-model:input="email" :required="true" />
         </div>
 
         <div class="breakHalf">
           <div class="groupUp">
             <label for="team_id">Team <span>*</span></label>
-            <p>{{ teamName }}</p>
+            <p v-if="isView">{{ teamName }}</p>
             <Dropdown v-if="!isView" v-model="selectedTeam" :list="teams" />
           </div>
           <div class="groupUp">
             <label for="position_id">Position <span>*</span></label>
-            <p>{{ positionName }}</p>
+            <p v-if="isView">{{ positionName }}</p>
             <Dropdown
               v-if="!isView"
               v-model="selectedPosition"
@@ -92,7 +92,8 @@
             :readonly="isView"
             v-if="!isView"
           />
-          <p>
+
+          <p v-if="isView">
             {{ phones[0].phoneNumber }}
           </p>
           <div
@@ -101,7 +102,7 @@
             :key="index + 1"
             class="phone-item"
           >
-            <p>
+            <p v-if="isView">
               {{ phone.phoneNumber }}
             </p>
             <InputText

@@ -40,18 +40,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import type { Employ1Details, Pagi, PagiData } from "../../types/types.ts";
 import Dropdown from "../Dropdown/Dropdown.vue";
 import SearchBar from "../SearchInput/SearchBar.vue";
 import Table from "../atoms/Table.vue";
 import type { Header } from "../../types/tableTypes.ts";
 import Pagination from "../Pagination/Pagination.vue";
-import { getItems, postItem } from "../../utils/fetch.ts";
+import { fetchDataEmployee } from "../../modules/employee/api/apiEmployee.ts";
+import { getPositionDropDown } from "../../modules/position/api/apiPosition.ts";
+import { getTeamDropDown } from "../../modules/team/api/apiTeam.ts";
 
 const teams = ref();
 const postions = ref();
-const employees = ref();
+// const employees = ref();
+
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
 const searchEmployee = ref<string>("");
@@ -103,12 +106,14 @@ const formattedDefault = ref({
 });
 
 const loadData = async (pagiData: Pagi) => {
+  pagiData = {...pagiData , search:formattedDefault.value.search}
   formattedDefault.value = pagiData;
   try {
-    const datas = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/employee/index`,
-      formattedDefault.value
-    );
+    const datas = await fetchDataEmployee(formattedDefault.value);
+
+    postions.value = await getPositionDropDown();
+    teams.value = await getTeamDropDown();
+
     selectedEmployees.value = datas.data;
     pageData.value = {
       pageRow: datas.rowCount,
@@ -120,36 +125,18 @@ const loadData = async (pagiData: Pagi) => {
   }
 };
 
-const loadPositionDropDown = async () => {
-  try {
-    const datas = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/position/getPositionDropdown`
-    );
-    postions.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-const loadTeamDropDown = async () => {
-  try {
-    const datas = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/team/getTeamDropdown`
-    );
-    teams.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-
 const confirmInput = () => {
-  const filter = {
+  formattedDefault.value = {
     pageIndex: 0,
     pageSize: pageData.value.pageSize,
     search: {
       text: searchEmployee.value,
+      teamId: selectedTeam.value,
+      positionId: selectedPosition.value,
     },
   };
-  loadData(filter);
+ 
+  loadData(formattedDefault.value);
 };
 // Filter Logic
 // const filterEmployees = () => {
@@ -173,8 +160,6 @@ const resetFilters = () => {
 
 (async () => {
   await loadData(formattedDefault.value);
-  await loadPositionDropDown();
-  await loadTeamDropDown();
 })();
 </script>
 

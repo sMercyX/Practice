@@ -193,6 +193,7 @@ const formattedDefault = ref({
 // };
 
 const loadData = async (pagiData: Pagi) => {
+  pagiData = {...pagiData , search:formattedDefault.value.search}
   formattedDefault.value = pagiData;
   try {
     const datas = await fetchDataEmployee(formattedDefault.value);
@@ -211,7 +212,7 @@ const loadData = async (pagiData: Pagi) => {
   }
 };
 const confirmInput = () => {
-  const filter = {
+  formattedDefault.value = {
     pageIndex: 0,
     pageSize: pageData.value.pageSize,
     search: {
@@ -220,7 +221,8 @@ const confirmInput = () => {
       positionId: selectedPosition.value,
     },
   };
-  loadData(filter);
+ 
+  loadData(formattedDefault.value);
 };
 
 const resetFilters = () => {
