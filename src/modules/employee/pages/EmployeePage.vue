@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import {
   teamList,
   postionList,
@@ -80,14 +80,17 @@ import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
-import { getItems, postItem } from "../../../utils/fetch.ts";
+import { getItems } from "../../../utils/fetch.ts";
+import { fetchDataEmployee } from "../api/apiEmployee.ts";
+import { getPositionDropDown } from "../../position/api/apiPosition.ts";
+import { getTeamDropDown } from "../../team/api/apiTeam.ts";
 const teams = ref(teamList);
 const postions = ref(postionList);
-const employees = ref(employeeList);
+// const employees = ref(employeeList);
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
 const searchEmployee = ref<string>("");
-const sumEmployee = computed(() => selectedEmployees.value.length);
+const sumEmployee = computed(() => pageData.value.pageRow);
 
 const selectedEmployees = ref<Employ1Details[]>([]);
 const selectedHeaders = ref<Header[]>([
@@ -145,15 +148,33 @@ const formattedDefault = ref({
   search: {},
 });
 
+// const loadData = async (pagiData: Pagi) => {
+//   formattedDefault.value = pagiData;
+//   try {
+//     const datas = await postItem(
+//       `${import.meta.env.VITE_BASE_URL}/Employee/Index`,
+//       formattedDefault.value
+//     );
+//     selectedEmployees.value = datas.data;
+//     pageData.value = {
+//       pageRow: datas.rowCount,
+//       pageIndex: datas.pageIndex + 1,
+//       pageSize: datas.pageSize,
+//     };
+//   } catch (error) {
+//     console.error("Error loading data:", error);
+//   }
+// };
+
 const loadData = async (pagiData: Pagi) => {
   formattedDefault.value = pagiData;
   try {
-    const datas = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/Employee/Index`,
-      formattedDefault.value
-    );
+    const datas = await fetchDataEmployee(formattedDefault.value);
+    
+    postions.value = await getPositionDropDown();
+    teams.value = await getTeamDropDown();
+
     selectedEmployees.value = datas.data;
-    console.log(selectedEmployees.value);
     pageData.value = {
       pageRow: datas.rowCount,
       pageIndex: datas.pageIndex + 1,
@@ -163,28 +184,6 @@ const loadData = async (pagiData: Pagi) => {
     console.error("Error loading data:", error);
   }
 };
-
-const loadPositionDropDown = async () => {
-  try {
-    const datas = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/position/getPositionDropdown`
-    );
-    postions.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-const loadTeamDropDown = async () => {
-  try {
-    const datas = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/team/getTeamDropdown`
-    );
-    teams.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-
 const confirmInput = () => {
   const filter = {
     pageIndex: 0,
@@ -198,39 +197,15 @@ const confirmInput = () => {
   loadData(filter);
 };
 
-// const filterEmployees = () => {
-//   selectedEmployees.value = employeesWithDetails.value.filter(
-//     (data) =>
-//       (!selectedTeam.value || data.teamId === selectedTeam.value) &&
-//       (!selectedPosition.value ||
-//         data.positionId === selectedPosition.value) &&
-//       (searchEmployee.value
-//         ? data.first_name
-//             .toLowerCase()
-//             .includes(searchEmployee.value.toLowerCase()) ||
-//           data.last_name
-//             .toLowerCase()
-//             .includes(searchEmployee.value.toLowerCase()) ||
-//           data.email.toLowerCase().includes(searchEmployee.value.toLowerCase())
-//         : true)
-//   );
-// };
-
 const resetFilters = () => {
   selectedTeam.value = "";
   selectedPosition.value = "";
   searchEmployee.value = "";
   confirmInput();
-  // filterEmployees();
 };
-
-// watch([selectedTeam, selectedPosition, searchEmployee], filterEmployees);
-// filterEmployees();
 
 (async () => {
   await loadData(formattedDefault.value);
-  await loadPositionDropDown();
-  await loadTeamDropDown();
 })();
 </script>
 

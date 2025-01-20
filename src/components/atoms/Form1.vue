@@ -66,11 +66,11 @@ const emit = defineEmits<{
 
 const uploadData = async (data: Dropdown) => {
   try {
-    await postItem(
+    const id = await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/create`,
       data
     );
-    datas.value.push(data)
+    datas.value.push({...data, [headerId.value]:id})
 
   } catch (error) {
     console.error("Error loading data:", error);

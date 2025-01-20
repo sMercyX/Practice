@@ -57,8 +57,16 @@
         <div class="phone-list">
           <InputText v-model:input="phones[0].phoneNumber" :required="true" />
 
-          <div v-if="phones.length > 1" v-for="(phone, index) in phones.slice(1)" :key="index + 1" class="phone-item">
-            <InputText v-model:input="phones[index + 1].phoneNumber" :required="true" />
+          <div
+            v-if="phones.length > 1"
+            v-for="(phone, index) in phones.slice(1)"
+            :key="index + 1"
+            class="phone-item"
+          >
+            <InputText
+              v-model:input="phones[index + 1].phoneNumber"
+              :required="true"
+            />
             <button
               class="remove-button"
               type="button"
@@ -67,7 +75,6 @@
               &minus;
             </button>
           </div>
-          
         </div>
       </form>
     </div>
@@ -82,6 +89,7 @@ import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
 import { getItems, postItem } from "../../../utils/fetch";
+import { createEmployee, updateEmployee, getDetail } from "../api/apiEmployee";
 // import PenLogo from "../../../assets/editPen.svg";
 
 const teams = ref();
@@ -98,8 +106,8 @@ const addPhone = () => {
   phones.value.push({}); // Add a new empty phone number input
 };
 
-const removePhone = (index:any) => {
-  phones.value.splice(index, 1); 
+const removePhone = (index: any) => {
+  phones.value.splice(index, 1);
 };
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
@@ -115,14 +123,13 @@ const navigateTo = (nameRoute: string) => {
 
 const loadData = async (employeeId: string) => {
   try {
-    const datas = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/Employee/GetDetail?id=${employeeId}`
-    );
-    employee.value = datas;
+    employee.value = await getDetail(employeeId);
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
+
+
 const loadPositionDropDown = async () => {
   try {
     const datas = await getItems(
@@ -144,30 +151,8 @@ const loadTeamDropDown = async () => {
   }
 };
 
-const updateEmployee = async (employeeData: Employ1) => {
-  try {
-    const datas = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/Employee/Update`,
-      employeeData
-    );
-    employee.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-const createEmployee = async (employeeData: Employ1) => {
-  try {
-    const datas = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/Employee/Create`,
-      employeeData
-    );
-    employee.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
 // **Handle Submit for Both Add & Edit**
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (isEditing.value && employeeId.value) {
     // const index = employeeList.findIndex((e) => e.id === employeeId.value);
     if (isEditing.value) {
@@ -181,8 +166,9 @@ const handleSubmit = () => {
         teamId: selectedTeam.value,
         positionId: selectedPosition.value,
       };
-      console.log(phones.value)
-      updateEmployee(formData);
+      // console.log(phones.value)
+      // updateEmployee(formData);
+      await updateEmployee(formData);
     }
   } else {
     const formData: Employ1 = {
@@ -195,8 +181,9 @@ const handleSubmit = () => {
       teamId: selectedTeam.value,
       positionId: selectedPosition.value,
     };
-    createEmployee(formData);
+    // create(formData);
     // employeeList.push(formData);
+    await createEmployee(formData);
   }
   navigateTo("employee");
 };
@@ -367,9 +354,8 @@ button:hover {
 
 .phone-item {
   display: flex;
-  input{
+  input {
     width: 100%;
-
   }
   align-items: center;
   gap: 10px;

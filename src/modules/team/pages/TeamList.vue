@@ -67,6 +67,7 @@ import Pagination from "../../../components/Pagination/Pagination.vue";
 import { postItem } from "../../../utils/fetch.ts";
 import Form1 from "../../../components/atoms/Form1.vue";
 import Delete from "../../../components/atoms/Delete.vue";
+import { deleteTeam } from "../api/apiTeam.ts";
 
 // const a = 0
 // const teams = ref<TeamType>();
@@ -107,18 +108,10 @@ const close = () => {
 };
 
 const handleDelete = async (id: string) => {
-  const formatted = {
-    teamId: id,
-  };
-  try {
-    const deleteItem = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/team/delete`,
-      formatted
-    );
-    console.log("deleteTeam", deleteItem);
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
+  await deleteTeam(id);
+
+  const index = paginationData.value.findIndex((item) => item.teamId === id);
+  paginationData.value.splice(index, 1);
 };
 
 const formattedDefault = ref({

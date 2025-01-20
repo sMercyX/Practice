@@ -60,6 +60,7 @@ import Pagination from "../../../components/Pagination/Pagination.vue";
 import { postItem } from "../../../utils/fetch.ts";
 import Form1 from "../../../components/atoms/Form1.vue";
 import Delete from "../../../components/atoms/Delete.vue";
+import { deletePosition, fetchDataPosition } from "../api/apiPosition.ts";
 
 const positions = ref<Pos>();
 const searchPosition = ref<string>("");
@@ -75,7 +76,6 @@ const header = ref<string>("position");
 const idToEditDelete = ref<string>("");
 const isFormOpen = ref<boolean>(false);
 const isDeleteOpen = ref<boolean>(false);
-
 
 const openFormEdit = (id: string) => {
   idToEditDelete.value = id;
@@ -96,20 +96,13 @@ const close = () => {
   isFormOpen.value = false;
   isDeleteOpen.value = false;
 };
-
 const handleDelete = async (id: string) => {
-  const formatted = {
-    positionId: id,
-  };
-  try {
-    const deleteItem = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/position/delete`,
-      formatted
-    );
-    console.log("deletePosition", deleteItem);
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
+  await deletePosition(id);
+
+  const index = paginationData.value.findIndex(
+    (item) => item.positionId === id
+  );
+  paginationData.value.splice(index, 1);
 };
 
 const formattedDefault = {
@@ -125,17 +118,12 @@ const pageData = ref<PagiData>({
 const loadData = async (pagiData: Pagi) => {
   const formatted = pagiData;
   try {
-    const datas: ImpData = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/Position/Index`,
-      formatted
-    );
-    // positions.value = createdTask.data;
+    const datas = await fetchDataPosition(formatted);
     selectedPosition.value = datas.data;
     pageData.value = {
       pageRow: datas.rowCount,
       pageIndex: datas.pageIndex + 1,
       pageSize: datas.pageSize,
-
     };
   } catch (error) {
     console.error("Error loading data:", error);
