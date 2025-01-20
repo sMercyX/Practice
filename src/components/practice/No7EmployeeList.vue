@@ -56,7 +56,7 @@ const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
 const searchEmployee = ref<string>("");
 
-const sumEmployee = computed(() => selectedEmployees.value.length);
+const sumEmployee = computed(() => pageData.value.pageRow);
 const selectedEmployees = ref<Employ1Details[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "FirstName", Key: "firstname" },

@@ -43,16 +43,15 @@
       :headers="selectedHeaders"
       :data="paginationData"
       @edit="navigateToEmployee"
-      @delete="navigateToEmployee"
       @view="navigateToView"
     >
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
-      <!-- <template #Button="{ row }">
+      <template #AddEdit="{ row }">
         <button @click="navigateToEmployee(row.employeeId)">Edit</button>
-        <button @click="navigateToEmployee(row.employeeId)">Delete</button>
-      </template> -->
+        <button @click="openFormDelete(row.employeeId)">Delete</button>
+      </template>
     </Table>
     <Pagination
       :data="employeesWithDetails"
@@ -61,6 +60,12 @@
       @paginationData="loadData"
     />
   </div>
+  <Delete
+    v-if="isDeleteOpen"
+    :id="idToEditDelete"
+    @back="close"
+    @deleteSubmit="handleDelete"
+  />
 
   <RouterView />
 </template>
@@ -80,10 +85,10 @@ import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
-import { getItems } from "../../../utils/fetch.ts";
-import { fetchDataEmployee } from "../api/apiEmployee.ts";
+import { deleteEmployee, fetchDataEmployee } from "../api/apiEmployee.ts";
 import { getPositionDropDown } from "../../position/api/apiPosition.ts";
 import { getTeamDropDown } from "../../team/api/apiTeam.ts";
+import Delete from "../../../components/atoms/Delete.vue";
 const teams = ref(teamList);
 const postions = ref(postionList);
 // const employees = ref(employeeList);
@@ -106,6 +111,26 @@ const paginationData = ref<Employ1Details[]>([]);
 
 const handleNewData = (data: Employ1Details[]) => {
   paginationData.value = data;
+};
+const isDeleteOpen = ref<boolean>(false);
+const idToEditDelete = ref<string>("");
+const openFormDelete = (id: string) => {
+  console.log(id)
+  idToEditDelete.value = id;
+  isDeleteOpen.value = true;
+};
+
+const close = () => {
+  idToEditDelete.value = "";
+  isDeleteOpen.value = false;
+};
+const handleDelete = async (id: string) => {
+  await deleteEmployee(id);
+
+  const index = paginationData.value.findIndex(
+    (item) => item.positionId === id
+  );
+  paginationData.value.splice(index, 1);
 };
 
 const navigateTo = (nameRoute: string) => {
@@ -170,7 +195,7 @@ const loadData = async (pagiData: Pagi) => {
   formattedDefault.value = pagiData;
   try {
     const datas = await fetchDataEmployee(formattedDefault.value);
-    
+
     postions.value = await getPositionDropDown();
     teams.value = await getTeamDropDown();
 

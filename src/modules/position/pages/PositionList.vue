@@ -16,7 +16,8 @@
   </div>
   <div>
     <!-- <EmployeeTable :employee="selectedEmployees" /> -->
-    <Table :headers="selectedHeaders" :data="paginationData">
+      
+    <Table :headers="selectedHeaders" :data="paginationData" >
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>

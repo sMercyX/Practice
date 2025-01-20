@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Dropdown } from "../../types/types";
+import type { Team } from "../../types/types";
 
 defineProps<{
   // list: Dropdown<number>[];
