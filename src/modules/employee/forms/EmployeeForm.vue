@@ -56,10 +56,11 @@
         </div>
         <div class="phone-list">
           <div v-for="(phone, index) in phones" :key="index" class="phone-item">
-            <InputText v-model:input="phones[index]" :required="true" />
+            <InputText v-model:input="phones[index].phoneNumber" :required="true" />
             <button
               v-if="phones.length > 1"
               class="remove-button"
+              type="button"
               @click="removePhone(index)"
             >
               &minus;
@@ -72,14 +73,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
-import type { Employ1, Gender } from "../../../types/types";
-import {
-  teamList,
-  postionList,
-  employeeList,
-} from "../../../assets/data/firstData";
+import type { Employ1 } from "../../../types/types";
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
@@ -90,17 +86,6 @@ const teams = ref();
 const postions = ref();
 const employee = ref();
 
-// const genders = ref([
-//   "Male",
-//   "Female",
-//   "Polygender",
-//   "Agender",
-//   "Genderqueer",
-//   "Bigender",
-//   "Genderfluid",
-//   "Non-binary",
-// ]);
-
 const firstName = ref<string>("");
 const lastName = ref<string>("");
 const email = ref<string>("");
@@ -108,11 +93,11 @@ const dateOfBirth = ref<number>(0);
 const phones = ref<any>([]);
 
 const addPhone = () => {
-  phones.value.push(""); // Add a new empty phone number input
+  phones.value.push({}); // Add a new empty phone number input
 };
 
-const removePhone = (index) => {
-  phones.value.splice(index, 1); // Remove the phone input at the specified index
+const removePhone = (index:any) => {
+  phones.value.splice(index, 1); 
 };
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
@@ -194,6 +179,7 @@ const handleSubmit = () => {
         teamId: selectedTeam.value,
         positionId: selectedPosition.value,
       };
+      console.log(phones.value)
       updateEmployee(formData);
     }
   } else {
