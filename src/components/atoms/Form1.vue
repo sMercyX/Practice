@@ -27,11 +27,10 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import { onMounted, ref } from "vue";
-import type { Dropdown, Pos, Team as TeamType } from "../../types/types";
+import type {  Pos, Team as TeamType, TP } from "../../types/types";
 import InputText from "../Input/InputText.vue";
-import { useRoute, useRouter } from "vue-router";
 import { postItem } from "../../utils/fetch";
 
 const datas = ref();
@@ -39,18 +38,12 @@ const datas = ref();
 const Name = ref<string>("");
 const Description = ref<string>("");
 
-const router = useRouter();
-const route = useRoute();
 const isEditing = ref<boolean>(false);
 const dataId = ref<string>();
 
-const navigateTo = (nameRoute: string) => {
-  router.push({ name: nameRoute });
-};
-
 const props = defineProps<{
   id: string;
-  data: (TeamType | Pos)[] ;
+  data: (TeamType<T> | Pos<T>)[] ;
   header: string;
 }>();
 const header = ref<string>(props.header);
@@ -64,7 +57,7 @@ const emit = defineEmits<{
   (e: "back", value: boolean): void;
 }>();
 
-const uploadData = async (data: Dropdown) => {
+const uploadData = async (data:TP) => {
   try {
     const id = await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/create`,
@@ -76,7 +69,7 @@ const uploadData = async (data: Dropdown) => {
     console.error("Error loading data:", error);
   }
 };
-const updateData = async (data: any,index:string) => {
+const updateData = async (data:TP,index:string) => {
   try {
     await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/update`,
@@ -96,7 +89,7 @@ const handleSubmit = () => {
       (e: any) => e[headerId.value] === dataId.value
     );
     if (index !== -1) {
-      const formData = {
+      const formData: TP = {
         name: Name.value,
         description: Description.value,
         [headerId.value]: dataId.value,
@@ -104,7 +97,7 @@ const handleSubmit = () => {
       updateData(formData,index);
     }
   } else {
-    const formData: Dropdown = {
+    const formData: TP = {
       name: Name.value,
       description: Description.value,
     };

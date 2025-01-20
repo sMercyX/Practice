@@ -50,7 +50,8 @@ const props = defineProps<{
 const currentPage = ref<number>(
   props.pageData!.pageIndex ? props.pageData!.pageIndex : 1
 );
-const pageSize = ref<number>(5);
+const pageSize = ref<number>(props.pageData!.pageSize);
+  // const pageSize = computed(()=>(props.pageData.pageSize))
 const localData = ref([...props.data]);
 
 // const localData = computed(()=> props.data)
@@ -105,6 +106,7 @@ watch(
   (newD) => {
     localData.value = [...newD];
     currentPage.value = props.pageData!.pageIndex;
+    pageSize.value = props.pageData!.pageSize
     emit("newData", newData.value);
   },
   { deep: true }

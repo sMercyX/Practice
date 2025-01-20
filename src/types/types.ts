@@ -1,14 +1,30 @@
-export interface Dropdown {
+export interface Dropdown<T> {
+  teamId?: T;
+  positionId?: T;
+
+  text: string;
+  value: string;
+}
+
+export interface Dropdown2 {  
+  text: string;
+  value: string;
+}
+
+export interface Team<T> extends Dropdown2 {
+  teamId: T;
+}
+
+export interface Pos<T> extends Dropdown2 {
+  positionId: T;
+}
+
+export interface TP {
+  teamId?: string;
+  positionId?: string;
+
   name: string;
   description: string;
-}
-
-export interface Team extends Dropdown {
-  teamId: string;
-}
-
-export interface Pos extends Dropdown {
-  positionId: string;
 }
 
 export interface Pagi {
@@ -81,10 +97,10 @@ interface Member {
   position_id: number;
 }
 
-interface MemberDetail extends Member {
-  team_name: string;
-  position_name: string;
-}
+// interface MemberDetail extends Member {
+//   team_name: string;
+//   position_name: string;
+// }
 
 // let mem1:Member = {
 

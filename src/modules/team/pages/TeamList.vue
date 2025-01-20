@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, reactive } from "vue";
+import { ref, computed } from "vue";
 import type { Pagi, PagiData, Team as TeamType } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
@@ -75,7 +75,7 @@ import { deleteTeam } from "../api/apiTeam.ts";
 
 const searchTeam = ref<string>("");
 const sumTeam = computed(() => pageData.value.pageRow);
-const selectedTeam = ref<TeamType[]>([]);
+const selectedTeam = ref<TeamType<string>[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Description", Key: "description" },
@@ -153,26 +153,18 @@ const confirmInput = () => {
   loadData(filter);
 };
 
-// const filterEmployees = () => {
-//   selectedTeam.value!.filter((data: TeamType) =>
-//     searchTeam.value
-//       ? data.name.toLowerCase().includes(searchTeam.value.toLowerCase())
-//       : true
-//   );
-// };
 
-const paginationData = ref<TeamType[]>([]);
+const paginationData = ref<TeamType<string>[]>([]);
 
-const handleNewData = (data: TeamType[]) => {
+const handleNewData = (data: TeamType<string>[]) => {
   paginationData.value = data;
 };
-// watch([searchTeam], filterEmployees);
 
-const input1 = document.getElementById("input1");
+// const input1 = document.getElementById("input1");
 // console.log(input1);
 // console.log(input1);
-console.time("mounted");
-console.time("setup");
+// console.time("mounted");
+// console.time("setup");
 
 (async () => {
   await loadData(formattedDefault.value);

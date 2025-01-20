@@ -52,21 +52,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import type { ImpData, Pagi, PagiData, Pos } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import Pagination from "../../../components/Pagination/Pagination.vue";
-import { postItem } from "../../../utils/fetch.ts";
 import Form1 from "../../../components/atoms/Form1.vue";
 import Delete from "../../../components/atoms/Delete.vue";
 import { deletePosition, fetchDataPosition } from "../api/apiPosition.ts";
 
-const positions = ref<Pos>();
 const searchPosition = ref<string>("");
 const sumPosition = computed(() => pageData.value.pageRow);
-const selectedPosition = ref<Pos[]>([]);
+const selectedPosition = ref<Pos<string>[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Description", Key: "description" },
@@ -119,7 +117,7 @@ const pageData = ref<PagiData>({
 const loadData = async (pagiData: Pagi) => {
   const formatted = pagiData;
   try {
-    const datas = await fetchDataPosition(formatted);
+    const datas:ImpData = await fetchDataPosition(formatted);
     selectedPosition.value = datas.data;
     pageData.value = {
       pageRow: datas.rowCount,
@@ -139,9 +137,9 @@ const loadData = async (pagiData: Pagi) => {
 //   );
 // };
 
-const paginationData = ref<Pos[]>([]);
+const paginationData = ref<Pos<string>[]>([]);
 
-const handleNewData = (data: Pos[]) => {
+const handleNewData = (data: Pos<string>[]) => {
   paginationData.value = data;
 };
 

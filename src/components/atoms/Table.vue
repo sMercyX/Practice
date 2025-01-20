@@ -13,7 +13,7 @@
     <tbody>
       <tr class="row" v-for="(row, rowIndex) in data" :key="rowIndex">
         <!-- Flexible data rendering with slot fallback -->
-        <td v-for="(header, colIndex) in headers" :key="colIndex">
+        <td v-for="(header, colIndex) in headers" :key="colIndex" @click="$emit('view', row.employeeId)">
           <slot name="cell" :row="row" :header="header">
             {{ (row[header.Key as K] !== null ? row[header.Key as K] : "-" )}}
             <template v-if="header.Name === 'Manage'">
@@ -29,7 +29,7 @@
   </table>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import type { Employ1Details } from "../../types/types";
 import type { Header } from "../../types/tableTypes.ts";
 
@@ -40,9 +40,9 @@ defineProps<{
 
 // defineEmits(["edit","delete", "view"]);
 defineEmits<{
-  (e: "edit", id: any): void;
-  (e: "delete", id: any): void;
-  (e: "view", id: any): void;
+  (e: "edit", id: string): void;
+  (e: "delete", id: string): void;
+  (e: "view", id: string): void;
 }>();
 type K = keyof Employ1Details;
 </script>

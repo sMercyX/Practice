@@ -1,12 +1,12 @@
 import type { 
   Employ1, 
-  // ImpData, 
+  ImpData, 
   Pagi } from "../../../types/types";
 import { getItems, postItem } from "../../../utils/fetch";
 
 export const fetchDataTeam = async (pagiData: Pagi) => {
   try {
-    const datas = await postItem(
+    const datas:ImpData = await postItem(
       `${import.meta.env.VITE_BASE_URL}/Team/Index`,
       pagiData
     );

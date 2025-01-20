@@ -7,12 +7,16 @@
   </select>
 </template>
 
-<script setup lang="ts">
-import type { Team } from "../../types/types";
+<script setup lang="ts" generic="T"> 
+import type { 
+  // Dropdown, 
+  Pos, 
+  Team } from "../../types/types";
 
 defineProps<{
-  // list: Dropdown<number>[];
-  list: any[];
+  // list: Dropdown<T>[];
+  list: (Team<T> | Pos<T>)[];
+
   // modelValue คือชื่อ Default ของค่า v-model
   modelValue: string;
 }>();

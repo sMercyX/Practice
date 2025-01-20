@@ -40,11 +40,13 @@ const router = createRouter(
         path: "/employee/edit/:employeeId",
         name: "editEmployee",
         component: EmployeeForm,
+        meta: { mode: "edit" },
       },
       {
         path: "/employee/view/:employeeId",
         name: "viewEmployee",
-        component: No2,
+        component: EmployeeForm,
+        meta: { mode: "view" },
       },
       {
         path: "/setting",

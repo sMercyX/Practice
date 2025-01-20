@@ -1,6 +1,12 @@
 <template>
   <div>
-    <h1>Employee ( {{ sumEmployee }} )</h1>
+    <div class="Head">
+      <h1>Employee ( {{ sumEmployee }} )</h1>
+      <div class="createEmployeeButton">
+        <button @click="navigateTo('createEmployee')">Create Employee</button>
+      </div>
+    </div>
+
     <div class="searchMenu">
       <div class="left">
         <!-- การส่งค่า เข้าออกให้บอกtype ของมัน-->
@@ -29,11 +35,6 @@
           <button @click="resetFilters">Reset</button>
         </div>
       </div>
-      <div class="right">
-        <div class="createEmployeeButton">
-          <button @click="navigateTo('createEmployee')">Create Employee</button>
-        </div>
-      </div>
     </div>
   </div>
   <hr />
@@ -45,10 +46,10 @@
       @edit="navigateToEmployee"
       @view="navigateToView"
     >
-      <template #header="{ header }">
+      <template #header="{ header }" >
         <strong>{{ header["Name"] }}</strong>
       </template>
-      <template #AddEdit="{ row }">
+      <template #AddEdit="{ row }" class="test">
         <button @click="navigateToEmployee(row.employeeId)">Edit</button>
         <button @click="openFormDelete(row.employeeId)">Delete</button>
       </template>
@@ -72,12 +73,12 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import {
-  teamList,
-  postionList,
-  employeeList,
-} from "../../../assets/data/firstData.ts";
-import type { Employ1Details, Pagi, PagiData } from "../../../types/types.ts";
+import type {
+  Employ1Details,
+  Pagi,
+  PagiData,
+  Team,
+} from "../../../types/types.ts";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
@@ -89,8 +90,8 @@ import { deleteEmployee, fetchDataEmployee } from "../api/apiEmployee.ts";
 import { getPositionDropDown } from "../../position/api/apiPosition.ts";
 import { getTeamDropDown } from "../../team/api/apiTeam.ts";
 import Delete from "../../../components/atoms/Delete.vue";
-const teams = ref(teamList);
-const postions = ref(postionList);
+const teams = ref<Team<string>[]>([]);
+const postions = ref<Team<string>[]>([]);
 // const employees = ref(employeeList);
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
@@ -115,7 +116,7 @@ const handleNewData = (data: Employ1Details[]) => {
 const isDeleteOpen = ref<boolean>(false);
 const idToEditDelete = ref<string>("");
 const openFormDelete = (id: string) => {
-  console.log(id)
+  console.log(id);
   idToEditDelete.value = id;
   isDeleteOpen.value = true;
 };
@@ -124,9 +125,9 @@ const close = () => {
   idToEditDelete.value = "";
   isDeleteOpen.value = false;
 };
+
 const handleDelete = async (id: string) => {
   await deleteEmployee(id);
-
   const index = paginationData.value.findIndex(
     (item) => item.positionId === id
   );
@@ -140,16 +141,16 @@ const navigateToEmployee = (employeeId: string) => {
   router.push({ name: "editEmployee", params: { employeeId: employeeId } });
 };
 
-const navigateToView = (id: string) => {
-  router.push({ name: "viewEmployee", params: { employeeId: id } });
+const navigateToView = (employeeId: string) => {
+  router.push({ name: "viewEmployee", params: { employeeId: employeeId } });
 };
 const getTeamName = (teamId: string) => {
-  const team = teams.value?.find((t: any) => t.value === teamId);
+  const team = teams.value!.find((t: any) => t.value === teamId);
   return team ? team.text : "Unknown Team";
 };
 
 const getPositionName = (positionId: string) => {
-  const position = postions.value?.find((p: any) => p.value === positionId);
+  const position = postions.value!.find((p: any) => p.value === positionId);
   return position ? position.text : "Unknown Position";
 };
 
@@ -169,7 +170,7 @@ const pageData = ref<PagiData>({
 
 const formattedDefault = ref({
   pageIndex: 0,
-  pageSize: 5,
+  pageSize: 10,
   search: {},
 });
 
@@ -235,6 +236,20 @@ const resetFilters = () => {
 </script>
 
 <style scoped>
+.Head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 10px;
+  button {
+    padding: 10px 20px;
+    background-color: #2bb8af;
+    color: #fff;
+    border: none;
+    align-items: center;
+    text-align: center;
+  }
+}
 .searchMenu {
   display: flex;
   justify-content: space-between;
@@ -261,4 +276,5 @@ td {
 p {
   margin: 0px;
 }
+
 </style>
