@@ -132,8 +132,9 @@ import type { Employ1, Pos, Team } from "../../../types/types";
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
-import { getItems } from "../../../utils/fetch";
 import { createEmployee, updateEmployee, getDetail } from "../api/apiEmployee";
+import { getPositionDropDown } from "../../position/api/apiPosition";
+import { getTeamDropDown } from "../../team/api/apiTeam";
 // import PenLogo from "../../../assets/editPen.svg";
 
 const teams = ref();
@@ -170,41 +171,20 @@ const navigateTo = (nameRoute: string) => {
 const teamName = ref<string>("");
 const positionName = ref<string>("");
 
-const getTeamPosition = () => {
+const getTeamPositionName = () => {
   teamName.value = teams.value.find(
     (e: Team<string>) => e.value === selectedTeam.value
   ).text;
   positionName.value = postions.value.find(
     (e: Pos<string>) => e.value === selectedPosition.value
   ).text;
-  // console.log(teams.value.find((e) => e.value === selectedTeam.value).text);
-  // console.log(postions.value.find((e) => e.value === selectedPosition.value).text);
 };
 
 const loadData = async (employeeId: string) => {
   try {
     employee.value = await getDetail(employeeId);
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-
-const loadPositionDropDown = async () => {
-  try {
-    const datas = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/position/getPositionDropdown`
-    );
-    postions.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-const loadTeamDropDown = async () => {
-  try {
-    const datas = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/team/getTeamDropdown`
-    );
-    teams.value = datas;
+    postions.value = await getPositionDropDown()
+    teams.value = await getTeamDropDown()
   } catch (error) {
     console.error("Error loading data:", error);
   }
@@ -213,7 +193,6 @@ const loadTeamDropDown = async () => {
 // **Handle Submit for Both Add & Edit**
 const handleSubmit = async () => {
   if (isEditing.value && employeeId.value && mode.value === "edit") {
-    // const index = employeeList.findIndex((e) => e.id === employeeId.value);
     if (isEditing.value) {
       const formData: Employ1 = {
         employeeIdId: employeeId.value,
@@ -225,8 +204,6 @@ const handleSubmit = async () => {
         teamId: selectedTeam.value,
         positionId: selectedPosition.value,
       };
-      // console.log(phones.value)
-      // updateEmployee(formData);
       await updateEmployee(formData);
     }
   } else {
@@ -250,8 +227,6 @@ const handleSubmit = async () => {
 (async () => {
   employeeId.value = route.params.employeeId as string;
   await loadData(employeeId.value);
-  await loadTeamDropDown();
-  await loadPositionDropDown();
 
   if (employeeId.value) {
     if (mode.value === "edit") isEditing.value = true;
@@ -265,26 +240,10 @@ const handleSubmit = async () => {
       selectedTeam.value = employee.value.teamId;
       selectedPosition.value = employee.value.positionId;
     }
-    getTeamPosition();
+    getTeamPositionName();
   }
 })();
 
-// onMounted(() => {
-//   employeeId.value = route.params.employeeId as string;
-//   if (employeeId.value) {
-//     isEditing.value = true;
-//     const employee = employeeList.find((e) => e.id === employeeId.value);
-//     if (employee) {
-//       firstName.value = employee.first_name;
-//       lastName.value = employee.last_name;
-//       email.value = employee.email;
-//       // gender.value = employee.gender;
-//       // age.value = employee.age;
-//       selectedTeam.value = employee.teamId;
-//       selectedPosition.value = employee.positionId;
-//     }
-//   }
-// });
 </script>
 
 <style scoped>

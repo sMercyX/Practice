@@ -174,24 +174,6 @@ const formattedDefault = ref({
   search: {},
 });
 
-// const loadData = async (pagiData: Pagi) => {
-//   formattedDefault.value = pagiData;
-//   try {
-//     const datas = await postItem(
-//       `${import.meta.env.VITE_BASE_URL}/Employee/Index`,
-//       formattedDefault.value
-//     );
-//     selectedEmployees.value = datas.data;
-//     pageData.value = {
-//       pageRow: datas.rowCount,
-//       pageIndex: datas.pageIndex + 1,
-//       pageSize: datas.pageSize,
-//     };
-//   } catch (error) {
-//     console.error("Error loading data:", error);
-//   }
-// };
-
 const loadData = async (pagiData: Pagi) => {
   pagiData = {...pagiData , search:formattedDefault.value.search}
   formattedDefault.value = pagiData;
