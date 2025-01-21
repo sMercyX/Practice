@@ -22,8 +22,8 @@
         <strong>{{ header["Name"] }}</strong>
       </template>
       <template #AddEdit="{ row }">
-        <button @click="openFormEdit(row.positionId)">Edit</button>
-        <button @click="openFormDelete(row.positionId)">Delete</button>
+        <button @click="openFormEdit(row.positionId!)">Edit</button>
+        <button @click="openFormDelete(row.positionId!)">Delete</button>
       </template>
     </Table>
 

@@ -27,8 +27,8 @@
       </template>
 
       <template #AddEdit="{ row }">
-        <button @click="openFormEdit(row.teamId)">Edit</button>
-        <button @click="openFormDelete(row.teamId)">Delete</button>
+        <button @click="openFormEdit(row.teamId!)">Edit</button>
+        <button @click="openFormDelete(row.teamId!)">Delete</button>
       </template>
     </Table>
 

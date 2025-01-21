@@ -11,40 +11,38 @@
       </tr>
     </thead>
     <tbody>
+      
       <tr class="row" v-for="(row, rowIndex) in data" :key="rowIndex">
         <!-- Flexible data rendering with slot fallback -->
-        <td v-for="(header, colIndex) in headers" :key="colIndex" @click="$emit('view', row.employeeId)">
+        <td v-for="(header, colIndex) in headers" :key="colIndex" @click="$emit('view', row)">
           <slot name="cell" :row="row" :header="header">
             {{ (row[header.Key as K] !== null ? row[header.Key as K] : "-" )}}
             <template v-if="header.Name === 'Manage'">
               <slot name="AddEdit" :row="row">
-                <button @click="$emit('edit', row.employeeId)">Edit</button>
-                <button @click="$emit('delete', row.employeeId)">Delete</button>
+     
               </slot>
             </template>
           </slot>
         </td>
       </tr>
+
     </tbody>
   </table>
 </template>
 
 <script setup lang="ts" generic="T">
-import type { Employ1Details } from "../../types/types";
 import type { Header } from "../../types/tableTypes.ts";
 
 defineProps<{
   headers: Header[];
-  data: any[];
+  data: T[];
 }>();
 
 // defineEmits(["edit","delete", "view"]);
 defineEmits<{
-  (e: "edit", id: string): void;
-  (e: "delete", id: string): void;
-  (e: "view", id: string): void;
+  (e: "view", data:any): void;
 }>();
-type K = keyof Employ1Details;
+type K = keyof T;
 </script>
 
 <style scoped>

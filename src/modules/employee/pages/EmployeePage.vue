@@ -43,13 +43,12 @@
     <Table
       :headers="selectedHeaders"
       :data="paginationData"
-      @edit="navigateToEmployee"
       @view="navigateToView"
     >
       <template #header="{ header }" >
         <strong>{{ header["Name"] }}</strong>
       </template>
-      <template #AddEdit="{ row }" class="test" >
+      <template #AddEdit="{ row }" class="test"  >
         <button @click="navigateToEmployee(row.employeeId)">Edit</button>
         <button @mousedown="openFormDelete(row.employeeId)">Delete</button>
       </template>
@@ -142,8 +141,8 @@ const navigateToEmployee = (employeeId: string) => {
   router.push({ name: "editEmployee", params: { employeeId: employeeId } });
 };
 
-const navigateToView = (employeeId: string) => {
-  router.push({ name: "viewEmployee", params: { employeeId: employeeId } });
+const navigateToView = (data: any) => {
+  router.push({ name: "viewEmployee", params: { employeeId: data.employeeId } });
 };
 const getTeamName = (teamId: string) => {
   const team = teams.value!.find((t: Team<string>) => t.value === teamId);
