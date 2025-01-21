@@ -57,7 +57,7 @@ export type Gender =
   | "Non-binary";
 
 export interface Employ1 {
-  employeeIdId: string;
+  employeeId: string;
   dateOfBirth: string;
   email: string;
   firstname: string;

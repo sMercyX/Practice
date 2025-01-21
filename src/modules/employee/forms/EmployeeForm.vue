@@ -196,7 +196,7 @@ const handleSubmit = async () => {
   if (isEditing.value && employeeId.value && mode.value === "edit") {
     if (isEditing.value) {
       const formData: Employ1 = {
-        employeeIdId: employeeId.value,
+        employeeId: employeeId.value,
         firstname: firstName.value,
         lastname: lastName.value,
         email: email.value,
@@ -209,7 +209,7 @@ const handleSubmit = async () => {
     }
   } else {
     const formData: Employ1 = {
-      employeeIdId: uuid.v1(),
+      employeeId: uuid.v1(),
       firstname: firstName.value,
       lastname: lastName.value,
       email: email.value,

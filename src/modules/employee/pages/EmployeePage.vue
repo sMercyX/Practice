@@ -117,7 +117,7 @@ const handleNewData = (data: Employ1Details[]) => {
 const isDeleteOpen = ref<boolean>(false);
 const idToEditDelete = ref<string>("");
 const openFormDelete = (id: string) => {
-  console.log(id);
+
   idToEditDelete.value = id;
   isDeleteOpen.value = true;
 };
@@ -130,7 +130,7 @@ const close = () => {
 const handleDelete = async (id: string) => {
   await deleteEmployee(id);
   const index = paginationData.value.findIndex(
-    (item) => item.positionId === id
+    (item) => item.employeeId === id
   );
   paginationData.value.splice(index, 1);
 };
