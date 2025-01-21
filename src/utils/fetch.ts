@@ -29,7 +29,7 @@ export const getItems = async (url:string) => {
 };
 
 
-export const postItem = async (url:string, item:any) => {
+export const postItem = async (url:string, item:{}) => {
   try {
     return await fetchData(url, {
       method: "POST",

@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import type {
+  Employ1,
   Employ1Details,
   Pagi,
   PagiData,
@@ -141,7 +142,7 @@ const navigateToEmployee = (employeeId: string) => {
   router.push({ name: "editEmployee", params: { employeeId: employeeId } });
 };
 
-const navigateToView = (data: any) => {
+const navigateToView = (data: Employ1) => {
   router.push({ name: "viewEmployee", params: { employeeId: data.employeeId } });
 };
 const getTeamName = (teamId: string) => {

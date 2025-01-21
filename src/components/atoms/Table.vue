@@ -40,7 +40,7 @@ defineProps<{
 
 // defineEmits(["edit","delete", "view"]);
 defineEmits<{
-  (e: "view", data:any): void;
+  (e: "view", data:T): void;
 }>();
 type K = keyof T;
 </script>
