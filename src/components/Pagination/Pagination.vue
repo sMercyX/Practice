@@ -38,13 +38,14 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import { ref, computed, watch } from "vue";
 import type { Pagi } from "../../types/types";
+import type { PagiData } from "../../types/types";
 
 const props = defineProps<{
-  data: any[];
-  pageData: any;
+  data: T[];
+  pageData: PagiData;
 }>();
 
 const currentPage = ref<number>(

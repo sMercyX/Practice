@@ -49,9 +49,9 @@
       <template #header="{ header }" >
         <strong>{{ header["Name"] }}</strong>
       </template>
-      <template #AddEdit="{ row }" class="test">
+      <template #AddEdit="{ row }" class="test" >
         <button @click="navigateToEmployee(row.employeeId)">Edit</button>
-        <button @click="openFormDelete(row.employeeId)">Delete</button>
+        <button @mousedown="openFormDelete(row.employeeId)">Delete</button>
       </template>
     </Table>
     <Pagination
@@ -77,6 +77,7 @@ import type {
   Employ1Details,
   Pagi,
   PagiData,
+  Pos,
   Team,
 } from "../../../types/types.ts";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
@@ -91,7 +92,7 @@ import { getPositionDropDown } from "../../position/api/apiPosition.ts";
 import { getTeamDropDown } from "../../team/api/apiTeam.ts";
 import Delete from "../../../components/atoms/Delete.vue";
 const teams = ref<Team<string>[]>([]);
-const postions = ref<Team<string>[]>([]);
+const postions = ref<Pos<string>[]>([]);
 // const employees = ref(employeeList);
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
@@ -145,12 +146,12 @@ const navigateToView = (employeeId: string) => {
   router.push({ name: "viewEmployee", params: { employeeId: employeeId } });
 };
 const getTeamName = (teamId: string) => {
-  const team = teams.value!.find((t: any) => t.value === teamId);
+  const team = teams.value!.find((t: Team<string>) => t.value === teamId);
   return team ? team.text : "Unknown Team";
 };
 
 const getPositionName = (positionId: string) => {
-  const position = postions.value!.find((p: any) => p.value === positionId);
+  const position = postions.value!.find((p: Pos<string>) => p.value === positionId);
   return position ? position.text : "Unknown Position";
 };
 

@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { ImpData, Pagi, PagiData, Pos } from "../../../types/types.ts";
+import type { ImpData, Pagi, PagiData, Pos,TP } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
@@ -64,7 +64,7 @@ import { deletePosition, fetchDataPosition } from "../api/apiPosition.ts";
 
 const searchPosition = ref<string>("");
 const sumPosition = computed(() => pageData.value.pageRow);
-const selectedPosition = ref<Pos<string>[]>([]);
+const selectedPosition = ref<TP[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Description", Key: "description" },
@@ -129,13 +129,7 @@ const loadData = async (pagiData: Pagi) => {
   }
 };
 
-// const filterEmployees = () => {
-//   selectedPosition.value = positions.value.filter((data: any) =>
-//     searchPosition.value
-//       ? data.name.toLowerCase().includes(searchPosition.value.toLowerCase())
-//       : true
-//   );
-// };
+
 
 const paginationData = ref<Pos<string>[]>([]);
 
@@ -143,15 +137,11 @@ const handleNewData = (data: Pos<string>[]) => {
   paginationData.value = data;
 };
 
-// watch([searchPosition], filterEmployees);
 (async () => {
   await loadData(formattedDefault);
 })();
 
-// onMounted(async () => {
-//   await loadData(formattedDefault);
-//   // filterEmployees();
-// });
+
 </script>
 
 <style scoped>

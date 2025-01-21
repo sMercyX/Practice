@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { Pagi, PagiData, Team as TeamType } from "../../../types/types.ts";
+import type { Pagi, PagiData, Team as TeamType, TP } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
 import Table from "../../../components/atoms/Table.vue";
@@ -75,7 +75,7 @@ import { deleteTeam } from "../api/apiTeam.ts";
 
 const searchTeam = ref<string>("");
 const sumTeam = computed(() => pageData.value.pageRow);
-const selectedTeam = ref<TeamType<string>[]>([]);
+const selectedTeam = ref<TP[]>([]);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Description", Key: "description" },

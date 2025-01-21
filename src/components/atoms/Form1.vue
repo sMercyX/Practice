@@ -28,12 +28,18 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { onMounted, ref } from "vue";
-import type {  Pos, Team as TeamType, TP } from "../../types/types";
+import { ref } from "vue";
+import type { TP } from "../../types/types";
 import InputText from "../Input/InputText.vue";
 import { postItem } from "../../utils/fetch";
 
-const datas = ref();
+const props = defineProps<{
+  id: string;
+  data: TP[];
+  header: string;
+}>();
+
+const datas = ref<TP[]>([]);
 
 const Name = ref<string>("");
 const Description = ref<string>("");
@@ -41,13 +47,8 @@ const Description = ref<string>("");
 const isEditing = ref<boolean>(false);
 const dataId = ref<string>();
 
-const props = defineProps<{
-  id: string;
-  data: (TeamType<T> | Pos<T>)[] ;
-  header: string;
-}>();
 const header = ref<string>(props.header);
-const headerId = ref<string>(header.value + "Id");
+const headerId = ref((header.value + "Id") as keyof TP);
 
 const goback = () => {
   return emit("back", false);
@@ -57,27 +58,24 @@ const emit = defineEmits<{
   (e: "back", value: boolean): void;
 }>();
 
-const uploadData = async (data:TP) => {
+const uploadData = async (data: TP) => {
   try {
     const id = await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/create`,
       data
     );
-    datas.value.push({...data, [headerId.value]:id})
-
+    datas.value.push({ ...data, [headerId.value]: id });
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
-const updateData = async (data:TP,index:string) => {
+const updateData = async (data: TP, index: number) => {
   try {
     await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/update`,
       data
     );
     datas.value[index] = data;
-
-
   } catch (error) {
     console.error("Error loading data:", error);
   }
@@ -86,7 +84,7 @@ const updateData = async (data:TP,index:string) => {
 const handleSubmit = () => {
   if (isEditing.value && dataId.value) {
     const index = datas.value.findIndex(
-      (e: any) => e[headerId.value] === dataId.value
+      (e: TP) => e[headerId.value] === dataId.value
     );
     if (index !== -1) {
       const formData: TP = {
@@ -94,7 +92,7 @@ const handleSubmit = () => {
         description: Description.value,
         [headerId.value]: dataId.value,
       };
-      updateData(formData,index);
+      updateData(formData, index);
     }
   } else {
     const formData: TP = {
@@ -106,20 +104,20 @@ const handleSubmit = () => {
   goback();
 };
 
-onMounted(async () => {
+(() => {
   dataId.value = props.id;
   datas.value = props.data;
   if (dataId.value) {
     isEditing.value = true;
     const dataa = datas.value.find(
-      (e: any) => e[headerId.value] === dataId.value
+      (e: TP) => e[headerId.value] === dataId!.value
     );
     if (dataa) {
       Name.value = dataa.name;
       Description.value = dataa.description;
     }
   }
-});
+})();
 </script>
 
 <style scoped>
@@ -203,7 +201,7 @@ button {
   transition: all 0.3s;
 }
 
-button:hover{
+button:hover {
   scale: 110%;
 }
 .close {

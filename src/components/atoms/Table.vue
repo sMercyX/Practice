@@ -35,7 +35,7 @@ import type { Header } from "../../types/tableTypes.ts";
 
 defineProps<{
   headers: Header[];
-  data: any[];
+  data: any;
 }>();
 
 // defineEmits(["edit","delete", "view"]);

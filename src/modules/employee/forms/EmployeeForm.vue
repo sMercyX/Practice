@@ -128,7 +128,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
-import type { Employ1, Pos, Team } from "../../../types/types";
+import type { Employ1, Phone, Pos, Team } from "../../../types/types";
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
@@ -137,23 +137,23 @@ import { getPositionDropDown } from "../../position/api/apiPosition";
 import { getTeamDropDown } from "../../team/api/apiTeam";
 // import PenLogo from "../../../assets/editPen.svg";
 
-const teams = ref();
-const postions = ref();
-const employee = ref();
+const teams = ref<Team<string>[]>([]);
+const postions = ref<Pos<string>[]>([]);
+const employee = ref<Employ1>();
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
 const email = ref<string>("");
-const dateOfBirth = ref<number>(0);
-const phones = ref<any>([{}]);
+const dateOfBirth = ref<string>("");
+const phones = ref<Phone[]>([{ phoneId: uuid.v1(), phoneNumber: "" }]);
 const mode = computed(() => route.meta.mode);
 
 const addPhone = () => {
-  phones.value.push({}); // Add a new empty phone number input
+  phones.value.push({ phoneId: uuid.v1(), phoneNumber: "" }); // Add a new empty phone number input
 };
 
-const removePhone = (index: any) => {
-  phones.value.splice(index, 1);
+const removePhone = (index: number) => {
+  phones.value.splice(index + 1, 1);
 };
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
@@ -174,17 +174,18 @@ const positionName = ref<string>("");
 const getTeamPositionName = () => {
   teamName.value = teams.value.find(
     (e: Team<string>) => e.value === selectedTeam.value
-  ).text;
+  )!.text;
+
   positionName.value = postions.value.find(
     (e: Pos<string>) => e.value === selectedPosition.value
-  ).text;
+  )!.text;
 };
 
 const loadData = async (employeeId: string) => {
   try {
     employee.value = await getDetail(employeeId);
-    postions.value = await getPositionDropDown()
-    teams.value = await getTeamDropDown()
+    postions.value = await getPositionDropDown();
+    teams.value = await getTeamDropDown();
   } catch (error) {
     console.error("Error loading data:", error);
   }
@@ -243,7 +244,6 @@ const handleSubmit = async () => {
     getTeamPositionName();
   }
 })();
-
 </script>
 
 <style scoped>

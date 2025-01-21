@@ -5,7 +5,7 @@
       <!-- Dropdowns for Filtering -->
       <Dropdown :list="teams" v-model="selectedTeam" @change="confirmInput" />
       <Dropdown
-        :list="postions"
+        :list="positions"
         :modelValue="selectedPosition"
         @update:modelValue="selectedPosition = $event"
         @change="confirmInput"
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { Employ1Details, Pagi, PagiData } from "../../types/types.ts";
+import type { Employ1Details, Pagi, PagiData, Pos, Team } from "../../types/types.ts";
 import Dropdown from "../Dropdown/Dropdown.vue";
 import SearchBar from "../SearchInput/SearchBar.vue";
 import Table from "../atoms/Table.vue";
@@ -51,8 +51,8 @@ import { fetchDataEmployee } from "../../modules/employee/api/apiEmployee.ts";
 import { getPositionDropDown } from "../../modules/position/api/apiPosition.ts";
 import { getTeamDropDown } from "../../modules/team/api/apiTeam.ts";
 
-const teams = ref();
-const postions = ref();
+const teams = ref<Team<string>[]>([]);
+const positions = ref<Pos<string>[]>([]);
 // const employees = ref();
 
 const selectedTeam = ref<string>("");
@@ -75,12 +75,12 @@ const handleNewData = (data: Employ1Details[]) => {
 };
 
 const getTeamName = (teamId: string) => {
-  const team = teams.value?.find((t: any) => t.value === teamId);
+  const team = teams.value?.find((t: Team<string>) => t.value === teamId);
   return team ? team.text : "Unknown Team";
 };
 
 const getPositionName = (positionId: string) => {
-  const position = postions.value?.find((p: any) => p.value === positionId);
+  const position = positions.value?.find((p: Pos<string>) => p.value === positionId);
   return position ? position.text : "Unknown Position";
 };
 
@@ -111,7 +111,7 @@ const loadData = async (pagiData: Pagi) => {
   try {
     const datas = await fetchDataEmployee(formattedDefault.value);
 
-    postions.value = await getPositionDropDown();
+    positions.value = await getPositionDropDown();
     teams.value = await getTeamDropDown();
 
     selectedEmployees.value = datas.data;

@@ -19,7 +19,7 @@ export interface Pos<T> extends Dropdown2 {
   positionId: T;
 }
 
-export interface TP {
+export interface TP{
   teamId?: string;
   positionId?: string;
 
@@ -67,8 +67,8 @@ export interface Employ1 {
   teamId: string;
 }
 export interface Phone {
-  type: string;
-  number: string;
+  phoneId: string;
+  phoneNumber: string;
 }
 export interface Employ1Details extends Employ1 {
   team_name: string;
