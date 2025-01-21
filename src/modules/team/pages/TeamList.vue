@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { Pagi, PagiData, Team as TeamType, TP } from "../../../types/types.ts";
+import type { Pagi, PagiData, TP } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
 import Table from "../../../components/atoms/Table.vue";
@@ -154,9 +154,9 @@ const confirmInput = () => {
 };
 
 
-const paginationData = ref<TeamType<string>[]>([]);
+const paginationData = ref<TP[]>([]);
 
-const handleNewData = (data: TeamType<string>[]) => {
+const handleNewData = (data: TP[]) => {
   paginationData.value = data;
 };
 

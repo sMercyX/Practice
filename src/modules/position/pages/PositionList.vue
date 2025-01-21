@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { ImpData, Pagi, PagiData, Pos,TP } from "../../../types/types.ts";
+import type { ImpData, Pagi, PagiData,TP } from "../../../types/types.ts";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
@@ -131,9 +131,9 @@ const loadData = async (pagiData: Pagi) => {
 
 
 
-const paginationData = ref<Pos<string>[]>([]);
+const paginationData = ref<TP[]>([]);
 
-const handleNewData = (data: Pos<string>[]) => {
+const handleNewData = (data: TP[]) => {
   paginationData.value = data;
 };
 
@@ -141,6 +141,8 @@ const handleNewData = (data: Pos<string>[]) => {
   await loadData(formattedDefault);
 })();
 
+defineProps<{
+}>();
 
 </script>
 

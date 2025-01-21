@@ -65,7 +65,7 @@ const pagiData = computed(() => ({
 
 const sumData = computed(() => props.pageData!.pageRow);
 const newData = computed(() => {
-  emit("newData", newData.value);
+  emit("newData", newData.value as T[]);
 
   return localData.value;
 });
@@ -76,13 +76,13 @@ const totalPages = computed(() =>
 
 const nextPage = () => {
   currentPage.value++;
-  emit("newData", newData.value);
+  emit("newData", newData.value as T[]);
   emit("paginationData", pagiData.value);
 };
 
 const prevPage = () => {
   currentPage.value--;
-  emit("newData", newData.value);
+  emit("newData", newData.value as T[]);
   emit("paginationData", pagiData.value);
 };
 
@@ -90,7 +90,7 @@ const updatePageSize = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   pageSize.value = Number(target.value);
   currentPage.value = 1;
-  emit("newData", newData.value);
+  emit("newData", newData.value as T[]);
   emit("paginationData", pagiData.value);
 };
 
@@ -98,7 +98,7 @@ const updateCurrentPage = (event: Event) => {
   const target = event.target as HTMLInputElement;
   currentPage.value = Number(target.value);
 
-  emit("newData", newData.value);
+  emit("newData", newData.value as T[]);
   emit("paginationData", pagiData.value);
 };
 
@@ -108,18 +108,18 @@ watch(
     localData.value = [...newD];
     currentPage.value = props.pageData!.pageIndex;
     pageSize.value = props.pageData!.pageSize
-    emit("newData", newData.value);
+    emit("newData", newData.value as T[]);
   },
   { deep: true }
 );
 
 const emit = defineEmits<{
-  (e: "newData", newData: any[]): void;
+  (e: "newData", newData: T[]): void;
   (e: "paginationData", pagiData: Pagi): void;
 }>();
 
 () => {
-  emit("newData", newData.value);
+  emit("newData", newData.value as T[]);
   emit("paginationData", pagiData.value);
 };
 
@@ -127,6 +127,7 @@ const emit = defineEmits<{
 //   emit("newData", newData.value);
 //   emit("paginationData", pagiData.value);
 // })
+
 </script>
 
 <style scoped>
