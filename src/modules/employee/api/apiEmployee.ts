@@ -1,60 +1,97 @@
-import type { Employ1, Pagi } from "../../../types/types";
+import type { ApiResponse } from "../../../types/apiType";
+import type { EmployeeIndexRequest, EmployeeIndexResponse } from "../../../types/employee";
+import type {
+  Employ1,
+  Employ1Details,
+  PaginationResponse,
+  PaginationRequest,
+} from "../../../types/types";
 import { getItems, postItem } from "../../../utils/fetch";
 
-export const fetchDataEmployee = async (pagiData: Pagi) => {
-  try {
-    const datas = await postItem(
+export default function useEmployeeApi() {
+  const fetchDataEmployee = async (
+    pagiData: PaginationRequest<EmployeeIndexRequest>
+  ): Promise<PaginationResponse<EmployeeIndexResponse[]>> => {
+    const response = await postItem(
       `${import.meta.env.VITE_BASE_URL}/Employee/Index`,
       pagiData
     );
-    return datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
 
-export const createEmployee = async (employeeData: Employ1) => {
-  try {
-    const datas = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/Employee/Create`,
-      employeeData
-    );
-    return datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
+    return response;
+  };
 
-export const updateEmployee = async (employeeData: Employ1) => {
-  try {
-    const datas = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/Employee/Update`,
-      employeeData
-    );
-    return datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
+  const createEmployee = async (employeeData: Employ1) => {
+    try {
+      const response = await postItem(
+        `${import.meta.env.VITE_BASE_URL}/Employee/Create`,
+        employeeData
+      );
+      const data: ApiResponse<string> = {
+        data: response,
+        isError: false,
+      };
+      return data;
+    } catch (error) {
+      console.error("Error loading data:", error);
+      return { data: "error" as String, isError: true };
+    }
+  };
+  const updateEmployee = async (
+    employeeData: Employ1
+  ): Promise<ApiResponse<string>> => {
+    try {
+      const response = await postItem(
+        `${import.meta.env.VITE_BASE_URL}/Employee/Update`,
+        employeeData
+      );
+      const data = {
+        data: response,
+        isError: false,
+      };
+      return data;
+    } catch (error) {
+      console.error("Error loading data:", error);
+      return { data: "error" as String, isError: true };
+    }
+  };
 
-export const getDetail = async (employeeId: string) => {
-  try {
-    const datas = await getItems(
-      `${import.meta.env.VITE_BASE_URL}/Employee/GetDetail?id=${employeeId}`
-    );
-    return datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
+  const getDetail = async (employeeId: string) => {
+    try {
+      const params = new URLSearchParams();
+      params.set(`id`, employeeId);
 
-export const deleteEmployee = async (employeeId: string) => {
-  try {
-    await postItem(
-      `${import.meta.env.VITE_BASE_URL}/Employee/Delete`,
-      employeeId
-    );
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
+      const response = await getItems(
+        `${import.meta.env.VITE_BASE_URL}/Employee/GetDetail?${params}`
+      );
+      const data: ApiResponse<Employ1> = {
+        data: {
+          ...response,
+        },
+        isError: false,
+      };
+
+      return data;
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  };
+
+  const deleteEmployee = async (employeeId: string) => {
+    try {
+      await postItem(
+        `${import.meta.env.VITE_BASE_URL}/Employee/Delete`,
+        employeeId
+      );
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  };
+
+  return {
+    fetchDataEmployee,
+    createEmployee,
+    updateEmployee,
+    getDetail,
+    deleteEmployee,
+  };
+}

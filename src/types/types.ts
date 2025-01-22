@@ -1,12 +1,5 @@
-export interface Dropdown<T> {
-  teamId?: T;
-  positionId?: T;
 
-  text: string;
-  value: string;
-}
-
-export interface Dropdown2 {  
+export interface Dropdown2 {
   text: string;
   value: string;
 }
@@ -19,7 +12,12 @@ export interface Pos<T> extends Dropdown2 {
   positionId: T;
 }
 
-export interface TP{
+export interface DropdownModel<T> {
+  text: string;
+  value: T;
+}
+
+export interface TP {
   teamId?: string;
   positionId?: string;
 
@@ -27,24 +25,26 @@ export interface TP{
   description: string;
 }
 
-export interface Pagi {
+export interface PaginationRequest<T> {
   pageIndex: number;
   pageSize: number;
-  search: {};
+  search: T;
 }
 
 export interface PagiData {
-  pageRow: number;
-  pageIndex: number;
-  pageSize: number;
-}
-
-export interface ImpData {
-  data: [];
   rowCount: number;
   pageIndex: number;
   pageSize: number;
 }
+
+export interface PaginationResponse<T> extends PagiData {
+  // data: Employ1Details[];
+  data: T;
+}
+
+export interface TableState<TQuery, TResponse>
+  extends PaginationRequest<TQuery>,
+    PaginationResponse<TResponse> {}
 
 export type Gender =
   | "Male"

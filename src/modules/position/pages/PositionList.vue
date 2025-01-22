@@ -1,5 +1,5 @@
 <template>
-  <div class="Head">
+  <!-- <div class="Head">
     <h2>Position ( {{ sumPosition }} )</h2>
     <div class="createEmployeeButton">
       <button class="createButton" @click="openForm">
@@ -15,9 +15,8 @@
     <div class="right"></div>
   </div>
   <div>
-    <!-- <EmployeeTable :employee="selectedEmployees" /> -->
-      
-    <Table :headers="selectedHeaders" :data="paginationData" >
+
+    <Table :headers="selectedHeaders" :data="paginationData">
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
@@ -48,102 +47,104 @@
     :id="idToEditDelete"
     @back="close"
     @deleteSubmit="handleDelete"
-  />
+  /> -->
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import type { ImpData, Pagi, PagiData,TP } from "../../../types/types.ts";
-import SearchBar from "../../../components/SearchInput/SearchBar.vue";
-import Table from "../../../components/atoms/Table.vue";
-import type { Header } from "../../../types/tableTypes.ts";
-import Pagination from "../../../components/Pagination/Pagination.vue";
-import Form1 from "../../../components/atoms/Form1.vue";
-import Delete from "../../../components/atoms/Delete.vue";
-import { deletePosition, fetchDataPosition } from "../api/apiPosition.ts";
+// import { ref, computed } from "vue";
+// import type {
+//   PaginationResponse,
+//   PaginationRequest,
+//   PaginationRequest,
+//   TP,
+// } from "../../../types/types.ts";
+// import SearchBar from "../../../components/SearchInput/SearchBar.vue";
+// import Table from "../../../components/atoms/Table.vue";
+// import type { Header } from "../../../types/tableTypes.ts";
+// import Pagination from "../../../components/Pagination/Pagination.vue";
+// import Form1 from "../../../components/atoms/Form1.vue";
+// import Delete from "../../../components/atoms/Delete.vue";
+// import { deletePosition, fetchDataPosition } from "../api/apiPosition.ts";
 
-const searchPosition = ref<string>("");
-const sumPosition = computed(() => pageData.value.pageRow);
-const selectedPosition = ref<TP[]>([]);
-const selectedHeaders = ref<Header[]>([
-  { Name: "TeamName", Key: "name" },
-  { Name: "Description", Key: "description" },
-  { Name: "Manage", Key: "manage" },
-]);
-const header = ref<string>("position");
+// const searchPosition = ref<string>("");
+// const sumPosition = computed(() => pageData.value.pageRow);
+// const selectedPosition = ref<TP[]>([]);
+// const selectedHeaders = ref<Header[]>([
+//   { Name: "TeamName", Key: "name" },
+//   { Name: "Description", Key: "description" },
+//   { Name: "Manage", Key: "manage" },
+// ]);
+// const header = ref<string>("position");
 
-const idToEditDelete = ref<string>("");
-const isFormOpen = ref<boolean>(false);
-const isDeleteOpen = ref<boolean>(false);
+// const idToEditDelete = ref<string>("");
+// const isFormOpen = ref<boolean>(false);
+// const isDeleteOpen = ref<boolean>(false);
 
-const openFormEdit = (id: string) => {
-  idToEditDelete.value = id;
-  isFormOpen.value = !isFormOpen.value;
-};
+// const openFormEdit = (id: string) => {
+//   idToEditDelete.value = id;
+//   isFormOpen.value = !isFormOpen.value;
+// };
 
-const openForm = () => {
-  isFormOpen.value = true;
-};
+// const openForm = () => {
+//   isFormOpen.value = true;
+// };
 
-const openFormDelete = (id: string) => {
-  idToEditDelete.value = id;
-  isDeleteOpen.value = true;
-};
+// const openFormDelete = (id: string) => {
+//   idToEditDelete.value = id;
+//   isDeleteOpen.value = true;
+// };
 
-const close = () => {
-  idToEditDelete.value = "";
-  isFormOpen.value = false;
-  isDeleteOpen.value = false;
-};
-const handleDelete = async (id: string) => {
-  await deletePosition(id);
+// const close = () => {
+//   idToEditDelete.value = "";
+//   isFormOpen.value = false;
+//   isDeleteOpen.value = false;
+// };
+// const handleDelete = async (id: string) => {
+//   await deletePosition(id);
 
-  const index = paginationData.value.findIndex(
-    (item) => item.positionId === id
-  );
-  paginationData.value.splice(index, 1);
-};
+//   const index = paginationData.value.findIndex(
+//     (item) => item.positionId === id
+//   );
+//   paginationData.value.splice(index, 1);
+// };
 
-const formattedDefault = {
-  pageIndex: 0,
-  pageSize: 5,
-  search: {},
-};
-const pageData = ref<PagiData>({
-  pageRow: 0,
-  pageIndex: 0,
-  pageSize: 0,
-});
-const loadData = async (pagiData: Pagi) => {
-  const formatted = pagiData;
-  try {
-    const datas:ImpData = await fetchDataPosition(formatted);
-    selectedPosition.value = datas.data;
-    pageData.value = {
-      pageRow: datas.rowCount,
-      pageIndex: datas.pageIndex + 1,
-      pageSize: datas.pageSize,
-    };
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
+// const formattedDefault = {
+//   pageIndex: 0,
+//   pageSize: 5,
+//   search: {},
+// };
+// const pageData = ref<PaginationRequest>({
+//   pageRow: 0,
+//   pageIndex: 0,
+//   pageSize: 0,
+// });
+// const loadData = async (pagiData: PaginationRequest) => {
+//   const formatted = pagiData;
+//   try {
+//     const data = await fetchDataPosition(formatted).then((x) => x.data);
 
+//     selectedPosition.value = datas.data;
+//     pageData.value = {
+//       pageRow: datas.rowCount,
+//       pageIndex: datas.pageIndex + 1,
+//       pageSize: datas.pageSize,
+//     };
+//   } catch (error) {
+//     console.error("Error loading data:", error);
+//   }
+// };
 
+// const paginationData = ref<TP[]>([]);
 
-const paginationData = ref<TP[]>([]);
+// const handleNewData = (data: TP[]) => {
+//   paginationData.value = data;
+// };
 
-const handleNewData = (data: TP[]) => {
-  paginationData.value = data;
-};
+// (async () => {
+//   await loadData(formattedDefault);
+// })();
 
-(async () => {
-  await loadData(formattedDefault);
-})();
-
-defineProps<{
-}>();
-
+// defineProps<{}>();
 </script>
 
 <style scoped>

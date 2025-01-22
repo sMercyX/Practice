@@ -132,14 +132,16 @@ import type { Employ1, Phone, Pos, Team } from "../../../types/types";
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
-import { createEmployee, updateEmployee, getDetail } from "../api/apiEmployee";
+import useEmployeeApi from "../api/apiEmployee";
 import { getPositionDropDown } from "../../position/api/apiPosition";
 import { getTeamDropDown } from "../../team/api/apiTeam";
 // import PenLogo from "../../../assets/editPen.svg";
 
 const teams = ref<Team<string>[]>([]);
 const postions = ref<Pos<string>[]>([]);
-const employee = ref<Employ1>();
+const employee = ref<Employ1>({} as Employ1)
+
+const employeeApi = useEmployeeApi();
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
@@ -183,9 +185,12 @@ const getTeamPositionName = () => {
 
 const loadData = async (employeeId: string) => {
   try {
-    employee.value = await getDetail(employeeId);
-    postions.value = await getPositionDropDown();
-    teams.value = await getTeamDropDown();
+    const data = await employeeApi.getDetail(employeeId).then(x=> x!.data);
+    employee.value = data
+
+    postions.value = await getPositionDropDown().then(x => x!.data);
+
+    teams.value = await getTeamDropDown().then(x => x!.data);
   } catch (error) {
     console.error("Error loading data:", error);
   }
@@ -205,7 +210,7 @@ const handleSubmit = async () => {
         teamId: selectedTeam.value,
         positionId: selectedPosition.value,
       };
-      await updateEmployee(formData);
+      await employeeApi.updateEmployee(formData);
     }
   } else {
     const formData: Employ1 = {
@@ -218,9 +223,7 @@ const handleSubmit = async () => {
       teamId: selectedTeam.value,
       positionId: selectedPosition.value,
     };
-    // create(formData);
-    // employeeList.push(formData);
-    await createEmployee(formData);
+    await employeeApi.createEmployee(formData);
   }
   navigateTo("employee");
 };

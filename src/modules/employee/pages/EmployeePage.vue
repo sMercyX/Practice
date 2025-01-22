@@ -11,24 +11,16 @@
       <div class="left">
         <!-- การส่งค่า เข้าออกให้บอกtype ของมัน-->
         <!-- ตรง v-model ไม่ได้ใส่ื่อทำให้ค่าที่รับ selectedTeam ชื่อ modelValue (เป็นชื่อdefault) -->
-        <Dropdown
-          :list="teams"
-          :modelValue="selectedTeam"
-          @update:modelValue="selectedTeam = $event"
-          @change="confirmInput"
-        />
-        <Dropdown
-          :list="postions"
-          :modelValue="selectedPosition"
-          @update:modelValue="selectedPosition = $event"
-          @change="confirmInput"
-        />
+        <Dropdown :list="teams" v-model="tableState.search.teamId" />
+        <Dropdown :list="postions" v-model="tableState.search.positionId" />
         <!-- -->
 
         <SearchBar
           header="SearchBar"
-          v-model:input="searchEmployee"
-          @change="confirmInput"
+          :input="tableState.search.text"
+          @keyup="
+            tableState.search.text = ($event.target as HTMLInputElement).value
+          "
         />
 
         <div class="resetButton">
@@ -42,23 +34,18 @@
     <!-- <EmployeeTable :employee="selectedEmployees" /> -->
     <Table
       :headers="selectedHeaders"
-      :data="paginationData"
+      :data="tableState.data"
       @view="navigateToView"
     >
-      <template #header="{ header }" >
+      <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
-      <template #AddEdit="{ row }" class="test"  >
+      <template #AddEdit="{ row }" class="test">
         <button @click="navigateToEmployee(row.employeeId)">Edit</button>
         <button @mousedown="openFormDelete(row.employeeId)">Delete</button>
       </template>
     </Table>
-    <Pagination
-      :data="employeesWithDetails"
-      :pageData="pageData"
-      @newData="handleNewData"
-      @paginationData="loadData"
-    />
+    <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
   <Delete
     v-if="isDeleteOpen"
@@ -71,13 +58,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, reactive, watch, watchEffect, warn } from "vue";
 import type {
   Employ1,
-  Employ1Details,
-  Pagi,
-  PagiData,
+  PaginationRequest,
+  PaginationResponse,
   Pos,
+  TableState,
   Team,
 } from "../../../types/types.ts";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
@@ -87,19 +74,20 @@ import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
-import { deleteEmployee, fetchDataEmployee } from "../api/apiEmployee.ts";
+import useEmployeeApi from "../api/apiEmployee.ts";
 import { getPositionDropDown } from "../../position/api/apiPosition.ts";
 import { getTeamDropDown } from "../../team/api/apiTeam.ts";
 import Delete from "../../../components/atoms/Delete.vue";
+import type {
+  EmployeeIndexRequest,
+  EmployeeIndexResponse,
+} from "../../../types/employee.ts";
 const teams = ref<Team<string>[]>([]);
 const postions = ref<Pos<string>[]>([]);
-// const employees = ref(employeeList);
-const selectedTeam = ref<string>("");
-const selectedPosition = ref<string>("");
-const searchEmployee = ref<string>("");
-const sumEmployee = computed(() => pageData.value.pageRow);
 
-const selectedEmployees = ref<Employ1Details[]>([]);
+// const sumEmployee = computed(() => pageData.value.pageRow);
+const sumEmployee = computed(() => rawData.value.rowCount);
+const employeeApi = useEmployeeApi();
 const selectedHeaders = ref<Header[]>([
   { Name: "FirstName", Key: "firstname" },
   { Name: "Email", Key: "email" },
@@ -109,15 +97,15 @@ const selectedHeaders = ref<Header[]>([
 ]);
 const router = useRouter();
 
-const paginationData = ref<Employ1Details[]>([]);
+// const paginationData = ref<Employ1Details[]>([]);
 
-const handleNewData = (data: Employ1Details[]) => {
-  paginationData.value = data;
-};
+// const handleNewData = (data: Employ1Details[]) => {
+//   paginationData.value = data;
+//   console.log(paginationData.value)
+// };
 const isDeleteOpen = ref<boolean>(false);
 const idToEditDelete = ref<string>("");
 const openFormDelete = (id: string) => {
-
   idToEditDelete.value = id;
   isDeleteOpen.value = true;
 };
@@ -128,11 +116,9 @@ const close = () => {
 };
 
 const handleDelete = async (id: string) => {
-  await deleteEmployee(id);
-  const index = paginationData.value.findIndex(
-    (item) => item.employeeId === id
-  );
-  paginationData.value.splice(index, 1);
+  await employeeApi.deleteEmployee(id);
+  const index = rawData.value.data.findIndex((item) => item.employeeId === id);
+  rawData.value.data.splice(index, 1);
 };
 
 const navigateTo = (nameRoute: string) => {
@@ -143,81 +129,132 @@ const navigateToEmployee = (employeeId: string) => {
 };
 
 const navigateToView = (data: Employ1) => {
-  router.push({ name: "viewEmployee", params: { employeeId: data.employeeId } });
+  router.push({
+    name: "viewEmployee",
+    params: { employeeId: data.employeeId },
+  });
 };
 const getTeamName = (teamId: string) => {
-  const team = teams.value!.find((t: Team<string>) => t.value === teamId);
+  const team = teams.value.find((t) => t.value === teamId);
   return team ? team.text : "Unknown Team";
 };
 
 const getPositionName = (positionId: string) => {
-  const position = postions.value!.find((p: Pos<string>) => p.value === positionId);
+  const position = postions.value.find((t) => t.value === positionId);
   return position ? position.text : "Unknown Position";
 };
 
-const employeesWithDetails = computed(() =>
-  selectedEmployees.value.map((emp) => ({
-    ...emp,
-    team_name: getTeamName(emp.teamId),
-    position_name: getPositionName(emp.positionId),
-  }))
-);
-
-const pageData = ref<PagiData>({
-  pageRow: 0,
+// const formattedDefault = ref({
+//   pageIndex: 0,
+//   pageSize: 10,
+//   search: {},
+// });
+// const pageData = ref<
+//   PaginationRequest<{ text: string; teamId: string; positionId: string }>
+// >({
+//   pageIndex: 0,
+//   pageSize: 0,
+//   search: {
+//     text: searchEmployee.value,
+//     teamId: selectedTeam.value,
+//     positionId: selectedPosition.value,
+//   },
+// });
+const rawData = ref<PaginationResponse<EmployeeIndexResponse[]>>({
   pageIndex: 0,
+  rowCount: 0,
   pageSize: 0,
+  data: [],
 });
 
-const formattedDefault = ref({
-  pageIndex: 0,
-  pageSize: 10,
-  search: {},
-});
+interface EmployeeWithDetail extends EmployeeIndexResponse {
+  team_name: string;
+  position_name: string;
+}
+const tableState: TableState<EmployeeIndexRequest, EmployeeWithDetail[]> =
+  reactive({
+    pageIndex: 0,
+    pageSize: 10,
+    rowCount: computed(() => rawData.value.rowCount),
+    data: computed(() =>
+      rawData.value.data.map((emp) => ({
+        ...emp,
+        team_name: getTeamName(emp.teamId),
+        position_name: getPositionName(emp.positionId),
+      }))
+    ),
+    search: {
+      text: "",
+      teamId: "",
+      positionId: "",
+    },
+  });
 
-const loadData = async (pagiData: Pagi) => {
-  pagiData = {...pagiData , search:formattedDefault.value.search}
-  formattedDefault.value = pagiData;
+const loadData = async () => {
   try {
-    const datas = await fetchDataEmployee(formattedDefault.value);
-
-    postions.value = await getPositionDropDown();
-    teams.value = await getTeamDropDown();
-
-    selectedEmployees.value = datas.data;
-    pageData.value = {
-      pageRow: datas.rowCount,
-      pageIndex: datas.pageIndex + 1,
-      pageSize: datas.pageSize,
-    };
+    const datas = await employeeApi
+      .fetchDataEmployee({
+        pageIndex: tableState.pageIndex,
+        pageSize: tableState.pageSize,
+        search: tableState.search,
+      })
+      .then((x) => x);
+    rawData.value = datas;
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
-const confirmInput = () => {
-  formattedDefault.value = {
-    pageIndex: 0,
-    pageSize: pageData.value.pageSize,
-    search: {
-      text: searchEmployee.value,
-      teamId: selectedTeam.value,
-      positionId: selectedPosition.value,
-    },
-  };
- 
-  loadData(formattedDefault.value);
+
+const handleNewPageData = (
+  data: PaginationResponse<EmployeeIndexResponse[]>
+) => {
+  tableState.pageIndex = data.pageIndex;
+  tableState.pageSize = data.pageSize;
 };
 
+const loadTeam = async () => {
+  try {
+    teams.value = await getTeamDropDown().then((x) => x!.data);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+const loadPosition = async () => {
+  try {
+    postions.value = await getPositionDropDown().then((x) => x!.data);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+
+function createDefaultSearch(): EmployeeIndexRequest {
+  return {
+    positionId: "",
+    teamId: "",
+    text: "",
+  };
+}
 const resetFilters = () => {
-  selectedTeam.value = "";
-  selectedPosition.value = "";
-  searchEmployee.value = "";
-  confirmInput();
+  tableState.search = createDefaultSearch();
 };
 
 (async () => {
-  await loadData(formattedDefault.value);
+  await Promise.all([loadData(), loadTeam(), loadPosition()]);
+
 })();
+
+watch(
+  [
+    () => tableState.pageIndex,
+    () => tableState.pageSize,
+    () => tableState.search.positionId,
+    () => tableState.search.teamId,
+    () => tableState.search.text,
+  ],
+  async () => {
+    await loadData();
+  }
+);
 </script>
 
 <style scoped>
@@ -261,5 +298,4 @@ td {
 p {
   margin: 0px;
 }
-
 </style>

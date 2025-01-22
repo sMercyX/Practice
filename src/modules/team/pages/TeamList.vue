@@ -1,5 +1,5 @@
 <template>
-  <div class="Head">
+  <!-- <div class="Head">
     <h2>Team ( {{ sumTeam }} )</h2>
     <div class="createEmployeeButton">
       <button class="createButton" @click="openFormCreate()">
@@ -47,152 +47,153 @@
     :header="header"
     @back="close"
   />
-  <!-- <input type="text" id="input1" /> -->
   <Delete
     v-if="isDeleteOpen"
     :id="idToEditDelete"
     @back="close"
     @deleteSubmit="handleDelete"
-  />
+  /> -->
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import type { Pagi, PagiData, TP } from "../../../types/types.ts";
-import SearchBar from "../../../components/SearchInput/SearchBar.vue";
+// import { ref, computed } from "vue";
+// import type {
+//   PaginationRequest,
+//   PaginationRequest,
+//   TP,
+// } from "../../../types/types.ts";
+// import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
-import Table from "../../../components/atoms/Table.vue";
-import type { Header } from "../../../types/tableTypes.ts";
-import Pagination from "../../../components/Pagination/Pagination.vue";
-import { postItem } from "../../../utils/fetch.ts";
-import Form1 from "../../../components/atoms/Form1.vue";
-import Delete from "../../../components/atoms/Delete.vue";
-import { deleteTeam } from "../api/apiTeam.ts";
+// import Table from "../../../components/atoms/Table.vue";
+// import type { Header } from "../../../types/tableTypes.ts";
+// import Pagination from "../../../components/Pagination/Pagination.vue";
+// import { postItem } from "../../../utils/fetch.ts";
+// import Form1 from "../../../components/atoms/Form1.vue";
+// import Delete from "../../../components/atoms/Delete.vue";
+// import { deleteTeam, fetchDataTeam } from "../api/apiTeam.ts";
 
-// const a = 0
-// const teams = ref<TeamType>();
-// const a = reactive({})
+// // const a = 0
+// // const teams = ref<TeamType>();
+// // const a = reactive({})
 
-const searchTeam = ref<string>("");
-const sumTeam = computed(() => pageData.value.pageRow);
-const selectedTeam = ref<TP[]>([]);
-const selectedHeaders = ref<Header[]>([
-  { Name: "TeamName", Key: "name" },
-  { Name: "Description", Key: "description" },
-  { Name: "Manage", Key: "manage" },
-]);
-const header = ref<string>("team");
+// const searchTeam = ref<string>("");
+// const sumTeam = computed(() => pageData.value.pageRow);
+// const selectedTeam = ref<TP[]>([]);
+// const selectedHeaders = ref<Header[]>([
+//   { Name: "TeamName", Key: "name" },
+//   { Name: "Description", Key: "description" },
+//   { Name: "Manage", Key: "manage" },
+// ]);
+// const header = ref<string>("team");
 
-const idToEditDelete = ref<string>("");
-const isFormOpen = ref<boolean>(false);
-const isDeleteOpen = ref<boolean>(false);
+// const idToEditDelete = ref<string>("");
+// const isFormOpen = ref<boolean>(false);
+// const isDeleteOpen = ref<boolean>(false);
 
-const openFormEdit = (id: string) => {
-  idToEditDelete.value = id;
-  isFormOpen.value = true;
-};
+// const openFormEdit = (id: string) => {
+//   idToEditDelete.value = id;
+//   isFormOpen.value = true;
+// };
 
-const openFormCreate = () => {
-  isFormOpen.value = true;
-};
+// const openFormCreate = () => {
+//   isFormOpen.value = true;
+// };
 
-const openFormDelete = (id: string) => {
-  idToEditDelete.value = id;
-  isDeleteOpen.value = true;
-};
+// const openFormDelete = (id: string) => {
+//   idToEditDelete.value = id;
+//   isDeleteOpen.value = true;
+// };
 
-const close = () => {
-  idToEditDelete.value = "";
-  isFormOpen.value = false;
-  isDeleteOpen.value = false;
-};
+// const close = () => {
+//   idToEditDelete.value = "";
+//   isFormOpen.value = false;
+//   isDeleteOpen.value = false;
+// };
 
-const handleDelete = async (id: string) => {
-  await deleteTeam(id);
+// const handleDelete = async (id: string) => {
+//   await deleteTeam(id);
 
-  const index = paginationData.value.findIndex((item) => item.teamId === id);
-  paginationData.value.splice(index, 1);
-};
+//   const index = paginationData.value.findIndex((item) => item.teamId === id);
+//   paginationData.value.splice(index, 1);
+// };
 
-const formattedDefault = ref({
-  pageIndex: 0,
-  pageSize: 5,
-  search: {},
-});
-const pageData = ref<PagiData>({
-  pageRow: 0,
-  pageIndex: 0,
-  pageSize: 0,
-});
-const loadData = async (pagiData: Pagi) => {
-  formattedDefault.value = pagiData;
-  try {
-    const datas = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/Team/Index`,
-      formattedDefault.value
-    );
-    selectedTeam.value = datas.data;
-    pageData.value = {
-      pageRow: datas.rowCount,
-      pageIndex: datas.pageIndex + 1,
-      pageSize: datas.pageSize,
-    };
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-
-const confirmInput = () => {
-  const filter = {
-    pageIndex: 0,
-    pageSize: pageData.value.pageSize,
-    search: {
-      text: searchTeam.value,
-    },
-  };
-  loadData(filter);
-};
-
-
-const paginationData = ref<TP[]>([]);
-
-const handleNewData = (data: TP[]) => {
-  paginationData.value = data;
-};
-
-// const input1 = document.getElementById("input1");
-// console.log(input1);
-// console.log(input1);
-// console.time("mounted");
-// console.time("setup");
-
-(async () => {
-  await loadData(formattedDefault.value);
-})();
-
-//  async function name() { // function
-
-//  }
-//  name() // call function
-
-//  const a = ()=> {}
-
-//  ()=> {} //anonymous function
-
-// ( ()=>{})  () ;//self-invoking function
-
-// (async ()=>{
-//   await loadData(formattedDefault.value);
-// })  ()
-
-// console.timeEnd("setup");
-
-// onMounted(async () => {
-//   console.timeEnd("mounted");
-//   await loadData(formattedDefault.value);
-
-//   // filterEmployees();
+// const formattedDefault = ref({
+//   pageIndex: 0,
+//   pageSize: 5,
+//   search: {},
 // });
+// const pageData = ref<PaginationRequest>({
+//   pageRow: 0,
+//   pageIndex: 0,
+//   pageSize: 0,
+// });
+// const loadData = async (pagiData: PaginationRequest) => {
+//   formattedDefault.value = pagiData;
+//   try {
+//     const datas = await fetchDataTeam(formattedDefault.value).then(
+//       (x) => x.data
+//     );
+//     selectedTeam.value = datas.data;
+//     pageData.value = {
+//       pageRow: datas.rowCount,
+//       pageIndex: datas.pageIndex + 1,
+//       pageSize: datas.pageSize,
+//     };
+//   } catch (error) {
+//     console.error("Error loading data:", error);
+//   }
+// };
+
+// const confirmInput = () => {
+//   const filter = {
+//     pageIndex: 0,
+//     pageSize: pageData.value.pageSize,
+//     search: {
+//       text: searchTeam.value,
+//     },
+//   };
+//   loadData(filter);
+// };
+
+// const paginationData = ref<TP[]>([]);
+
+// const handleNewData = (data: TP[]) => {
+//   paginationData.value = data;
+// };
+
+// // const input1 = document.getElementById("input1");
+// // console.log(input1);
+// // console.log(input1);
+// // console.time("mounted");
+// // console.time("setup");
+
+// (async () => {
+//   await loadData(formattedDefault.value);
+// })();
+
+// //  async function name() { // function
+
+// //  }
+// //  name() // call function
+
+// //  const a = ()=> {}
+
+// //  ()=> {} //anonymous function
+
+// // ( ()=>{})  () ;//self-invoking function
+
+// // (async ()=>{
+// //   await loadData(formattedDefault.value);
+// // })  ()
+
+// // console.timeEnd("setup");
+
+// // onMounted(async () => {
+// //   console.timeEnd("mounted");
+// //   await loadData(formattedDefault.value);
+
+// //   // filterEmployees();
+// // });
 </script>
 
 <style scoped>

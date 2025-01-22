@@ -40,94 +40,74 @@
 
 <script setup lang="ts" generic="T">
 import { ref, computed, watch } from "vue";
-import type { Pagi } from "../../types/types";
-import type { PagiData } from "../../types/types";
+import type { PaginationResponse } from "../../types/types";
 
 const props = defineProps<{
-  data: T[];
-  pageData: PagiData;
+  data: PaginationResponse<T[]>;
 }>();
 
-const currentPage = ref<number>(
-  props.pageData!.pageIndex ? props.pageData!.pageIndex : 1
-);
-const pageSize = ref<number>(props.pageData!.pageSize);
-  // const pageSize = computed(()=>(props.pageData.pageSize))
-const localData = ref([...props.data]);
-
-// const localData = computed(()=> props.data)
+const currentPage = ref<number>(props.data.pageIndex + 1);
+const pageSize = ref<number>(props.data.pageSize);
+const localData = ref([...props.data.data]);
 
 const pagiData = computed(() => ({
   pageIndex: currentPage.value - 1,
   pageSize: pageSize.value,
-  search: {},
+  rowCount: sumData.value,
+  data: localData.value,
 }));
 
-const sumData = computed(() => props.pageData!.pageRow);
-const newData = computed(() => {
-  emit("newData", newData.value as T[]);
-
-  return localData.value;
-});
+const sumData = ref(props.data!.rowCount);
 
 const totalPages = computed(() =>
-  Math.ceil(props.pageData!.pageRow / pageSize.value)
+  Math.ceil(props.data!.rowCount / pageSize.value)
 );
 
 const nextPage = () => {
   currentPage.value++;
-  emit("newData", newData.value as T[]);
-  emit("paginationData", pagiData.value);
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
 };
 
 const prevPage = () => {
   currentPage.value--;
-  emit("newData", newData.value as T[]);
-  emit("paginationData", pagiData.value);
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
 };
 
 const updatePageSize = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   pageSize.value = Number(target.value);
   currentPage.value = 1;
-  emit("newData", newData.value as T[]);
-  emit("paginationData", pagiData.value);
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
 };
 
 const updateCurrentPage = (event: Event) => {
   const target = event.target as HTMLInputElement;
   currentPage.value = Number(target.value);
-
-  emit("newData", newData.value as T[]);
-  emit("paginationData", pagiData.value);
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
 };
 
 watch(
   () => props.data,
-  (newD) => {
-    localData.value = [...newD];
-    currentPage.value = props.pageData!.pageIndex;
-    pageSize.value = props.pageData!.pageSize
-    emit("newData", newData.value as T[]);
+  () => {
+    currentPage.value = props.data!.pageIndex + 1;
+    pageSize.value = props.data!.pageSize;
+    sumData.value = props.data.rowCount;
   },
   { deep: true }
 );
 
 const emit = defineEmits<{
-  (e: "newData", newData: T[]): void;
-  (e: "paginationData", pagiData: Pagi): void;
+  (e: "paginationData", pagiData: PaginationResponse<T[]>): void;
 }>();
 
 () => {
-  emit("newData", newData.value as T[]);
-  emit("paginationData", pagiData.value);
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
 };
 
 // onMounted(()=>{
 //   emit("newData", newData.value);
 //   emit("paginationData", pagiData.value);
 // })
-
 </script>
 
 <style scoped>
