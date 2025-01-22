@@ -133,15 +133,18 @@ import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
 import useEmployeeApi from "../api/apiEmployee";
-import { getPositionDropDown } from "../../position/api/apiPosition";
-import { getTeamDropDown } from "../../team/api/apiTeam";
+import usePositionApi from "../../position/api/apiPosition";
+import useTeamApi from "../../team/api/apiTeam";
 // import PenLogo from "../../../assets/editPen.svg";
 
 const teams = ref<Team<string>[]>([]);
 const postions = ref<Pos<string>[]>([]);
-const employee = ref<Employ1>({} as Employ1)
+const employee = ref<Employ1>({} as Employ1);
 
 const employeeApi = useEmployeeApi();
+const positionApi = usePositionApi()
+const teamApi = useTeamApi()
+
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
@@ -185,12 +188,12 @@ const getTeamPositionName = () => {
 
 const loadData = async (employeeId: string) => {
   try {
-    const data = await employeeApi.getDetail(employeeId).then(x=> x!.data);
-    employee.value = data
+    const data = await employeeApi.getDetail(employeeId).then((x) => x);
+    employee.value = data;
 
-    postions.value = await getPositionDropDown().then(x => x!.data);
+    postions.value = await positionApi.getPositionDropDown().then((x) => x);
 
-    teams.value = await getTeamDropDown().then(x => x!.data);
+    teams.value = await teamApi.getTeamDropDown().then((x) => x);
   } catch (error) {
     console.error("Error loading data:", error);
   }

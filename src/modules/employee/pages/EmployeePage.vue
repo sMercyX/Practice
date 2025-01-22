@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, watch, watchEffect, warn } from "vue";
+import { ref, computed, reactive, watch } from "vue";
 import type {
   Employ1,
   PaginationRequest,
@@ -75,8 +75,8 @@ import type { Header } from "../../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../../components/Pagination/Pagination.vue";
 import useEmployeeApi from "../api/apiEmployee.ts";
-import { getPositionDropDown } from "../../position/api/apiPosition.ts";
-import { getTeamDropDown } from "../../team/api/apiTeam.ts";
+import usePositionApi from "../../position/api/apiPosition.ts";
+import useTeamApi from "../../team/api/apiTeam.ts";
 import Delete from "../../../components/atoms/Delete.vue";
 import type {
   EmployeeIndexRequest,
@@ -88,6 +88,9 @@ const postions = ref<Pos<string>[]>([]);
 // const sumEmployee = computed(() => pageData.value.pageRow);
 const sumEmployee = computed(() => rawData.value.rowCount);
 const employeeApi = useEmployeeApi();
+const positionApi = usePositionApi();
+const teamApi = useTeamApi()
+
 const selectedHeaders = ref<Header[]>([
   { Name: "FirstName", Key: "firstname" },
   { Name: "Email", Key: "email" },
@@ -117,8 +120,7 @@ const close = () => {
 
 const handleDelete = async (id: string) => {
   await employeeApi.deleteEmployee(id);
-  const index = rawData.value.data.findIndex((item) => item.employeeId === id);
-  rawData.value.data.splice(index, 1);
+  await loadData();
 };
 
 const navigateTo = (nameRoute: string) => {
@@ -214,14 +216,16 @@ const handleNewPageData = (
 
 const loadTeam = async () => {
   try {
-    teams.value = await getTeamDropDown().then((x) => x!.data);
+    teams.value = await teamApi.getTeamDropDown().then((x) => x);
   } catch (error) {
     console.error("Error loading data:", error);
   }
 };
 const loadPosition = async () => {
   try {
-    postions.value = await getPositionDropDown().then((x) => x!.data);
+    postions.value = await positionApi
+      .getPositionDropDown()
+      .then((x) => x);
   } catch (error) {
     console.error("Error loading data:", error);
   }
@@ -240,7 +244,6 @@ const resetFilters = () => {
 
 (async () => {
   await Promise.all([loadData(), loadTeam(), loadPosition()]);
-
 })();
 
 watch(
