@@ -1,11 +1,8 @@
-import type { ApiResponse } from "../../../types/apiType";
 import type {
   EmployeeIndexRequest,
   EmployeeIndexResponse,
 } from "../../../types/employee";
 import type {
-  Employ1,
-  Employ1Details,
   PaginationResponse,
   PaginationRequest,
 } from "../../../types/types";
@@ -23,7 +20,9 @@ export default function useEmployeeApi() {
     return response;
   };
 
-  const createEmployee = async (employeeData: Employ1): Promise<string> => {
+  const createEmployee = async (
+    employeeData: EmployeeIndexResponse
+  ): Promise<string> => {
     const response = await postItem(
       `${import.meta.env.VITE_BASE_URL}/Employee/Create`,
       employeeData
@@ -31,7 +30,9 @@ export default function useEmployeeApi() {
     return response;
   };
 
-  const updateEmployee = async (employeeData: Employ1): Promise<string> => {
+  const updateEmployee = async (
+    employeeData: EmployeeIndexResponse
+  ): Promise<string> => {
     const response = await postItem(
       `${import.meta.env.VITE_BASE_URL}/Employee/Update`,
       employeeData
@@ -40,7 +41,9 @@ export default function useEmployeeApi() {
     return response;
   };
 
-  const getDetail = async (employeeId: string): Promise<Employ1> => {
+  const getDetail = async (
+    employeeId: string
+  ): Promise<EmployeeIndexResponse> => {
     const params = new URLSearchParams();
     params.set(`id`, employeeId);
 

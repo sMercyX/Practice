@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="Head">
+  <div class="Head">
     <h2>Team ( {{ sumTeam }} )</h2>
     <div class="createEmployeeButton">
       <button class="createButton" @click="openFormCreate()">
@@ -13,15 +13,16 @@
     <div class="left">
       <SearchBar
         header="SearchBar"
-        v-model:input="searchTeam"
-        @blur="confirmInput"
-        @keyup.enter="confirmInput"
+        :input="tableState.search.text"
+        @keyup="
+          tableState.search.text = ($event.target as HTMLInputElement).value
+        "
       />
     </div>
     <div class="right"></div>
   </div>
   <div>
-    <Table :headers="selectedHeaders" :data="paginationData">
+    <Table :headers="selectedHeaders" :data="tableState.data">
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
@@ -32,17 +33,12 @@
       </template>
     </Table>
 
-    <Pagination
-      :data="selectedTeam"
-      :pageData="pageData"
-      @newData="handleNewData"
-      @paginationData="loadData"
-    />
+    <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
 
   <Form1
     v-if="isFormOpen"
-    :data="selectedTeam"
+    :data="tableState.data"
     :id="idToEditDelete"
     :header="header"
     @back="close"
@@ -52,148 +48,118 @@
     :id="idToEditDelete"
     @back="close"
     @deleteSubmit="handleDelete"
-  /> -->
+  />
 </template>
 
 <script setup lang="ts">
-// import { ref, computed } from "vue";
-// import type {
-//   PaginationRequest,
-//   PaginationRequest,
-//   TP,
-// } from "../../../types/types.ts";
-// import SearchBar from "../../../components/SearchInput/SearchBar.vue";
+import { ref, computed, reactive, watch } from "vue";
+import type {
+  PaginationResponse,
+  TableState,
+} from "../../../types/types.ts";
+import SearchBar from "../../../components/SearchInput/SearchBar.vue";
 
-// import Table from "../../../components/atoms/Table.vue";
-// import type { Header } from "../../../types/tableTypes.ts";
-// import Pagination from "../../../components/Pagination/Pagination.vue";
-// import { postItem } from "../../../utils/fetch.ts";
-// import Form1 from "../../../components/atoms/Form1.vue";
-// import Delete from "../../../components/atoms/Delete.vue";
-// import { deleteTeam, fetchDataTeam } from "../api/apiTeam.ts";
+import Table from "../../../components/atoms/Table.vue";
+import type { Header } from "../../../types/tableTypes.ts";
+import Pagination from "../../../components/Pagination/Pagination.vue";
+import Form1 from "../../../components/atoms/Form1.vue";
+import Delete from "../../../components/atoms/Delete.vue";
+import useTeamApi from "../api/apiTeam.ts";
+import type { EmployeeIndexRequest } from "../../../types/employee.ts";
+import type { TeamResponse } from "../../../types/teamPositions.ts";
 
-// // const a = 0
-// // const teams = ref<TeamType>();
-// // const a = reactive({})
+const teamApi = useTeamApi();
+const sumTeam = computed(() => tableState.rowCount);
+const selectedHeaders = ref<Header[]>([
+  { Name: "TeamName", Key: "name" },
+  { Name: "Description", Key: "description" },
+  { Name: "Manage", Key: "manage" },
+]);
+const header = ref<string>("team");
 
-// const searchTeam = ref<string>("");
-// const sumTeam = computed(() => pageData.value.pageRow);
-// const selectedTeam = ref<TP[]>([]);
-// const selectedHeaders = ref<Header[]>([
-//   { Name: "TeamName", Key: "name" },
-//   { Name: "Description", Key: "description" },
-//   { Name: "Manage", Key: "manage" },
-// ]);
-// const header = ref<string>("team");
+const idToEditDelete = ref<string>("");
+const isFormOpen = ref<boolean>(false);
+const isDeleteOpen = ref<boolean>(false);
 
-// const idToEditDelete = ref<string>("");
-// const isFormOpen = ref<boolean>(false);
-// const isDeleteOpen = ref<boolean>(false);
+const openFormEdit = (id: string) => {
+  idToEditDelete.value = id;
+  isFormOpen.value = true;
+};
 
-// const openFormEdit = (id: string) => {
-//   idToEditDelete.value = id;
-//   isFormOpen.value = true;
-// };
+const openFormCreate = () => {
+  isFormOpen.value = true;
+};
 
-// const openFormCreate = () => {
-//   isFormOpen.value = true;
-// };
+const openFormDelete = (id: string) => {
+  idToEditDelete.value = id;
+  isDeleteOpen.value = true;
+};
 
-// const openFormDelete = (id: string) => {
-//   idToEditDelete.value = id;
-//   isDeleteOpen.value = true;
-// };
+const close = () => {
+  idToEditDelete.value = "";
+  isFormOpen.value = false;
+  isDeleteOpen.value = false;
+};
 
-// const close = () => {
-//   idToEditDelete.value = "";
-//   isFormOpen.value = false;
-//   isDeleteOpen.value = false;
-// };
+const handleDelete = async (id: string) => {
+  await teamApi.deleteTeam(id);
+  await loadData();
+};
 
-// const handleDelete = async (id: string) => {
-//   await deleteTeam(id);
+const rawData = ref<PaginationResponse<TeamResponse<string>[]>>({
+  pageIndex: 0,
+  rowCount: 0,
+  pageSize: 0,
+  data: [],
+});
 
-//   const index = paginationData.value.findIndex((item) => item.teamId === id);
-//   paginationData.value.splice(index, 1);
-// };
+const tableState: TableState<EmployeeIndexRequest, TeamResponse<string>[]> =
+  reactive({
+    pageIndex: 0,
+    pageSize: 10,
+    rowCount: computed(() => rawData.value.rowCount),
+    data: computed(() => rawData.value.data),
+    search: {
+      text: "",
+    },
+  });
 
-// const formattedDefault = ref({
-//   pageIndex: 0,
-//   pageSize: 5,
-//   search: {},
-// });
-// const pageData = ref<PaginationRequest>({
-//   pageRow: 0,
-//   pageIndex: 0,
-//   pageSize: 0,
-// });
-// const loadData = async (pagiData: PaginationRequest) => {
-//   formattedDefault.value = pagiData;
-//   try {
-//     const datas = await fetchDataTeam(formattedDefault.value).then(
-//       (x) => x.data
-//     );
-//     selectedTeam.value = datas.data;
-//     pageData.value = {
-//       pageRow: datas.rowCount,
-//       pageIndex: datas.pageIndex + 1,
-//       pageSize: datas.pageSize,
-//     };
-//   } catch (error) {
-//     console.error("Error loading data:", error);
-//   }
-// };
+const loadData = async () => {
+  try {
+    const datas = await teamApi
+      .fetchDataTeam({
+        pageIndex: tableState.pageIndex,
+        pageSize: tableState.pageSize,
+        search: tableState.search,
+      })
+      .then((x) => x);
+    rawData.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 
-// const confirmInput = () => {
-//   const filter = {
-//     pageIndex: 0,
-//     pageSize: pageData.value.pageSize,
-//     search: {
-//       text: searchTeam.value,
-//     },
-//   };
-//   loadData(filter);
-// };
+const handleNewPageData = (
+  data: PaginationResponse<TeamResponse<string>[]>
+) => {
+  tableState.pageIndex = data.pageIndex;
+  tableState.pageSize = data.pageSize;
+};
 
-// const paginationData = ref<TP[]>([]);
+(async () => {
+  await Promise.all([loadData()]);
+})();
 
-// const handleNewData = (data: TP[]) => {
-//   paginationData.value = data;
-// };
-
-// // const input1 = document.getElementById("input1");
-// // console.log(input1);
-// // console.log(input1);
-// // console.time("mounted");
-// // console.time("setup");
-
-// (async () => {
-//   await loadData(formattedDefault.value);
-// })();
-
-// //  async function name() { // function
-
-// //  }
-// //  name() // call function
-
-// //  const a = ()=> {}
-
-// //  ()=> {} //anonymous function
-
-// // ( ()=>{})  () ;//self-invoking function
-
-// // (async ()=>{
-// //   await loadData(formattedDefault.value);
-// // })  ()
-
-// // console.timeEnd("setup");
-
-// // onMounted(async () => {
-// //   console.timeEnd("mounted");
-// //   await loadData(formattedDefault.value);
-
-// //   // filterEmployees();
-// // });
+watch(
+  [
+    () => tableState.pageIndex,
+    () => tableState.pageSize,
+    () => tableState.search.text,
+  ],
+  async () => {
+    await loadData();
+  }
+);
 </script>
 
 <style scoped>

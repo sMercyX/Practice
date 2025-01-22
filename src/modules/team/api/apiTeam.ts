@@ -1,104 +1,69 @@
-import type { ApiResponse } from "../../../types/apiType";
 import type {
-  Employ1,
+  TeamIndexRequest,
+  TeamPositionRequest,
+  TeamResponse,
+} from "../../../types/teamPositions";
+import type {
   PaginationResponse,
   PaginationRequest,
-  Team,
-  TP,
+  DropdownModel,
 } from "../../../types/types";
 import { getItems, postItem } from "../../../utils/fetch";
 
-type getTeamResponse = PaginationResponse<TP[]>;
 
 export default function useTeamApi() {
-  const fetchDataTeam = async (pagiData: PaginationRequest) => {
-    try {
-      const response = await postItem(
-        `${import.meta.env.VITE_BASE_URL}/Team/Index`,
-        pagiData
-      );
-      const data: ApiResponse<getTeamResponse> = {
-        data: {
-          ...response,
-        },
-        isError: false,
-      };
-      return data;
-    } catch (error) {
-      console.error("Error loading data:", error);
-      return { data: {} as getTeamResponse, isError: true };
-    }
+  const fetchDataTeam = async (
+    pagiData: PaginationRequest<TeamIndexRequest>
+  ): Promise<PaginationResponse<TeamResponse<string>[]>> => {
+    const response = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/Team/Index`,
+      pagiData
+    );
+    return response;
   };
 
-  const createTeam = async (TeamData: Employ1) => {
-    try {
-      const response = await postItem(
-        `${import.meta.env.VITE_BASE_URL}/Team/Create`,
-        TeamData
-      );
-      const data: ApiResponse<string> = {
-        data: response,
-        isError: false,
-      };
-      return data;
-    } catch (error) {
-      console.error("Error loading data:", error);
-      return { data: error as string, isError: true };
-    }
+  const createTeam = async (TeamData: TeamPositionRequest): Promise<string> => {
+    const response = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/Team/Create`,
+      TeamData
+    );
+    return response;
   };
 
-  const updateTeam = async (TeamData: Employ1) => {
-    try {
-      const response = await postItem(
-        `${import.meta.env.VITE_BASE_URL}/Team/Update`,
-        TeamData
-      );
-      const data: ApiResponse<string> = {
-        data: response,
-        isError: false,
-      };
-      return data;
-    } catch (error) {
-      console.error("Error loading data:", error);
-      return { data: error as string, isError: true };
-    }
+  const updateTeam = async (
+    TeamData: TeamResponse<string>
+  ): Promise<string> => {
+    const response = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/Team/Update`,
+      TeamData
+    );
+    return response;
   };
 
-  const getDetailTeam = async (TeamId: string) => {
-    try {
-      const params = new URLSearchParams();
-      params.set("id", TeamId);
+  const getDetailTeam = async ( TeamId: string ) : Promise<TeamResponse<string>> => {
+    const params = new URLSearchParams();
+    params.set("id", TeamId);
 
-      const response = await getItems(
-        `${import.meta.env.VITE_BASE_URL}/Team/GetDetail?${params}`
-      );
-      const data: ApiResponse<TP> = {
-        data: {
-          ...response,
-        },
-        isError: false,
-      };
-      return data;
-    } catch (error) {
-      console.error("Error loading data:", error);
-      return { data: {} as TP, isError: true };
-    }
+    const response = await getItems(
+      `${import.meta.env.VITE_BASE_URL}/Team/GetDetail?${params}`
+    );
+    return response;
   };
 
-  const deleteTeam = async (TeamId: string) => {
-    try {
-      await postItem(`${import.meta.env.VITE_BASE_URL}/Team/Delete`, TeamId);
-    } catch (error) {
-      console.error("Error loading data:", error);
-    }
+  const deleteTeam = async (TeamId: string): Promise<string> => {
+    const response = await postItem(
+      `${import.meta.env.VITE_BASE_URL}/Team/Delete`,
+      TeamId
+    );
+    return response;
   };
 
-  const getTeamDropDown = async () : Promise<Team<string>[]> => {
-      const response = await getItems(
-        `${import.meta.env.VITE_BASE_URL}/Team/GetTeamDropDown`
-      );
-     
-      return response;
+  const getTeamDropDown = async (): Promise<DropdownModel<string>[]> => {
+    const response = await getItems(
+      `${import.meta.env.VITE_BASE_URL}/Team/GetTeamDropDown`
+    );
+
+    return response;
   };
 
   return {

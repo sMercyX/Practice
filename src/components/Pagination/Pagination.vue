@@ -104,10 +104,6 @@ const emit = defineEmits<{
   emit("paginationData", pagiData.value as PaginationResponse<T[]>);
 };
 
-// onMounted(()=>{
-//   emit("newData", newData.value);
-//   emit("paginationData", pagiData.value);
-// })
 </script>
 
 <style scoped>

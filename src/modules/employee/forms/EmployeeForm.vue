@@ -128,23 +128,25 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
-import type { Employ1, Phone, Pos, Team } from "../../../types/types";
+import type {
+  DropdownModel,
+} from "../../../types/types";
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
 import useEmployeeApi from "../api/apiEmployee";
 import usePositionApi from "../../position/api/apiPosition";
 import useTeamApi from "../../team/api/apiTeam";
+import type { EmployeeIndexResponse, Phone } from "../../../types/employee";
 // import PenLogo from "../../../assets/editPen.svg";
 
-const teams = ref<Team<string>[]>([]);
-const postions = ref<Pos<string>[]>([]);
-const employee = ref<Employ1>({} as Employ1);
+const teams = ref<DropdownModel<string>[]>([]);
+const postions = ref<DropdownModel<string>[]>([]);
+const employee = ref<EmployeeIndexResponse>({} as EmployeeIndexResponse);
 
 const employeeApi = useEmployeeApi();
-const positionApi = usePositionApi()
-const teamApi = useTeamApi()
-
+const positionApi = usePositionApi();
+const teamApi = useTeamApi();
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
@@ -178,11 +180,11 @@ const positionName = ref<string>("");
 
 const getTeamPositionName = () => {
   teamName.value = teams.value.find(
-    (e: Team<string>) => e.value === selectedTeam.value
+    (e: DropdownModel<string>) => e.value === selectedTeam.value
   )!.text;
 
   positionName.value = postions.value.find(
-    (e: Pos<string>) => e.value === selectedPosition.value
+    (e: DropdownModel<string>) => e.value === selectedPosition.value
   )!.text;
 };
 
@@ -203,7 +205,7 @@ const loadData = async (employeeId: string) => {
 const handleSubmit = async () => {
   if (isEditing.value && employeeId.value && mode.value === "edit") {
     if (isEditing.value) {
-      const formData: Employ1 = {
+      const formData: EmployeeIndexResponse = {
         employeeId: employeeId.value,
         firstname: firstName.value,
         lastname: lastName.value,
@@ -216,7 +218,7 @@ const handleSubmit = async () => {
       await employeeApi.updateEmployee(formData);
     }
   } else {
-    const formData: Employ1 = {
+    const formData: EmployeeIndexResponse = {
       employeeId: uuid.v1(),
       firstname: firstName.value,
       lastname: lastName.value,

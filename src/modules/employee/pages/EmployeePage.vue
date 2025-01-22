@@ -60,12 +60,9 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch } from "vue";
 import type {
-  Employ1,
-  PaginationRequest,
+  DropdownModel,
   PaginationResponse,
-  Pos,
   TableState,
-  Team,
 } from "../../../types/types.ts";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
 import SearchBar from "../../../components/SearchInput/SearchBar.vue";
@@ -81,15 +78,16 @@ import Delete from "../../../components/atoms/Delete.vue";
 import type {
   EmployeeIndexRequest,
   EmployeeIndexResponse,
+  EmployeeWithDetail,
 } from "../../../types/employee.ts";
-const teams = ref<Team<string>[]>([]);
-const postions = ref<Pos<string>[]>([]);
+const teams = ref<DropdownModel<string>[]>([]);
+const postions = ref<DropdownModel<string>[]>([]);
 
 // const sumEmployee = computed(() => pageData.value.pageRow);
 const sumEmployee = computed(() => rawData.value.rowCount);
 const employeeApi = useEmployeeApi();
 const positionApi = usePositionApi();
-const teamApi = useTeamApi()
+const teamApi = useTeamApi();
 
 const selectedHeaders = ref<Header[]>([
   { Name: "FirstName", Key: "firstname" },
@@ -100,12 +98,6 @@ const selectedHeaders = ref<Header[]>([
 ]);
 const router = useRouter();
 
-// const paginationData = ref<Employ1Details[]>([]);
-
-// const handleNewData = (data: Employ1Details[]) => {
-//   paginationData.value = data;
-//   console.log(paginationData.value)
-// };
 const isDeleteOpen = ref<boolean>(false);
 const idToEditDelete = ref<string>("");
 const openFormDelete = (id: string) => {
@@ -130,7 +122,7 @@ const navigateToEmployee = (employeeId: string) => {
   router.push({ name: "editEmployee", params: { employeeId: employeeId } });
 };
 
-const navigateToView = (data: Employ1) => {
+const navigateToView = (data: EmployeeIndexResponse) => {
   router.push({
     name: "viewEmployee",
     params: { employeeId: data.employeeId },
@@ -146,22 +138,6 @@ const getPositionName = (positionId: string) => {
   return position ? position.text : "Unknown Position";
 };
 
-// const formattedDefault = ref({
-//   pageIndex: 0,
-//   pageSize: 10,
-//   search: {},
-// });
-// const pageData = ref<
-//   PaginationRequest<{ text: string; teamId: string; positionId: string }>
-// >({
-//   pageIndex: 0,
-//   pageSize: 0,
-//   search: {
-//     text: searchEmployee.value,
-//     teamId: selectedTeam.value,
-//     positionId: selectedPosition.value,
-//   },
-// });
 const rawData = ref<PaginationResponse<EmployeeIndexResponse[]>>({
   pageIndex: 0,
   rowCount: 0,
@@ -169,10 +145,6 @@ const rawData = ref<PaginationResponse<EmployeeIndexResponse[]>>({
   data: [],
 });
 
-interface EmployeeWithDetail extends EmployeeIndexResponse {
-  team_name: string;
-  position_name: string;
-}
 const tableState: TableState<EmployeeIndexRequest, EmployeeWithDetail[]> =
   reactive({
     pageIndex: 0,
@@ -221,11 +193,10 @@ const loadTeam = async () => {
     console.error("Error loading data:", error);
   }
 };
+
 const loadPosition = async () => {
   try {
-    postions.value = await positionApi
-      .getPositionDropDown()
-      .then((x) => x);
+    postions.value = await positionApi.getPositionDropDown().then((x) => x);
   } catch (error) {
     console.error("Error loading data:", error);
   }
@@ -238,6 +209,7 @@ function createDefaultSearch(): EmployeeIndexRequest {
     text: "",
   };
 }
+
 const resetFilters = () => {
   tableState.search = createDefaultSearch();
 };
