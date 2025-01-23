@@ -2,20 +2,13 @@
   <div class="Top">
     <div class="Left">
       <h2 class="leftArrow" @click="navigateTo('employee')">&leftarrow;</h2>
-      <h2>{{ isEditing ? "Edit" : isView ? "View" : "Create" }} Employee</h2>
+      <h2>{{ isEditing ? "Edit" : "Create" }} Employee</h2>
     </div>
     <div class="Right">
       <button @click="navigateTo('employee')" class="cancelButton">
         Cancel
       </button>
-      <button
-        type="submit"
-        form="myForm"
-        class="confirmButton"
-        :disabled="isView"
-      >
-        Save
-      </button>
+      <button type="submit" form="myForm" class="confirmButton">Save</button>
     </div>
   </div>
   <div class="modal-overlay">
@@ -33,87 +26,48 @@
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
-            <p v-if="isView">{{ firstName }}</p>
-            <InputText
-              v-if="!isView"
-              v-model:input="firstName"
-              :required="true"
-            />
+            <InputText v-model:input="firstName" :required="true" />
           </div>
           <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
-            <p v-if="isView">{{ lastName }}</p>
-            <InputText
-              v-if="!isView"
-              v-model:input="lastName"
-              :required="true"
-            />
+            <InputText v-model:input="lastName" :required="true" />
           </div>
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
-          <p v-if="isView">{{ email }}</p>
-          <InputText v-if="!isView" v-model:input="email" :required="true" />
+          <InputText v-model:input="email" :required="true" />
         </div>
 
         <div class="breakHalf">
           <div class="groupUp">
             <label for="team_id">Team <span>*</span></label>
-            <p v-if="isView">{{ teamName }}</p>
-            <Dropdown v-if="!isView" v-model="selectedTeam" :list="teams" />
+            <Dropdown v-model="selectedTeam" :list="teams" />
           </div>
           <div class="groupUp">
             <label for="position_id">Position <span>*</span></label>
-            <p v-if="isView">{{ positionName }}</p>
-            <Dropdown
-              v-if="!isView"
-              v-model="selectedPosition"
-              :list="postions"
-            />
+            <Dropdown v-model="selectedPosition" :list="postions" />
           </div>
         </div>
 
         <hr />
         <div class="breakHalf">
           <label for="phone">Phone Numbers</label>
-          <button
-            class="add-button"
-            @click="addPhone"
-            type="button"
-            v-if="!isView"
-          >
+          <button class="add-button" @click="addPhone" type="button">
             &plus; Phone
           </button>
         </div>
         <div class="phone-list">
-          <InputText
-            v-model:input="phones[0].phoneNumber"
-            :required="true"
-            :readonly="isView"
-            v-if="!isView"
-          />
-
-          <p v-if="isView">
-            {{ phones[0].phoneNumber }}
-          </p>
+          <InputText v-model:input="phones[0].phoneNumber" :required="true" />
           <div
             v-if="phones.length > 1"
             v-for="(phone, index) in phones.slice(1)"
             :key="index + 1"
             class="phone-item"
           >
-            <p v-if="isView">
-              {{ phone.phoneNumber }}
-            </p>
-            <InputText
-              v-model:input="phone.phoneNumber"
-              :required="true"
-              v-if="!isView"
-            />
+            <InputText v-model:input="phone.phoneNumber" :required="true" />
             <button
               class="remove-button"
               type="button"
-              v-if="!isView"
               @click="removePhone(index)"
             >
               &minus;
@@ -126,11 +80,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import Dropdown from "../../../components/Dropdown/Dropdown.vue";
-import type {
-  DropdownModel,
-} from "../../../types/types";
+import type { DropdownModel } from "../../../types/types";
 import InputText from "../../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
@@ -138,7 +90,6 @@ import useEmployeeApi from "../api/apiEmployee";
 import usePositionApi from "../../position/api/apiPosition";
 import useTeamApi from "../../team/api/apiTeam";
 import type { EmployeeIndexResponse, Phone } from "../../../types/employee";
-// import PenLogo from "../../../assets/editPen.svg";
 
 const teams = ref<DropdownModel<string>[]>([]);
 const postions = ref<DropdownModel<string>[]>([]);
@@ -153,10 +104,9 @@ const lastName = ref<string>("");
 const email = ref<string>("");
 const dateOfBirth = ref<string>("");
 const phones = ref<Phone[]>([{ phoneId: uuid.v1(), phoneNumber: "" }]);
-const mode = computed(() => route.meta.mode);
 
 const addPhone = () => {
-  phones.value.push({ phoneId: uuid.v1(), phoneNumber: "" }); // Add a new empty phone number input
+  phones.value.push({ phoneId: uuid.v1(), phoneNumber: "" });
 };
 
 const removePhone = (index: number) => {
@@ -168,7 +118,6 @@ const router = useRouter();
 const route = useRoute();
 
 const isEditing = ref<boolean>(false);
-const isView = ref<boolean>(false);
 const employeeId = ref<string | null>(null);
 
 const navigateTo = (nameRoute: string) => {
@@ -203,7 +152,7 @@ const loadData = async (employeeId: string) => {
 
 // **Handle Submit for Both Add & Edit**
 const handleSubmit = async () => {
-  if (isEditing.value && employeeId.value && mode.value === "edit") {
+  if (isEditing.value && employeeId.value) {
     if (isEditing.value) {
       const formData: EmployeeIndexResponse = {
         employeeId: employeeId.value,
@@ -238,8 +187,7 @@ const handleSubmit = async () => {
   await loadData(employeeId.value);
 
   if (employeeId.value) {
-    if (mode.value === "edit") isEditing.value = true;
-    if (mode.value === "view") isView.value = true;
+    isEditing.value = true;
     if (employee.value) {
       firstName.value = employee.value.firstname;
       lastName.value = employee.value.lastname;
