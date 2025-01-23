@@ -8,7 +8,8 @@
     <template #="{ value }"> {{ value }} </template>
   </Test>
 
-  <Box1></Box1>
+  <button @click="openBox()">open</button>
+  <Box1 ref="modalBox" ></Box1>
 </template>
 
 <script setup lang="ts">
@@ -17,6 +18,14 @@ import Test from "./FixTest.vue";
 import Box1 from "./box/box1.vue";
 
 const count = ref<number>(0);
+
+
+
+const modalBox = ref<InstanceType<typeof Box1>>(null!);
+const openBox = () => {
+  modalBox.value.openModal();
+};
+
 
 interface AB {
   a: string;
