@@ -2,94 +2,88 @@
   <div class="Top">
     <div class="Left">
       <h2 class="leftArrow" @click="navigateTo('employee')">&leftarrow;</h2>
-      <h2>{{ isEditing ? "Edit" : "Create" }} Employee</h2>
+      <h2>View Employee</h2>
     </div>
     <div class="Right">
       <button @click="navigateTo('employee')" class="cancelButton">
         Cancel
       </button>
-      <button type="submit" form="myForm" class="confirmButton">Save</button>
+      <button type="submit" form="myForm" class="confirmButton" disabled>
+        Save
+      </button>
     </div>
   </div>
   <div class="modal-overlay">
     <div class="modal-content">
       <div class="Header">
         <img
-          src="../../../assets/editPen.svg"
+          src="../../assets/editPen.svg"
           alt="Edit Icon"
           class="editIcon"
         />
         <h2>Basic Info</h2>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="Content" id="myForm">
+      <div class="Content" id="myForm">
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
-            <InputText v-model:input="firstName" :required="true" />
+            <p>{{ firstName }}</p>
           </div>
           <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
-            <InputText v-model:input="lastName" :required="true" />
+            <p>{{ lastName }}</p>
           </div>
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
-          <InputText v-model:input="email" :required="true" />
+          <p>{{ email }}</p>
         </div>
 
         <div class="breakHalf">
           <div class="groupUp">
             <label for="team_id">Team <span>*</span></label>
-            <Dropdown v-model="selectedTeam" :list="teams" />
+            <p>{{ teamName }}</p>
           </div>
           <div class="groupUp">
             <label for="position_id">Position <span>*</span></label>
-            <Dropdown v-model="selectedPosition" :list="postions" />
+            <p>{{ positionName }}</p>
           </div>
         </div>
 
         <hr />
         <div class="breakHalf">
           <label for="phone">Phone Numbers</label>
-          <button class="add-button" @click="addPhone" type="button">
-            &plus; Phone
-          </button>
         </div>
         <div class="phone-list">
-          <InputText v-model:input="phones[0].phoneNumber" :required="true" />
+          <p>
+            {{ phones[0].phoneNumber }}
+          </p>
           <div
             v-if="phones.length > 1"
             v-for="(phone, index) in phones.slice(1)"
             :key="index + 1"
             class="phone-item"
           >
-            <InputText v-model:input="phone.phoneNumber" :required="true" />
-            <button
-              class="remove-button"
-              type="button"
-              @click="removePhone(index)"
-            >
-              &minus;
-            </button>
+            <p>
+              {{ phone.phoneNumber }}
+            </p>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Dropdown from "../../../components/Dropdown/Dropdown.vue";
-import type { DropdownModel } from "../../../types/types";
-import InputText from "../../../components/Input/InputText.vue";
+import type { DropdownModel } from "../../types/types";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
-import useEmployeeApi from "../api/apiEmployee";
-import usePositionApi from "../../position/api/apiPosition";
-import useTeamApi from "../../team/api/apiTeam";
-import type { EmployeeIndexResponse, Phone } from "../../../types/employee";
+import useEmployeeApi from "./api/apiEmployee";
+import usePositionApi from "../position/api/apiPosition";
+import useTeamApi from "../team/api/apiTeam";
+import type { EmployeeIndexResponse, Phone } from "../../types/employee";
 
 const teams = ref<DropdownModel<string>[]>([]);
 const postions = ref<DropdownModel<string>[]>([]);
@@ -105,19 +99,11 @@ const email = ref<string>("");
 const dateOfBirth = ref<string>("");
 const phones = ref<Phone[]>([{ phoneId: uuid.v1(), phoneNumber: "" }]);
 
-const addPhone = () => {
-  phones.value.push({ phoneId: uuid.v1(), phoneNumber: "" });
-};
-
-const removePhone = (index: number) => {
-  phones.value.splice(index + 1, 1);
-};
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
 const router = useRouter();
 const route = useRoute();
 
-const isEditing = ref<boolean>(false);
 const employeeId = ref<string | null>(null);
 
 const navigateTo = (nameRoute: string) => {
@@ -141,45 +127,11 @@ const loadData = async (employeeId: string) => {
   try {
     const data = await employeeApi.getDetail(employeeId).then((x) => x);
     employee.value = data;
-
     postions.value = await positionApi.getPositionDropDown().then((x) => x);
-
     teams.value = await teamApi.getTeamDropDown().then((x) => x);
   } catch (error) {
     console.error("Error loading data:", error);
   }
-};
-
-// **Handle Submit for Both Add & Edit**
-const handleSubmit = async () => {
-  if (isEditing.value && employeeId.value) {
-    if (isEditing.value) {
-      const formData: EmployeeIndexResponse = {
-        employeeId: employeeId.value,
-        firstname: firstName.value,
-        lastname: lastName.value,
-        email: email.value,
-        dateOfBirth: "",
-        phones: phones.value,
-        teamId: selectedTeam.value,
-        positionId: selectedPosition.value,
-      };
-      await employeeApi.updateEmployee(formData);
-    }
-  } else {
-    const formData: EmployeeIndexResponse = {
-      employeeId: uuid.v1(),
-      firstname: firstName.value,
-      lastname: lastName.value,
-      email: email.value,
-      dateOfBirth: "",
-      phones: phones.value,
-      teamId: selectedTeam.value,
-      positionId: selectedPosition.value,
-    };
-    await employeeApi.createEmployee(formData);
-  }
-  navigateTo("employee");
 };
 
 (async () => {
@@ -187,7 +139,6 @@ const handleSubmit = async () => {
   await loadData(employeeId.value);
 
   if (employeeId.value) {
-    isEditing.value = true;
     if (employee.value) {
       firstName.value = employee.value.firstname;
       lastName.value = employee.value.lastname;
