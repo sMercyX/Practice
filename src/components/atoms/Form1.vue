@@ -29,17 +29,17 @@
 
 <script setup lang="ts" generic="T">
 import { ref } from "vue";
-import type { TeamPositionResponse } from "../../types/types";
 import InputText from "../Input/InputText.vue";
 import { postItem } from "../../utils/fetch";
+import type { TeamPositionRequest } from "../../types/teamPositions";
 
 const props = defineProps<{
   id: string;
-  data: TeamPositionResponse[];
+  data: TeamPositionRequest[];
   header: string;
 }>();
 
-const datas = ref<TeamPositionResponse[]>([]);
+const datas = ref<TeamPositionRequest[]>([]);
 
 const Name = ref<string>("");
 const Description = ref<string>("");
@@ -48,7 +48,7 @@ const isEditing = ref<boolean>(false);
 const dataId = ref<string>();
 
 const header = ref<string>(props.header);
-const headerId = ref((header.value + "Id") as keyof TeamPositionResponse);
+const headerId = ref((header.value + "Id") as keyof TeamPositionRequest);
 
 const goback = () => {
   return emit("back", false);
@@ -58,7 +58,7 @@ const emit = defineEmits<{
   (e: "back", value: boolean): void;
 }>();
 
-const uploadData = async (data: TeamPositionResponse) => {
+const uploadData = async (data: TeamPositionRequest) => {
   try {
     const id = await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/create`,
@@ -69,7 +69,7 @@ const uploadData = async (data: TeamPositionResponse) => {
     console.error("Error loading data:", error);
   }
 };
-const updateData = async (data: TeamPositionResponse, index: number) => {
+const updateData = async (data: TeamPositionRequest, index: number) => {
   try {
     await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/update`,
@@ -84,10 +84,10 @@ const updateData = async (data: TeamPositionResponse, index: number) => {
 const handleSubmit = () => {
   if (isEditing.value && dataId.value) {
     const index = datas.value.findIndex(
-      (e: TeamPositionResponse) => e[headerId.value] === dataId.value
+      (e: TeamPositionRequest) => e[headerId.value] === dataId.value
     );
     if (index !== -1) {
-      const formData: TeamPositionResponse = {
+      const formData: TeamPositionRequest = {
         name: Name.value,
         description: Description.value,
         [headerId.value]: dataId.value,
@@ -95,7 +95,7 @@ const handleSubmit = () => {
       updateData(formData, index);
     }
   } else {
-    const formData: TeamPositionResponse = {
+    const formData: TeamPositionRequest = {
       name: Name.value,
       description: Description.value,
     };
@@ -110,7 +110,7 @@ const handleSubmit = () => {
   if (dataId.value) {
     isEditing.value = true;
     const dataa = datas.value.find(
-      (e: TeamPositionResponse) => e[headerId.value] === dataId!.value
+      (e: TeamPositionRequest) => e[headerId.value] === dataId!.value
     );
     if (dataa) {
       Name.value = dataa.name;

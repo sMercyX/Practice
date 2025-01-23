@@ -1,18 +1,15 @@
 <template>
-  <!-- <div>
+  <div>
     <h1>Employee ( {{ sumEmployee }} )</h1>
     <div class="searchMenu">
-      <Dropdown :list="teams" v-model="selectedTeam" @change="confirmInput" />
-      <Dropdown
-        :list="positions"
-        :modelValue="selectedPosition"
-        @update:modelValue="selectedPosition = $event"
-        @change="confirmInput"
-      />
+      <Dropdown :list="teams" v-model="tableState.search.teamId" />
+      <Dropdown :list="postions" v-model="tableState.search.positionId" />
       <SearchBar
         header="SearchBar"
-        v-model:input="searchEmployee"
-        @change="confirmInput"
+        :input="tableState.search.text"
+        @keyup="
+          tableState.search.text = ($event.target as HTMLInputElement).value
+        "
       />
       <div class="resetButton">
         <button @click="resetFilters">Reset</button>
@@ -22,141 +19,155 @@
   <hr />
 
   <div>
-    <Table :headers="selectedHeaders" :data="paginationData">
+    <Table :headers="selectedHeaders" :data="tableState.data">
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
     </Table>
 
-    <Pagination
-      :data="employeesWithDetails"
-      :pageData="pageData"
-      @newData="handleNewData"
-      @paginationData="loadData"
-    />
-  </div> -->
+    <Pagination :data="rawData" @paginationData="handleNewPageData" />
+  </div>
 </template>
 
 <script setup lang="ts">
-// import { ref, computed, onMounted } from "vue";
-// import type {
-//   Employ1Details,
-//   PaginationRequest,
-//   PaginationRequest,
-//   Pos,
-//   Team,
-// } from "../../types/types.ts";
-// import Dropdown from "../Dropdown/Dropdown.vue";
-// import SearchBar from "../SearchInput/SearchBar.vue";
-// import Table from "../atoms/Table.vue";
-// import type { Header } from "../../types/tableTypes.ts";
-// import Pagination from "../Pagination/Pagination.vue";
-// import { fetchDataEmployee } from "../../modules/employee/api/apiEmployee.ts";
-// import { getPositionDropDown } from "../../modules/position/api/apiPosition.ts";
-// import { getTeamDropDown } from "../../modules/team/api/apiTeam.ts";
+import { ref, computed, reactive, watch } from "vue";
+import type {
+  DropdownModel,
+  PaginationResponse,
+  TableState,
+} from "../../types/types.ts";
+import Dropdown from "../Dropdown/Dropdown.vue";
+import SearchBar from "../SearchInput/SearchBar.vue";
+import Table from "../atoms/Table.vue";
+import type { Header } from "../../types/tableTypes.ts";
+import Pagination from "../Pagination/Pagination.vue";
+import useEmployeeApi from "../../modules/employee/api/apiEmployee.ts";
+import usePositionApi from "../../modules/position/api/apiPosition.ts";
+import useTeamApi from "../../modules/team/api/apiTeam.ts";
+import type {
+  EmployeeIndexRequest,
+  EmployeeIndexResponse,
+  EmployeeWithDetail,
+} from "../../types/employee.ts";
 
-// const teams = ref<Team<string>[]>([]);
-// const positions = ref<Pos<string>[]>([]);
-// // const employees = ref();
+const teams = ref<DropdownModel<string>[]>([]);
+const postions = ref<DropdownModel<string>[]>([]);
+// const employees = ref();
 
-// const selectedTeam = ref<string>("");
-// const selectedPosition = ref<string>("");
-// const searchEmployee = ref<string>("");
+const sumEmployee = computed(() => rawData.value.rowCount);
+const employeeApi = useEmployeeApi();
+const positionApi = usePositionApi();
+const teamApi = useTeamApi();
 
-// const sumEmployee = computed(() => pageData.value.pageRow);
-// const selectedEmployees = ref<Employ1Details[]>([]);
-// const selectedHeaders = ref<Header[]>([
-//   { Name: "FirstName", Key: "firstname" },
-//   { Name: "Email", Key: "email" },
-//   { Name: "Team", Key: "team_name" },
-//   { Name: "Position", Key: "position_name" },
-// ]);
+const selectedHeaders = ref<Header[]>([
+  { Name: "FirstName", Key: "firstname" },
+  { Name: "Email", Key: "email" },
+  { Name: "Team", Key: "team_name" },
+  { Name: "Position", Key: "position_name" },
+]);
 
-// const paginationData = ref<Employ1Details[]>([]);
+const getTeamName = (teamId: string) => {
+  const team = teams.value.find((t) => t.value === teamId);
+  return team ? team.text : "Unknown Team";
+};
 
-// const handleNewData = (data: Employ1Details[]) => {
-//   paginationData.value = data;
-// };
+const getPositionName = (positionId: string) => {
+  const position = postions.value.find((t) => t.value === positionId);
+  return position ? position.text : "Unknown Position";
+};
 
-// const getTeamName = (teamId: string) => {
-//   const team = teams.value.find((t) => t.value === teamId);
-//   return team ? team.text : "Unknown Team";
-// };
+const rawData = ref<PaginationResponse<EmployeeIndexResponse[]>>({
+  pageIndex: 0,
+  rowCount: 0,
+  pageSize: 0,
+  data: [],
+});
 
-// const getPositionName = (positionId: string) => {
-//   const position = positions.value.find((t) => t.value === positionId);
-//   return position ? position.text : "Unknown Position";
-// };
+const tableState: TableState<EmployeeIndexRequest, EmployeeWithDetail[]> =
+  reactive({
+    pageIndex: 0,
+    pageSize: 10,
+    rowCount: computed(() => rawData.value.rowCount),
+    data: computed(() =>
+      rawData.value.data.map((emp) => ({
+        ...emp,
+        team_name: getTeamName(emp.teamId),
+        position_name: getPositionName(emp.positionId),
+      }))
+    ),
+    search: {
+      text: "",
+      teamId: "",
+      positionId: "",
+    },
+  });
 
-// // Enhanced with Team and Position Names
-// const employeesWithDetails = computed(() =>
-//   selectedEmployees.value.map((emp) => ({
-//     ...emp,
-//     team_name: getTeamName(emp.teamId),
-//     position_name: getPositionName(emp.positionId),
-//   }))
-// );
+const loadData = async () => {
+  try {
+    const datas = await employeeApi
+      .fetchDataEmployee({
+        pageIndex: tableState.pageIndex,
+        pageSize: tableState.pageSize,
+        search: tableState.search,
+      })
+      .then((x) => x);
+    rawData.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 
-// const pageData = ref<PaginationRequest>({
-//   pageRow: 0,
-//   pageIndex: 0,
-//   pageSize: 0,
-// });
+const handleNewPageData = (
+  data: PaginationResponse<EmployeeIndexResponse[]>
+) => {
+  tableState.pageIndex = data.pageIndex;
+  tableState.pageSize = data.pageSize;
+};
 
-// const formattedDefault = ref({
-//   pageIndex: 0,
-//   pageSize: 5,
-//   search: {},
-// });
+const loadTeam = async () => {
+  try {
+    teams.value = await teamApi.getTeamDropDown().then((x) => x);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 
-// const loadData = async (pagiData: PaginationRequest) => {
-//   pagiData = { ...pagiData, search: formattedDefault.value.search };
-//   formattedDefault.value = pagiData;
-//   try {
-//     const datas = await fetchDataEmployee(formattedDefault.value).then(
-//       (x) => x.data
-//     );
+const loadPosition = async () => {
+  try {
+    postions.value = await positionApi.getPositionDropDown().then((x) => x);
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 
-//     positions.value = await getPositionDropDown().then((x) => x!.data);
-//     teams.value = await getTeamDropDown().then((x) => x!.data);
-//     console.log(teams.value);
+function createDefaultSearch(): EmployeeIndexRequest {
+  return {
+    positionId: "",
+    teamId: "",
+    text: "",
+  };
+}
 
-//     selectedEmployees.value = datas.data;
-//     pageData.value = {
-//       pageRow: datas.rowCount,
-//       pageIndex: datas.pageIndex + 1,
-//       pageSize: datas.pageSize,
-//     };
-//   } catch (error) {
-//     console.error("Error loading data:", error);
-//   }
-// };
+const resetFilters = () => {
+  tableState.search = createDefaultSearch();
+};
 
-// const confirmInput = () => {
-//   formattedDefault.value = {
-//     pageIndex: 0,
-//     pageSize: pageData.value.pageSize,
-//     search: {
-//       text: searchEmployee.value,
-//       teamId: selectedTeam.value,
-//       positionId: selectedPosition.value,
-//     },
-//   };
+(async () => {
+  await Promise.all([loadData(), loadTeam(), loadPosition()]);
+})();
 
-//   loadData(formattedDefault.value);
-// };
-
-// const resetFilters = () => {
-//   selectedTeam.value = "";
-//   selectedPosition.value = "";
-//   searchEmployee.value = "";
-//   confirmInput();
-//   // filterEmployees();
-// };
-
-// onMounted(async () => {
-//   await loadData(formattedDefault.value);
-// });
+watch(
+  [
+    () => tableState.pageIndex,
+    () => tableState.pageSize,
+    () => tableState.search.positionId,
+    () => tableState.search.teamId,
+    () => tableState.search.text,
+  ],
+  async () => {
+    await loadData();
+  }
+);
 </script>
 
 <style scoped>

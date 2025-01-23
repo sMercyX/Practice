@@ -1,16 +1,3 @@
-<script setup lang="ts">
-import { ref } from "vue";
-import Test from "./FixTest.vue";
-
-const count = ref<number>(0);
-
-interface AB {
-  a: string;
-}
-
-const ab: AB = null!;
-</script>
-
 <template>
   <container>
     <button type="button" @click="count--">&minus;</button>
@@ -20,7 +7,23 @@ const ab: AB = null!;
   <Test :data="ab" @data="console.log($event)">
     <template #="{ value }"> {{ value }} </template>
   </Test>
+
+  <Box1></Box1>
 </template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import Test from "./FixTest.vue";
+import Box1 from "./box/box1.vue";
+
+const count = ref<number>(0);
+
+interface AB {
+  a: string;
+}
+
+const ab: AB = null!;
+</script>
 
 <style scoped>
 container {

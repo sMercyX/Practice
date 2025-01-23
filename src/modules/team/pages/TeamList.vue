@@ -43,12 +43,7 @@
     :header="header"
     @back="close"
   />
-  <Delete
-    v-if="isDeleteOpen"
-    :id="idToEditDelete"
-    @back="close"
-    @deleteSubmit="handleDelete"
-  />
+  <ModalDelete ref="modalDelete"></ModalDelete>
 </template>
 
 <script setup lang="ts">
@@ -63,10 +58,10 @@ import Table from "../../../components/atoms/Table.vue";
 import type { Header } from "../../../types/tableTypes.ts";
 import Pagination from "../../../components/Pagination/Pagination.vue";
 import Form1 from "../../../components/atoms/Form1.vue";
-import Delete from "../../../components/atoms/Delete.vue";
 import useTeamApi from "../api/apiTeam.ts";
 import type { EmployeeIndexRequest } from "../../../types/employee.ts";
 import type { TeamResponse } from "../../../types/teamPositions.ts";
+import ModalDelete from "../../../components/atoms/ModalDelete.vue";
 
 const teamApi = useTeamApi();
 const sumTeam = computed(() => tableState.rowCount);
@@ -90,10 +85,14 @@ const openFormCreate = () => {
   isFormOpen.value = true;
 };
 
-const openFormDelete = (id: string) => {
-  idToEditDelete.value = id;
-  isDeleteOpen.value = true;
-};
+const modalDelete = ref<InstanceType<typeof ModalDelete>>(null!);
+const openFormDelete = async (id: string) => {
+  const confirm = await modalDelete.value.openModal();
+  console.log(confirm);
+  if (confirm) {
+    handleDelete(id);
+  }
+}
 
 const close = () => {
   idToEditDelete.value = "";

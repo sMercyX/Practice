@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="Head">
+  <div class="Head">
     <h2>Position ( {{ sumPosition }} )</h2>
     <div class="createEmployeeButton">
       <button class="createButton" @click="openForm">
@@ -15,8 +15,7 @@
     <div class="right"></div>
   </div>
   <div>
-
-    <Table :headers="selectedHeaders" :data="paginationData">
+    <Table :headers="selectedHeaders" :data="tableState.data">
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
@@ -26,125 +25,133 @@
       </template>
     </Table>
 
-    <Pagination
-      :data="selectedPosition"
-      :pageData="pageData"
-      @newData="handleNewData"
-      @paginationData="loadData"
-    />
+    <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
 
   <Form1
     v-if="isFormOpen"
-    :data="selectedPosition"
+    :data="tableState.data"
     :id="idToEditDelete"
     :header="header"
     @back="close"
   />
 
-  <Delete
-    v-if="isDeleteOpen"
-    :id="idToEditDelete"
-    @back="close"
-    @deleteSubmit="handleDelete"
-  /> -->
+  <ModalDelete ref="modalDelete"></ModalDelete>
+  
+  
 </template>
 
 <script setup lang="ts">
-// import { ref, computed } from "vue";
-// import type {
-//   PaginationResponse,
-//   PaginationRequest,
-//   PaginationRequest,
-//   TP,
-// } from "../../../types/types.ts";
-// import SearchBar from "../../../components/SearchInput/SearchBar.vue";
-// import Table from "../../../components/atoms/Table.vue";
-// import type { Header } from "../../../types/tableTypes.ts";
-// import Pagination from "../../../components/Pagination/Pagination.vue";
-// import Form1 from "../../../components/atoms/Form1.vue";
-// import Delete from "../../../components/atoms/Delete.vue";
-// import { deletePosition, fetchDataPosition } from "../api/apiPosition.ts";
+import { ref, computed, reactive, watch } from "vue";
+import type { PaginationResponse, TableState } from "../../../types/types.ts";
+import SearchBar from "../../../components/SearchInput/SearchBar.vue";
+import Table from "../../../components/atoms/Table.vue";
+import type { Header } from "../../../types/tableTypes.ts";
+import Pagination from "../../../components/Pagination/Pagination.vue";
+import Form1 from "../../../components/atoms/Form1.vue";
+import usePositionApi from "../api/apiPosition.ts";
+import type { PositionResponse } from "../../../types/teamPositions.ts";
+import type { EmployeeIndexRequest } from "../../../types/employee.ts";
+import ModalDelete from "../../../components/atoms/ModalDelete.vue";
 
-// const searchPosition = ref<string>("");
-// const sumPosition = computed(() => pageData.value.pageRow);
-// const selectedPosition = ref<TP[]>([]);
-// const selectedHeaders = ref<Header[]>([
-//   { Name: "TeamName", Key: "name" },
-//   { Name: "Description", Key: "description" },
-//   { Name: "Manage", Key: "manage" },
-// ]);
-// const header = ref<string>("position");
+const searchPosition = ref<string>("");
+const sumPosition = computed(() => tableState.rowCount);
+const selectedHeaders = ref<Header[]>([
+  { Name: "TeamName", Key: "name" },
+  { Name: "Description", Key: "description" },
+  { Name: "Manage", Key: "manage" },
+]);
+const header = ref<string>("position");
 
-// const idToEditDelete = ref<string>("");
-// const isFormOpen = ref<boolean>(false);
-// const isDeleteOpen = ref<boolean>(false);
+const positionApi = usePositionApi();
 
-// const openFormEdit = (id: string) => {
-//   idToEditDelete.value = id;
-//   isFormOpen.value = !isFormOpen.value;
-// };
+const idToEditDelete = ref<string>("");
+const isFormOpen = ref<boolean>(false);
+const isDeleteOpen = ref<boolean>(false);
 
-// const openForm = () => {
-//   isFormOpen.value = true;
-// };
+const openFormEdit = (id: string) => {
+  idToEditDelete.value = id;
+  isFormOpen.value = !isFormOpen.value;
+};
 
-// const openFormDelete = (id: string) => {
-//   idToEditDelete.value = id;
-//   isDeleteOpen.value = true;
-// };
+const openForm = () => {
+  isFormOpen.value = true;
+};
 
-// const close = () => {
-//   idToEditDelete.value = "";
-//   isFormOpen.value = false;
-//   isDeleteOpen.value = false;
-// };
-// const handleDelete = async (id: string) => {
-//   await deletePosition(id);
+const modalDelete = ref<InstanceType<typeof ModalDelete>>(null!);
+const openFormDelete = async (id: string) => {
+  const confirm = await modalDelete.value.openModal();
+  console.log(confirm);
+  if (confirm) {
+    handleDelete(id);
+  }
+};
 
-//   const index = paginationData.value.findIndex(
-//     (item) => item.positionId === id
-//   );
-//   paginationData.value.splice(index, 1);
-// };
+const close = () => {
+  idToEditDelete.value = "";
+  isFormOpen.value = false;
+  isDeleteOpen.value = false;
+};
+const handleDelete = async (id: string) => {
+  await positionApi.deletePosition(id);
+  await loadData();
+};
 
-// const formattedDefault = {
-//   pageIndex: 0,
-//   pageSize: 5,
-//   search: {},
-// };
-// const pageData = ref<PaginationRequest>({
-//   pageRow: 0,
-//   pageIndex: 0,
-//   pageSize: 0,
-// });
-// const loadData = async (pagiData: PaginationRequest) => {
-//   const formatted = pagiData;
-//   try {
-//     const data = await fetchDataPosition(formatted).then((x) => x.data);
+const rawData = ref<PaginationResponse<PositionResponse<string>[]>>({
+  pageIndex: 0,
+  rowCount: 0,
+  pageSize: 0,
+  data: [],
+});
 
-//     selectedPosition.value = datas.data;
-//     pageData.value = {
-//       pageRow: datas.rowCount,
-//       pageIndex: datas.pageIndex + 1,
-//       pageSize: datas.pageSize,
-//     };
-//   } catch (error) {
-//     console.error("Error loading data:", error);
-//   }
-// };
+const tableState: TableState<EmployeeIndexRequest, PositionResponse<string>[]> =
+  reactive({
+    pageIndex: 0,
+    pageSize: 10,
+    rowCount: computed(() => rawData.value.rowCount),
+    data: computed(() => rawData.value.data),
+    search: {
+      text: "",
+    },
+  });
 
-// const paginationData = ref<TP[]>([]);
+const loadData = async () => {
+  try {
+    const datas = await positionApi
+      .fetchDataPosition({
+        pageIndex: tableState.pageIndex,
+        pageSize: tableState.pageSize,
+        search: tableState.search,
+      })
+      .then((x) => x);
+    rawData.value = datas;
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
 
-// const handleNewData = (data: TP[]) => {
-//   paginationData.value = data;
-// };
 
-// (async () => {
-//   await loadData(formattedDefault);
-// })();
+const handleNewPageData = (
+  data: PaginationResponse<PositionResponse<string>[]>
+) => {
+  tableState.pageIndex = data.pageIndex;
+  tableState.pageSize = data.pageSize;
+};
 
-// defineProps<{}>();
+(async () => {
+  await Promise.all([loadData()]);
+})();
+
+watch(
+  [
+    () => tableState.pageIndex,
+    () => tableState.pageSize,
+    () => tableState.search.text,
+  ],
+  async () => {
+    await loadData();
+  }
+);
 </script>
 
 <style scoped>

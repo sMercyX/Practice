@@ -22,7 +22,13 @@
             tableState.search.text = ($event.target as HTMLInputElement).value
           "
         />
+        <input ref="input1" />
+        <button @click="input1.focus()">focus</button>
+        <button @click="input1.value = 'blablabla'">set value</button>
+        <ExampleComponent ref="exCom"></ExampleComponent>
 
+        <button @click="exCom.setColor()">set color</button>
+        <button @click="increase()">++</button>
         <div class="resetButton">
           <button @click="resetFilters">Reset</button>
         </div>
@@ -47,13 +53,7 @@
     </Table>
     <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
-  <Delete
-    v-if="isDeleteOpen"
-    :id="idToEditDelete"
-    @back="close"
-    @deleteSubmit="handleDelete"
-  />
-
+  <ModalDelete ref="modalDelete"></ModalDelete>
   <RouterView />
 </template>
 
@@ -74,12 +74,13 @@ import Pagination from "../../../components/Pagination/Pagination.vue";
 import useEmployeeApi from "../api/apiEmployee.ts";
 import usePositionApi from "../../position/api/apiPosition.ts";
 import useTeamApi from "../../team/api/apiTeam.ts";
-import Delete from "../../../components/atoms/Delete.vue";
 import type {
   EmployeeIndexRequest,
   EmployeeIndexResponse,
   EmployeeWithDetail,
 } from "../../../types/employee.ts";
+import ExampleComponent from "./ExampleComponent.vue";
+import ModalDelete from "../../../components/atoms/ModalDelete.vue";
 const teams = ref<DropdownModel<string>[]>([]);
 const postions = ref<DropdownModel<string>[]>([]);
 
@@ -98,16 +99,13 @@ const selectedHeaders = ref<Header[]>([
 ]);
 const router = useRouter();
 
-const isDeleteOpen = ref<boolean>(false);
-const idToEditDelete = ref<string>("");
-const openFormDelete = (id: string) => {
-  idToEditDelete.value = id;
-  isDeleteOpen.value = true;
-};
-
-const close = () => {
-  idToEditDelete.value = "";
-  isDeleteOpen.value = false;
+const modalDelete = ref<InstanceType<typeof ModalDelete>>(null!);
+const openFormDelete = async (id: string) => {
+  const confirm = await modalDelete.value.openModal();
+  console.log(confirm);
+  if (confirm) {
+    handleDelete(id);
+  }
 };
 
 const handleDelete = async (id: string) => {
@@ -230,6 +228,15 @@ watch(
     await loadData();
   }
 );
+
+const input1 = ref<HTMLInputElement>(null!);
+
+const exCom = ref<InstanceType<typeof ExampleComponent>>(null!);
+// exCom.value.setColor();
+
+function increase() {
+  exCom.value.count = exCom.value.count + 1;
+}
 </script>
 
 <style scoped>

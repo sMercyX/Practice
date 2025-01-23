@@ -1,74 +1,64 @@
 <template>
   <Modal :isShow="isOpen">
-    <form @submit.prevent="deleteSubmit">
-      <div class="Head"></div>
+      <div class="overlay">
+        <div class="Head"></div>
 
-      <div class="Content">
-        <img src="../../assets/trashFill.svg" alt="DeleteLogo" />
-        <h3><span>Delete</span></h3>
-        <p class="delete-message">
-          Are you sure you want to delete selected items ?
-        </p>
-      </div>
+        <div class="Content">
+          <img src="../../assets/trashFill.svg" alt="DeleteLogo" />
+          <h3><span>Delete</span></h3>
+          <p class="delete-message">
+            Are you sure you want to delete selected items ?
+          </p>
+        </div>
 
-      <div class="Footer">
-        <button class="cancel" type="button" @click="goback">Cancel</button>
-        <button class="save" type="submit" @click="deleteSubmit">Delete</button>
+        <div class="Footer">
+          <button class="cancel" type="button" @click="closeModal">
+            Cancel
+          </button>
+          <button class="save" type="submit" @click="onSave">Delete</button>
+        </div>
       </div>
-    </form>
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import Modal from "./Modal.vue";
 
-const props = defineProps<{
-  id: string;
-}>();
+const isOpen = ref<boolean>(false);
 
-const isOpen= ref<boolean>(false)
-function openModal (){
-  isOpen.value = true
+let promise: Promise<boolean>;
+let _resolve!: (value: boolean | PromiseLike<boolean>) => void;
+let _reject!: (reason?: any) => void;
+
+function openModal() {
+  isOpen.value = true;
+  return (promise = new Promise((resolve, reject) => {
+    _resolve = resolve;
+    _reject = reject;
+  }));
 }
 
 function closeModal() {
-  
-  isOpen.value = true
-  isOpen.value = true
+  _resolve(false);
+  isOpen.value = false;
 }
-const dataId = ref<string>();
 
-const goback = () => {
-  emit("back", false);
-};
-const deleteSubmit = () => {
-  emit("back", false);
-  emit("deleteSubmit", props.id);
-};
+function onSave() {
+  _resolve(true);
+  isOpen.value = false;
+}
 
-const emit = defineEmits<{
-  (e: "back", value: boolean): void;
-  (e: "deleteSubmit", value: string): void;
-}>();
-
-onMounted(async () => {
-  dataId.value = props.id;
+defineExpose({
+  openModal,
 });
 </script>
 
 <style scoped>
-.modal-overlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+.overlay {
+ background-color: white;
+ padding: 20px 0;
+ border-radius: 10px;
 }
 /* .modal-content {
     background: white;
