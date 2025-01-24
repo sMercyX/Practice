@@ -16,11 +16,7 @@
   <div class="modal-overlay">
     <div class="modal-content">
       <div class="Header">
-        <img
-          src="../../assets/editPen.svg"
-          alt="Edit Icon"
-          class="editIcon"
-        />
+        <img src="../../assets/editPen.svg" alt="Edit Icon" class="editIcon" />
         <h2>Basic Info</h2>
       </div>
 
@@ -76,31 +72,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { DropdownModel } from "../../types/types";
 import { useRoute, useRouter } from "vue-router";
-import { uuid } from "vue-uuid";
-import useEmployeeApi from "./api/apiEmployee";
-import usePositionApi from "../position/api/apiPosition";
-import useTeamApi from "../team/api/apiTeam";
-import type { EmployeeIndexResponse, Phone } from "../../types/employee";
+import type { EmployeeIndexResponse } from "../../types/employee";
+import useMasterData from "./dataProvider/masterData";
+import usePageView from "./dataProvider/pageView";
 
-const teams = ref<DropdownModel<string>[]>([]);
-const postions = ref<DropdownModel<string>[]>([]);
-const employee = ref<EmployeeIndexResponse>({} as EmployeeIndexResponse);
+const masterDataProvider = useMasterData();
+const { teams, postions } = masterDataProvider;
+const pageViewDataProvider = usePageView();
+const data = pageViewDataProvider.employeeData
 
-const employeeApi = useEmployeeApi();
-const positionApi = usePositionApi();
-const teamApi = useTeamApi();
 
-const firstName = ref<string>("");
-const lastName = ref<string>("");
-const email = ref<string>("");
-const dateOfBirth = ref<string>("");
-const phones = ref<Phone[]>([{ phoneId: uuid.v1(), phoneNumber: "" }]);
+const firstName = computed(() => data.firstname);
+const lastName = computed(() => data.lastname);
+const email = computed(() => data.email);
+const phones = computed(() => data.phones);
 
-const selectedTeam = ref<string>("");
-const selectedPosition = ref<string>("");
+const selectedTeam = computed(() => data.teamId);
+const selectedPosition = computed(() => data.positionId);
 const router = useRouter();
 const route = useRoute();
 
@@ -123,33 +114,13 @@ const getTeamPositionName = () => {
   )!.text;
 };
 
-const loadData = async (employeeId: string) => {
-  try {
-    const data = await employeeApi.getDetail(employeeId).then((x) => x);
-    employee.value = data;
-    postions.value = await positionApi.getPositionDropDown().then((x) => x);
-    teams.value = await teamApi.getTeamDropDown().then((x) => x);
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-
 (async () => {
   employeeId.value = route.params.employeeId as string;
-  await loadData(employeeId.value);
-
-  if (employeeId.value) {
-    if (employee.value) {
-      firstName.value = employee.value.firstname;
-      lastName.value = employee.value.lastname;
-      email.value = employee.value.email;
-      dateOfBirth.value = employee.value.dateOfBirth;
-      phones.value = employee.value.phones;
-      selectedTeam.value = employee.value.teamId;
-      selectedPosition.value = employee.value.positionId;
-    }
-    getTeamPositionName();
-  }
+  await Promise.all([
+    masterDataProvider.loadMasterData(),
+    pageViewDataProvider.loadEmployeeDetail(employeeId.value),
+  ]);
+  getTeamPositionName()
 })();
 </script>
 
