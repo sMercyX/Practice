@@ -129,8 +129,10 @@ const handleSubmit = async () => {
       teamId: selectedTeam.value,
       positionId: selectedPosition.value,
     };
-    console.log(formData.email);
-    await employeeApi.updateEmployee(formData);
+    console.log(formData.employeeId);
+    const response = await employeeApi.updateEmployee(formData);
+    console.log(formData)
+    console.log(response)
   } else {
     console.log("add");
 
@@ -156,7 +158,8 @@ const handleSubmit = async () => {
       pageEditDataProvider.loadEmployeeDetail(employeeId.value),
     ]);
     dataa.value = response[0];
-    // dataa.value = {...response[0],phones:[{ phoneId: uuid.v1(), phoneNumber: "" }]}
+    dataa.value = {...response[0],employeeId:employeeId.value}
+    
     selectedTeam.value = response[0].teamId;
     selectedPosition.value = response[0].positionId;
   }
