@@ -6,7 +6,7 @@ import type {
 } from "../../../types/employee";
 import type { PaginationResponse, TableState } from "../../../types/types";
 import useEmployeeApi from "../api/apiEmployee";
-import  { type IEmployeeMasterData } from "./masterData";
+import { type IEmployeeMasterData } from "./masterData";
 
 export default function usePageIndex(masterData: IEmployeeMasterData) {
   const getTeamName = (teamId: string) => {
@@ -27,7 +27,7 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
     pageSize: 0,
     data: [],
   });
-  
+
   const tableState: TableState<EmployeeIndexRequest, EmployeeWithDetail[]> =
     reactive({
       pageIndex: 0,
@@ -46,19 +46,18 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
         positionId: "",
       },
     });
+    
+  function createDefaultSearch(): EmployeeIndexRequest {
+    return {
+      positionId: "",
+      teamId: "",
+      text: "",
+    };
+  }
 
-
-    function createDefaultSearch(): EmployeeIndexRequest {
-        return {
-          positionId: "",
-          teamId: "",
-          text: "",
-        };
-      }
-      
-      const resetFilters = () => {
-        tableState.search = createDefaultSearch();
-      };
+  const resetFilters = () => {
+    tableState.search = createDefaultSearch();
+  };
   const employeeApi = useEmployeeApi();
   const loadEmployee = async () => {
     try {

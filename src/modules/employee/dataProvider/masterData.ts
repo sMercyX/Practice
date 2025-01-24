@@ -5,16 +5,22 @@ import { computed, reactive, type ComputedRef } from "vue";
 
 export interface IEmployeeMasterData {
   loadMasterData: () => Promise<void>;
-  teams: ComputedRef<{
+  teams: ComputedRef<
+    {
       text: string;
       value: string;
-  }[]>;
-  postions: ComputedRef<{
+    }[]
+  >;
+
+  postions: ComputedRef<
+    {
       text: string;
       value: string;
-  }[]>;
+    }[]
+  >;
 }
-export default function useMasterData() :IEmployeeMasterData{
+
+export default function useMasterData(): IEmployeeMasterData {
   const teamApi = useTeamApi();
   const positionApi = usePositionApi();
 

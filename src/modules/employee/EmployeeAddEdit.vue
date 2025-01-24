@@ -14,11 +14,7 @@
   <div class="modal-overlay">
     <div class="modal-content">
       <div class="Header">
-        <img
-          src="../../assets/editPen.svg"
-          alt="Edit Icon"
-          class="editIcon"
-        />
+        <img src="../../assets/editPen.svg" alt="Edit Icon" class="editIcon" />
         <h2>Basic Info</h2>
       </div>
 
@@ -26,16 +22,16 @@
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
-            <InputText v-model:input="firstName" :required="true" />
+            <InputText v-model:input="dataa.firstname" :required="true" />
           </div>
           <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
-            <InputText v-model:input="lastName" :required="true" />
+            <InputText v-model:input="dataa.lastname" :required="true" />
           </div>
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
-          <InputText v-model:input="email" :required="true" />
+          <InputText v-model:input="dataa.email" :required="true" />
         </div>
 
         <div class="breakHalf">
@@ -57,10 +53,13 @@
           </button>
         </div>
         <div class="phone-list">
-          <InputText v-model:input="phones[0].phoneNumber" :required="true" />
+          <InputText
+            v-model:input="dataa.phones[0].phoneNumber"
+            :required="true"
+          />
           <div
-            v-if="phones.length > 1"
-            v-for="(phone, index) in phones.slice(1)"
+            v-if="dataa.phones.length > 1"
+            v-for="(phone, index) in dataa.phones.slice(1)"
             :key="index + 1"
             class="phone-item"
           >
@@ -82,36 +81,35 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Dropdown from "../../components/Dropdown/Dropdown.vue";
-import type { DropdownModel } from "../../types/types";
 import InputText from "../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
 import useEmployeeApi from "./api/apiEmployee";
-import usePositionApi from "../position/api/apiPosition";
-import useTeamApi from "../team/api/apiTeam";
-import type { EmployeeIndexResponse, Phone } from "../../types/employee";
-
-const teams = ref<DropdownModel<string>[]>([]);
-const postions = ref<DropdownModel<string>[]>([]);
-const employee = ref<EmployeeIndexResponse>({} as EmployeeIndexResponse);
+import type { EmployeeIndexResponse } from "../../types/employee";
+import usePageEdit from "./dataProvider/pageEdit";
+import useMasterData from "./dataProvider/masterData";
 
 const employeeApi = useEmployeeApi();
-const positionApi = usePositionApi();
-const teamApi = useTeamApi();
 
-const firstName = ref<string>("");
-const lastName = ref<string>("");
-const email = ref<string>("");
-const dateOfBirth = ref<string>("");
-const phones = ref<Phone[]>([{ phoneId: uuid.v1(), phoneNumber: "" }]);
+const masterDataProvider = useMasterData();
+const { teams, postions } = masterDataProvider;
+const pageEditDataProvider = usePageEdit();
+// const { firstname, lastname, email, phones } = pageEditDataProvider.rawData.value;
+// const employeeData = pageEditDataProvider.employeeData;
+
+const dataa = ref<EmployeeIndexResponse>({
+  dateOfBirth: "",
+  phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
+} as EmployeeIndexResponse);
 
 const addPhone = () => {
-  phones.value.push({ phoneId: uuid.v1(), phoneNumber: "" });
+  dataa.value.phones.push({ phoneId: uuid.v1(), phoneNumber: "" });
 };
 
 const removePhone = (index: number) => {
-  phones.value.splice(index + 1, 1);
+  dataa.value.phones.splice(index + 1, 1);
 };
+
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
 const router = useRouter();
@@ -124,62 +122,26 @@ const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
-const teamName = ref<string>("");
-const positionName = ref<string>("");
-
-const getTeamPositionName = () => {
-  teamName.value = teams.value.find(
-    (e: DropdownModel<string>) => e.value === selectedTeam.value
-  )!.text;
-
-  positionName.value = postions.value.find(
-    (e: DropdownModel<string>) => e.value === selectedPosition.value
-  )!.text;
-};
-
-const loadData = async (employeeId: string) => {
-  try {
-    const data = await employeeApi.getDetail(employeeId).then((x) => x);
-    employee.value = data;
-
-    postions.value = await positionApi.getPositionDropDown().then((x) => x);
-
-    teams.value = await teamApi.getTeamDropDown().then((x) => x);
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-
-// **Handle Submit for Both Add & Edit**
 const handleSubmit = async () => {
   if (isEditing.value && employeeId.value) {
-    if (isEditing.value) {
-      console.log('edit')
-      const formData: EmployeeIndexResponse = {
-        employeeId: employeeId.value,
-        firstname: firstName.value,
-        lastname: lastName.value,
-        email: email.value,
-        dateOfBirth: "",
-        phones: phones.value,
-        teamId: selectedTeam.value,
-        positionId: selectedPosition.value,
-      };
-      await employeeApi.updateEmployee(formData);
-    }
-  } else {
-    console.log('add')
-
     const formData: EmployeeIndexResponse = {
-      employeeId: uuid.v1(),
-      firstname: firstName.value,
-      lastname: lastName.value,
-      email: email.value,
-      dateOfBirth: "",
-      phones: phones.value,
+      ...dataa.value,
       teamId: selectedTeam.value,
       positionId: selectedPosition.value,
     };
+    console.log(formData.email);
+    await employeeApi.updateEmployee(formData);
+  } else {
+    console.log("add");
+
+    const formData: EmployeeIndexResponse = {
+      ...dataa.value,
+      employeeId: uuid.v1(),
+      teamId: selectedTeam.value,
+      positionId: selectedPosition.value,
+    };
+    console.log(formData.email);
+
     await employeeApi.createEmployee(formData);
   }
   navigateTo("employee");
@@ -187,22 +149,36 @@ const handleSubmit = async () => {
 
 (async () => {
   employeeId.value = route.params.employeeId as string;
-  await loadData(employeeId.value);
-
+  await Promise.all([masterDataProvider.loadMasterData()]);
   if (employeeId.value) {
     isEditing.value = true;
-    if (employee.value) {
-      firstName.value = employee.value.firstname;
-      lastName.value = employee.value.lastname;
-      email.value = employee.value.email;
-      dateOfBirth.value = employee.value.dateOfBirth;
-      phones.value = employee.value.phones;
-      selectedTeam.value = employee.value.teamId;
-      selectedPosition.value = employee.value.positionId;
-    }
-    getTeamPositionName();
+    const response = await Promise.all([
+      pageEditDataProvider.loadEmployeeDetail(employeeId.value),
+    ]);
+    dataa.value = response[0];
+    // dataa.value = {...response[0],phones:[{ phoneId: uuid.v1(), phoneNumber: "" }]}
+    selectedTeam.value = response[0].teamId;
+    selectedPosition.value = response[0].positionId;
   }
 })();
+
+// (async () => {
+//   employeeId.value = route.params.employeeId as string;
+//   await loadData(employeeId.value);
+
+//   if (employeeId.value) {
+//     isEditing.value = true;
+//     if (employee.value) {
+//       firstName.value = employee.value.firstname;
+//       lastName.value = employee.value.lastname;
+//       email.value = employee.value.email;
+//       dateOfBirth.value = employee.value.dateOfBirth;
+//       phones.value = employee.value.phones;
+//       selectedTeam.value = employee.value.teamId;
+//       selectedPosition.value = employee.value.positionId;
+//     }
+//   }
+// })();
 </script>
 
 <style scoped>
