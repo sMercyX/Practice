@@ -10,8 +10,8 @@ import No5 from "../components/practice/No5.vue";
 import No6 from "../components/practice/No6.vue";
 import EmployeeList from "../components/practice/No7EmployeeList.vue";
 import EmployeeForm from "../modules/employee/EmployeeAddEdit.vue";
-import TeamList from "../modules/team/pages/TeamList.vue";
-import PositionList from "../modules/position/pages/PositionList.vue";
+import TeamList from "../modules/team/TeamList.vue";
+import PositionList from "../modules/position/PositionList.vue";
 import EmployeeView from "../modules/employee/EmployeeView.vue";
 
 const router = createRouter(

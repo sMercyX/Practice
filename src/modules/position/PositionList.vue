@@ -42,28 +42,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, watch } from "vue";
-import type { PaginationResponse, TableState } from "../../../types/types.ts";
-import SearchBar from "../../../components/SearchInput/SearchBar.vue";
-import Table from "../../../components/atoms/Table.vue";
-import type { Header } from "../../../types/tableTypes.ts";
-import Pagination from "../../../components/Pagination/Pagination.vue";
-import Form1 from "../../../components/atoms/Form1.vue";
-import usePositionApi from "../api/apiPosition.ts";
-import type { PositionResponse } from "../../../types/teamPositions.ts";
-import type { EmployeeIndexRequest } from "../../../types/employee.ts";
-import ModalDelete from "../../../components/atoms/ModalDelete.vue";
+import { ref, computed, watch } from "vue";
+import type { PaginationResponse } from "../../types/types.ts";
+import SearchBar from "../../components/SearchInput/SearchBar.vue";
+import Table from "../../components/atoms/Table.vue";
+import type { Header } from "../../types/tableTypes.ts";
+import Pagination from "../../components/Pagination/Pagination.vue";
+import Form1 from "../../components/atoms/Form1.vue";
+import type { PositionResponse } from "../../types/teamPositions.ts";
+import ModalDelete from "../../components/atoms/ModalDelete.vue";
+import usePageIndexPosition from "./dataProvider/pageIndexPosition.ts";
+
+const pageIndexDataProvider = usePageIndexPosition();
+
+const { tableState, deleteItem } = pageIndexDataProvider;
+const sumPosition = computed(() => tableState.rowCount);
+const rawData = ref(pageIndexDataProvider.rawData);
 
 const searchPosition = ref<string>("");
-const sumPosition = computed(() => tableState.rowCount);
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Description", Key: "description" },
   { Name: "Manage", Key: "manage" },
 ]);
 const header = ref<string>("position");
-
-const positionApi = usePositionApi();
 
 const idToEditDelete = ref<string>("");
 const isFormOpen = ref<boolean>(false);
@@ -83,7 +85,7 @@ const openFormDelete = async (id: string) => {
   const confirm = await modalDelete.value.openModal();
   console.log(confirm);
   if (confirm) {
-    handleDelete(id);
+    deleteItem(id);
   }
 };
 
@@ -92,44 +94,6 @@ const close = () => {
   isFormOpen.value = false;
   isDeleteOpen.value = false;
 };
-const handleDelete = async (id: string) => {
-  await positionApi.deletePosition(id);
-  await loadData();
-};
-
-const rawData = ref<PaginationResponse<PositionResponse<string>[]>>({
-  pageIndex: 0,
-  rowCount: 0,
-  pageSize: 0,
-  data: [],
-});
-
-const tableState: TableState<EmployeeIndexRequest, PositionResponse<string>[]> =
-  reactive({
-    pageIndex: 0,
-    pageSize: 10,
-    rowCount: computed(() => rawData.value.rowCount),
-    data: computed(() => rawData.value.data),
-    search: {
-      text: "",
-    },
-  });
-
-const loadData = async () => {
-  try {
-    const datas = await positionApi
-      .fetchDataPosition({
-        pageIndex: tableState.pageIndex,
-        pageSize: tableState.pageSize,
-        search: tableState.search,
-      })
-      .then((x) => x);
-    rawData.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-
 
 const handleNewPageData = (
   data: PaginationResponse<PositionResponse<string>[]>
@@ -139,7 +103,7 @@ const handleNewPageData = (
 };
 
 (async () => {
-  await Promise.all([loadData()]);
+  await Promise.all([pageIndexDataProvider.loadPosition()]);
 })();
 
 watch(
@@ -149,7 +113,7 @@ watch(
     () => tableState.search.text,
   ],
   async () => {
-    await loadData();
+    await pageIndexDataProvider.loadPosition();
   }
 );
 </script>

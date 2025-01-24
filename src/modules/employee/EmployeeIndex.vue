@@ -73,6 +73,7 @@ const router = useRouter();
 const { tableState, resetFilters } = pageIndexDataProvider;
 const sumEmployee = computed(() => tableState.rowCount);
 const rawData = ref(pageIndexDataProvider.rawData);
+
 const selectedHeaders = ref<Header<EmployeeWithDetail,"manage">[]>([
   { Name: "FirstName", Key: "firstname" },
   { Name: "Email", Key: "email" },

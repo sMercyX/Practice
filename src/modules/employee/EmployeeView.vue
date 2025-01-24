@@ -75,7 +75,6 @@
 import { computed, ref } from "vue";
 import type { DropdownModel } from "../../types/types";
 import { useRoute, useRouter } from "vue-router";
-import type { EmployeeIndexResponse } from "../../types/employee";
 import useMasterData from "./dataProvider/masterData";
 import usePageView from "./dataProvider/pageView";
 

@@ -47,24 +47,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, watch } from "vue";
-import type {
-  PaginationResponse,
-  TableState,
-} from "../../../types/types.ts";
-import SearchBar from "../../../components/SearchInput/SearchBar.vue";
+import { ref, computed, watch } from "vue";
+import type { PaginationResponse } from "../../types/types.ts";
+import SearchBar from "../../components/SearchInput/SearchBar.vue";
 
-import Table from "../../../components/atoms/Table.vue";
-import type { Header } from "../../../types/tableTypes.ts";
-import Pagination from "../../../components/Pagination/Pagination.vue";
-import Form1 from "../../../components/atoms/Form1.vue";
-import useTeamApi from "../api/apiTeam.ts";
-import type { EmployeeIndexRequest } from "../../../types/employee.ts";
-import type { TeamResponse } from "../../../types/teamPositions.ts";
-import ModalDelete from "../../../components/atoms/ModalDelete.vue";
+import Table from "../../components/atoms/Table.vue";
+import type { Header } from "../../types/tableTypes.ts";
+import Pagination from "../../components/Pagination/Pagination.vue";
+import Form1 from "../../components/atoms/Form1.vue";
+import type { TeamResponse } from "../../types/teamPositions.ts";
+import ModalDelete from "../../components/atoms/ModalDelete.vue";
+import usePageIndexTeam from "./dataProvider/pageIndexTeam.ts";
 
-const teamApi = useTeamApi();
+const pageIndexDataProvider = usePageIndexTeam();
+
+const { tableState, deleteItem } = pageIndexDataProvider;
 const sumTeam = computed(() => tableState.rowCount);
+const rawData = ref(pageIndexDataProvider.rawData);
+
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Description", Key: "description" },
@@ -90,52 +90,14 @@ const openFormDelete = async (id: string) => {
   const confirm = await modalDelete.value.openModal();
   console.log(confirm);
   if (confirm) {
-    handleDelete(id);
+    deleteItem(id);
   }
-}
+};
 
 const close = () => {
   idToEditDelete.value = "";
   isFormOpen.value = false;
   isDeleteOpen.value = false;
-};
-
-const handleDelete = async (id: string) => {
-  await teamApi.deleteTeam(id);
-  await loadData();
-};
-
-const rawData = ref<PaginationResponse<TeamResponse<string>[]>>({
-  pageIndex: 0,
-  rowCount: 0,
-  pageSize: 0,
-  data: [],
-});
-
-const tableState: TableState<EmployeeIndexRequest, TeamResponse<string>[]> =
-  reactive({
-    pageIndex: 0,
-    pageSize: 10,
-    rowCount: computed(() => rawData.value.rowCount),
-    data: computed(() => rawData.value.data),
-    search: {
-      text: "",
-    },
-  });
-
-const loadData = async () => {
-  try {
-    const datas = await teamApi
-      .fetchDataTeam({
-        pageIndex: tableState.pageIndex,
-        pageSize: tableState.pageSize,
-        search: tableState.search,
-      })
-      .then((x) => x);
-    rawData.value = datas;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
 };
 
 const handleNewPageData = (
@@ -146,7 +108,7 @@ const handleNewPageData = (
 };
 
 (async () => {
-  await Promise.all([loadData()]);
+  await Promise.all([pageIndexDataProvider.loadTeam()]);
 })();
 
 watch(
@@ -156,7 +118,7 @@ watch(
     () => tableState.search.text,
   ],
   async () => {
-    await loadData();
+    await pageIndexDataProvider.loadTeam();
   }
 );
 </script>
