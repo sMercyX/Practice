@@ -24,16 +24,16 @@
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
-            <p>{{ firstName }}</p>
+            <p>{{ employeeData.firstname }}</p>
           </div>
           <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
-            <p>{{ lastName }}</p>
+            <p>{{ employeeData.lastname }}</p>
           </div>
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
-          <p>{{ email }}</p>
+          <p>{{ employeeData.email }}</p>
         </div>
 
         <div class="breakHalf">
@@ -53,11 +53,11 @@
         </div>
         <div class="phone-list">
           <p>
-            {{ phones[0].phoneNumber }}
+            {{ employeeData.phones[0].phoneNumber }}
           </p>
           <div
-            v-if="phones.length > 1"
-            v-for="(phone, index) in phones.slice(1)"
+            v-if="employeeData.phones.length > 1"
+            v-for="(phone, index) in employeeData.phones.slice(1)"
             :key="index + 1"
             class="phone-item"
           >
@@ -81,16 +81,10 @@ import usePageView from "./dataProvider/pageView";
 const masterDataProvider = useMasterData();
 const { teams, postions } = masterDataProvider;
 const pageViewDataProvider = usePageView();
-const data = pageViewDataProvider.employeeData
+const { employeeData } = pageViewDataProvider;
 
-
-const firstName = computed(() => data.firstname);
-const lastName = computed(() => data.lastname);
-const email = computed(() => data.email);
-const phones = computed(() => data.phones);
-
-const selectedTeam = computed(() => data.teamId);
-const selectedPosition = computed(() => data.positionId);
+const selectedTeam = computed(() => employeeData.value.teamId);
+const selectedPosition = computed(() => employeeData.value.positionId);
 const router = useRouter();
 const route = useRoute();
 
@@ -119,7 +113,7 @@ const getTeamPositionName = () => {
     masterDataProvider.loadMasterData(),
     pageViewDataProvider.loadEmployeeDetail(employeeId.value),
   ]);
-  getTeamPositionName()
+  getTeamPositionName();
 })();
 </script>
 

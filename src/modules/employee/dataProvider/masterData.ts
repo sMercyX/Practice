@@ -5,6 +5,7 @@ import { computed, reactive, type ComputedRef } from "vue";
 
 export interface IEmployeeMasterData {
   loadMasterData: () => Promise<void>;
+
   teams: ComputedRef<
     {
       text: string;
