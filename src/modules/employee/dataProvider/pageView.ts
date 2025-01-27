@@ -1,4 +1,4 @@
-import { computed, reactive, ref, type ComputedRef } from "vue";
+import { computed, ref } from "vue";
 import type { EmployeeIndexResponse } from "../../../types/employee";
 import useEmployeeApi from "../api/apiEmployee";
 import { uuid } from "vue-uuid";
@@ -18,7 +18,6 @@ export default function usePageView() {
     positionId: "",
   });
 
- 
   // const employeeData = reactive(computed(() => rawData.value));
 
   const employeeApi = useEmployeeApi();
@@ -29,6 +28,6 @@ export default function usePageView() {
 
   return {
     loadEmployeeDetail,
-    form:computed(()=> rawData.value),
+    form: computed(() => rawData.value),
   };
 }
