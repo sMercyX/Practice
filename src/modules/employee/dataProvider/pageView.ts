@@ -19,7 +19,7 @@ export default function usePageView() {
   });
 
  
-  const employeeData = reactive(computed(() => rawData.value));
+  // const employeeData = reactive(computed(() => rawData.value));
 
   const employeeApi = useEmployeeApi();
   const loadEmployeeDetail = async (employeeId: string) => {
@@ -29,7 +29,6 @@ export default function usePageView() {
 
   return {
     loadEmployeeDetail,
-    rawData,
-    employeeData,
+    form:computed(()=> rawData.value),
   };
 }

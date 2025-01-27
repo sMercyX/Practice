@@ -18,7 +18,11 @@
         <h2>Basic Info</h2>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="Content" id="myForm">
+      <form
+        @submit.prevent="handleSubmit(formData)"
+        class="Content"
+        id="myForm"
+      >
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
@@ -76,24 +80,24 @@
       </form>
     </div>
   </div>
+  <button @click="console.log(dataa)">click</button>
+  <button @click="console.log(formData)">click</button>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Dropdown from "../../components/Dropdown/Dropdown.vue";
 import InputText from "../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
 import { uuid } from "vue-uuid";
-import useEmployeeApi from "./api/apiEmployee";
 import type { EmployeeIndexResponse } from "../../types/employee";
 import usePageEdit from "./dataProvider/pageEdit";
 import useMasterData from "./dataProvider/masterData";
 
-const employeeApi = useEmployeeApi();
-
 const masterDataProvider = useMasterData();
 const { teams, postions } = masterDataProvider;
 const pageEditDataProvider = usePageEdit();
+const { handleSubmit, loadEmployeeDetail, employeeId } = pageEditDataProvider;
 // const { firstname, lastname, email, phones } = pageEditDataProvider.rawData.value;
 // const employeeData = pageEditDataProvider.employeeData;
 
@@ -116,72 +120,56 @@ const router = useRouter();
 const route = useRoute();
 
 const isEditing = ref<boolean>(false);
-const employeeId = ref<string | null>(null);
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
-const handleSubmit = async () => {
-  if (isEditing.value && employeeId.value) {
-    const formData: EmployeeIndexResponse = {
-      ...dataa.value,
-      teamId: selectedTeam.value,
-      positionId: selectedPosition.value,
-    };
-    console.log(formData.employeeId);
-    const response = await employeeApi.updateEmployee(formData);
-    console.log(formData)
-    console.log(response)
-  } else {
-    console.log("add");
-
-    const formData: EmployeeIndexResponse = {
-      ...dataa.value,
-      employeeId: uuid.v1(),
-      teamId: selectedTeam.value,
-      positionId: selectedPosition.value,
-    };
-    console.log(formData.email);
-
-    await employeeApi.createEmployee(formData);
-  }
-  navigateTo("employee");
-};
+const formData = ref<EmployeeIndexResponse>({
+  ...dataa.value,
+  teamId: selectedTeam.value,
+  positionId: selectedPosition.value,
+});
 
 (async () => {
   employeeId.value = route.params.employeeId as string;
   await Promise.all([masterDataProvider.loadMasterData()]);
   if (employeeId.value) {
     isEditing.value = true;
-    const response = await Promise.all([
-      pageEditDataProvider.loadEmployeeDetail(employeeId.value),
-    ]);
+    const response = await Promise.all([loadEmployeeDetail(employeeId.value)]);
     dataa.value = response[0];
-    dataa.value = {...response[0],employeeId:employeeId.value}
-    
+    dataa.value = { ...response[0], employeeId: employeeId.value };
+
     selectedTeam.value = response[0].teamId;
     selectedPosition.value = response[0].positionId;
   }
 })();
+watch(
+  () => [
+    dataa.value.firstname,
+    dataa.value.lastname,
+    dataa.value.email,
+    dataa.value.phones,
+    selectedTeam.value,
+    selectedPosition.value,
+  ],
+  () =>
+    (formData.value = {
+      ...dataa.value,
+      teamId: selectedTeam.value,
+      positionId: selectedPosition.value,
+    })
+);
+// watch(
+//   () => dataa.value.firstname,
 
-// (async () => {
-//   employeeId.value = route.params.employeeId as string;
-//   await loadData(employeeId.value);
-
-//   if (employeeId.value) {
-//     isEditing.value = true;
-//     if (employee.value) {
-//       firstName.value = employee.value.firstname;
-//       lastName.value = employee.value.lastname;
-//       email.value = employee.value.email;
-//       dateOfBirth.value = employee.value.dateOfBirth;
-//       phones.value = employee.value.phones;
-//       selectedTeam.value = employee.value.teamId;
-//       selectedPosition.value = employee.value.positionId;
-//     }
-//   }
-// })();
+//   () =>
+//     (formData.value = {
+//       ...dataa.value,
+//       teamId: selectedTeam.value,
+//       positionId: selectedPosition.value,
+//     })
+// );
 </script>
 
 <style scoped>

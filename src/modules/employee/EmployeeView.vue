@@ -24,16 +24,16 @@
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
-            <p>{{ employeeData.firstname }}</p>
+            <p>{{ form.firstname }}</p>
           </div>
           <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
-            <p>{{ employeeData.lastname }}</p>
+            <p>{{ form.lastname }}</p>
           </div>
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
-          <p>{{ employeeData.email }}</p>
+          <p>{{ form.email }}</p>
         </div>
 
         <div class="breakHalf">
@@ -53,11 +53,11 @@
         </div>
         <div class="phone-list">
           <p>
-            {{ employeeData.phones[0].phoneNumber }}
+            {{ form.phones[0].phoneNumber }}
           </p>
           <div
-            v-if="employeeData.phones.length > 1"
-            v-for="(phone, index) in employeeData.phones.slice(1)"
+            v-if="form.phones.length > 1"
+            v-for="(phone, index) in form.phones.slice(1)"
             :key="index + 1"
             class="phone-item"
           >
@@ -81,10 +81,10 @@ import usePageView from "./dataProvider/pageView";
 const masterDataProvider = useMasterData();
 const { teams, postions } = masterDataProvider;
 const pageViewDataProvider = usePageView();
-const { employeeData } = pageViewDataProvider;
+const { form } = pageViewDataProvider;
 
-const selectedTeam = computed(() => employeeData.value.teamId);
-const selectedPosition = computed(() => employeeData.value.positionId);
+const selectedTeam = computed(() => form.value.teamId);
+const selectedPosition = computed(() => form.value.positionId);
 const router = useRouter();
 const route = useRoute();
 
