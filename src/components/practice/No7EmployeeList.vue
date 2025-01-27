@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <h1>Employee ( {{ sumEmployee }} )</h1>
     <div class="searchMenu">
@@ -210,4 +210,4 @@ td {
 p {
   margin: 0px;
 }
-</style>
+</style> -->

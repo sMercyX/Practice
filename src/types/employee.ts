@@ -1,23 +1,4 @@
-export interface EmployeeIndexRequest {
-  teamId?: string;
-  positionId?: string;
-  text?: string;
-}
-
-export interface EmployeeIndexResponse {
-  employeeId: string;
-  dateOfBirth: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-  phones: Phone[];
-  positionId: string;
-  teamId: string;
-}
-export interface Phone {
-  phoneId: string;
-  phoneNumber: string;
-}
+import type { EmployeeIndexResponse } from "../composables/api/employeeApi";
 
 export interface EmployeeWithDetail extends EmployeeIndexResponse {
   team_name: string;

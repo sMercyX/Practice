@@ -1,8 +1,7 @@
 import { computed, ref } from "vue";
-import type { EmployeeIndexResponse } from "../../../types/employee";
-import useEmployeeApi from "../api/apiEmployee";
 import router from "../../../routes";
 import { uuid } from "vue-uuid";
+import { useEmployeeApi, type EmployeeIndexResponse } from "../../../composables/api/employeeApi";
 
 export default function usePageEdit() {
   const rawData = ref<EmployeeIndexResponse>({
@@ -16,15 +15,23 @@ export default function usePageEdit() {
     positionId: "",
   });
 
-  // const employeeData = reactive<EmployeeIndexResponse>(rawData.value);
+  // const state = reactive<{form : EmployeeIndexResponse}>({form:{   employeeId: "",
+  //   firstname: "",
+  //   lastname: "",
+  //   email: "",
+  //   dateOfBirth: "",
+  //   phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
+  //   teamId: "",
+  //   positionId: "",}})
+
+  // const employeeData = reactive<EmployeeIndexResponse>(state.form);
   const addPhone = () => {
     rawData.value.phones.push({ phoneId: uuid.v1(), phoneNumber: "" });
   };
-  
+
   const removePhone = (index: number) => {
-    rawData.value.phones.splice(index + 1, 1);
+    rawData.value.phones.splice(index, 1);
   };
-  
 
   const employeeApi = useEmployeeApi();
   const loadEmployeeDetail = async (employeeId: string) => {
@@ -33,9 +40,10 @@ export default function usePageEdit() {
   };
 
   const handleSubmit = async () => {
-    const form = rawData.value
+    const form = rawData.value;
     if (rawData.value.employeeId) {
-      employeeApi.updateEmployee(form);
+      employeeApi.updareEmployee(form);
+      console.log(form);
     } else {
       employeeApi.createEmployee(form);
     }
@@ -46,6 +54,6 @@ export default function usePageEdit() {
     handleSubmit,
     form: computed(() => rawData.value),
     addPhone,
-    removePhone
+    removePhone,
   };
 }

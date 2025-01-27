@@ -56,13 +56,13 @@ import type { Header } from "../../types/tableTypes.ts";
 import { useRouter } from "vue-router";
 import Pagination from "../../components/Pagination/Pagination.vue";
 import type {
-  EmployeeIndexResponse,
   EmployeeWithDetail,
 } from "../../types/employee.ts";
 
 import ModalDelete from "../../components/atoms/ModalDelete.vue";
 import useMasterData from "./dataProvider/masterData.ts";
 import usePageIndex from "./dataProvider/pageIndex.ts";
+import type { EmployeeIndexResponse } from "../../composables/api/employeeApi.ts";
 
 const masterDataProvider = useMasterData();
 const { teams, postions } = masterDataProvider;

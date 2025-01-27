@@ -1,18 +1,17 @@
 import { computed, reactive, ref } from "vue";
-import type { EmployeeIndexRequest } from "../../../types/employee";
 import type { PaginationResponse, TableState } from "../../../types/types";
-import type { PositionResponse } from "../../../types/teamPositions";
-import usePositionApi from "../api/apiPosition";
+import { usePositionApi, type PositionResponse } from "../../../composables/api/positionApi";
+import type { EmployeeIndexRequest } from "../../../composables/api/employeeApi";
 
 export default function usePageIndexPosition() {
-  const rawData = ref<PaginationResponse<PositionResponse<string>[]>>({
+  const rawData = ref<PaginationResponse<PositionResponse[]>>({
     pageIndex: 0,
     rowCount: 0,
     pageSize: 0,
     data: [],
   });
 
-  const tableState: TableState<EmployeeIndexRequest, PositionResponse<string>[]> =
+  const tableState: TableState<EmployeeIndexRequest, PositionResponse[]> =
     reactive({
       pageIndex: 0,
       pageSize: 10,
@@ -36,7 +35,7 @@ export default function usePageIndexPosition() {
   const loadPosition = async () => {
     try {
       const response = await positionApi
-        .fetchDataPosition({
+        .getIndex({
           pageIndex: tableState.pageIndex,
           pageSize: tableState.pageSize,
           search: tableState.search,

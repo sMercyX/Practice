@@ -1,12 +1,10 @@
 import { computed, reactive, ref } from "vue";
 import type {
-  EmployeeIndexRequest,
-  EmployeeIndexResponse,
   EmployeeWithDetail,
 } from "../../../types/employee";
 import type { PaginationResponse, TableState } from "../../../types/types";
-import useEmployeeApi from "../api/apiEmployee";
 import { type IEmployeeMasterData } from "./masterData";
+import { useEmployeeApi, type EmployeeIndexRequest, type EmployeeIndexResponse } from "../../../composables/api/employeeApi";
 
 export default function usePageIndex(masterData: IEmployeeMasterData) {
   const getTeamName = (teamId: string) => {
@@ -62,7 +60,7 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
   const loadEmployee = async () => {
     try {
       const response = await employeeApi
-        .fetchDataEmployee({
+        .getIndex({
           pageIndex: tableState.pageIndex,
           pageSize: tableState.pageSize,
           search: tableState.search,

@@ -5,17 +5,17 @@
         <h3>
           {{ isEditing ? "Editing" : "Create" }} {{ header.toUpperCase() }}
         </h3>
-        <div class="close" @click="isOpen = false;">&times;</div>
+        <div class="close" @click="isOpen = false">&times;</div>
       </div>
       <!-- First Name -->
       <div class="Content">
         <p>Fields Marked with an <span>*</span> are required</p>
 
         <label for="name">Team Name <span>*</span> </label>
-        <InputText v-model:input="Name" :required="true" />
+        <InputText v-model:input="form.name" :required="true" />
 
         <label for="description">Description</label>
-        <InputText v-model:input="Description" :required="false" />
+        <InputText v-model:input="form.description" :required="false" />
       </div>
 
       <!-- Submit Button -->
@@ -28,33 +28,29 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { provide, ref } from "vue";
+import { computed, ref } from "vue";
 import InputText from "../Input/InputText.vue";
-import { postItem } from "../../utils/fetch";
-import type { TeamPositionRequest } from "../../types/teamPositions";
 import Modal from "./Modal.vue";
+import {
+  type IModalEditMaster,
+} from "../../types/modalForm1";
 
 const props = defineProps<{
-  data: TeamPositionRequest[];
   header: string;
+  dataProvider: IModalEditMaster;
 }>();
-const dataa = ref();
 const isOpen = ref<boolean>(false);
+
+const dataProvider = props.dataProvider;
+const form = dataProvider.form;
+
+const isEditing = computed(() => {
+  return !!form.value.id;
+});
+
 function openModal(id: string) {
   isOpen.value = true;
-
-  datas.value = props.data;
-  dataId.value = id;
-  if (id) {
-    isEditing.value = true;
-    dataa.value = datas.value.find(
-      (e: TeamPositionRequest) => e[headerId.value] === dataId.value
-    );
-    if (dataa) {
-      Name.value = dataa.value.name;
-      Description.value = dataa.value.description;
-    }
-  }
+  dataProvider.loadData(id);
 }
 function closeModal() {
   isOpen.value = false;
@@ -63,69 +59,12 @@ defineExpose({
   openModal,
 });
 
-
-
-const datas = ref<TeamPositionRequest[]>([]);
-
-const Name = ref<string>("");
-const Description = ref<string>("");
-
-const isEditing = ref<boolean>(false);
-const dataId = ref<string>();
-
 const header = ref<string>(props.header);
-const headerId = ref((header.value + "Id") as keyof TeamPositionRequest);
-
-
-const uploadData = async (data: TeamPositionRequest) => {
-  try {
-    const id = await postItem(
-      `${import.meta.env.VITE_BASE_URL}/${header.value}/create`,
-      data
-    );
-    datas.value.push({ ...data, [headerId.value]: id });
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
-const updateData = async (data: TeamPositionRequest, index: number) => {
-  try {
-    await postItem(
-      `${import.meta.env.VITE_BASE_URL}/${header.value}/update`,
-      data
-    );
-    datas.value[index] = data;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-};
 
 const handleSubmit = () => {
-  if (isEditing.value && dataId.value) {
-    const index = datas.value.findIndex(
-      (e: TeamPositionRequest) => e[headerId.value] === dataId.value
-    );
-    if (index !== -1) {
-      const formData: TeamPositionRequest = {
-        name: Name.value,
-        description: Description.value,
-        [headerId.value]: dataId.value,
-      };
-      updateData(formData, index);
-    }
-  } else {
-    const formData: TeamPositionRequest = {
-      name: Name.value,
-      description: Description.value,
-    };
-    uploadData(formData);
-  }
+  dataProvider.onSubmit();
   isOpen.value = false;
 };
-
-(() => {
-  datas.value = props.data;
-})();
 </script>
 
 <style scoped>

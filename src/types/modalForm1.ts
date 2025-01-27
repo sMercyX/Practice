@@ -1,10 +1,15 @@
-import type { ComputedRef, InjectionKey } from "vue"
-import type { PositionResponse, TeamResponse } from "./teamPositions"
+import type { ComputedRef, InjectionKey } from "vue";
 
+import type { TeamPositionRequest } from "../composables/api/teamApi";
+
+export interface IFormMaster extends TeamPositionRequest {
+  id: string;
+}
 export interface IModalEditMaster {
-    form: ComputedRef<PositionResponse<string> | TeamResponse<string>>
-    loadData: () => Promise<void>
-    OnSubmit: () => Promise<void>
+  form: ComputedRef<IFormMaster>;
+  loadData: (id: string) => Promise<void>;
+  onSubmit: () => Promise<void>;
 }
 
-const editMasterDataProviderKey: InjectionKey<IModalEditMaster> = Symbol()
+export const editMasterDataProviderKey: InjectionKey<IModalEditMaster> =
+  Symbol();

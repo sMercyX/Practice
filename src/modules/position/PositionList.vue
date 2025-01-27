@@ -37,7 +37,7 @@
   /> -->
   <ModalForm1
     ref="modalForm"
-    :data="tableState.data"
+    :data-provider="manageTeamDataProvider"
     :header="header"
   ></ModalForm1>
   <ModalDelete ref="modalDelete"></ModalDelete>
@@ -56,6 +56,7 @@ import type { PositionResponse } from "../../types/teamPositions.ts";
 import ModalDelete from "../../components/atoms/ModalDelete.vue";
 import usePageIndexPosition from "./dataProvider/pageIndexPosition.ts";
 import ModalForm1 from "../../components/atoms/ModalForm1.vue";
+import useMangePosition from "./dataProvider/pageEditPosition.ts";
 
 const pageIndexDataProvider = usePageIndexPosition();
 
@@ -85,13 +86,18 @@ const oepnModalForm = (id:string) => {
   modalForm.value?.openModal(id);
 };
 
+const manageTeamDataProvider = useMangePosition()
+
+// provide(editMasterDataProviderKey,manageTeamDataProvider)
+
 
 const handleNewPageData = (
-  data: PaginationResponse<PositionResponse<string>[]>
+  data: PaginationResponse<PositionResponse[]>
 ) => {
   tableState.pageIndex = data.pageIndex;
   tableState.pageSize = data.pageSize;
 };
+
 
 (async () => {
   await Promise.all([pageIndexDataProvider.loadPosition()]);

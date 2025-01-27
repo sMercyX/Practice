@@ -16,7 +16,7 @@
         <!-- Flexible data rendering with slot fallback -->
         <td v-for="(header, colIndex) in headers" :key="colIndex" @click="$emit('view', row)">
           <slot name="cell" :row="row" :header="header">
-            {{ (row[header.Key as K] !== null ? row[header.Key as K] : "-" )}}
+            {{ (row[header.Key as K] !== null || "" || undefined ? row[header.Key as K] : "-" )}}
             <template v-if="header.Name === 'Manage'">
               <slot name="AddEdit" :row="row">
      

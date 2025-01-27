@@ -8,7 +8,7 @@ import No3 from "../components/practice/No3.vue";
 import No4 from "../components/practice/No4.vue";
 import No5 from "../components/practice/No5.vue";
 import No6 from "../components/practice/No6.vue";
-import EmployeeList from "../components/practice/No7EmployeeList.vue";
+// import EmployeeList from "../components/practice/No7EmployeeList.vue";
 import EmployeeForm from "../modules/employee/EmployeeAddEdit.vue";
 import TeamList from "../modules/team/TeamList.vue";
 import PositionList from "../modules/position/PositionList.vue";
@@ -107,7 +107,7 @@ const router = createRouter(
           {
             path: "no7",
             name: "no7",
-            component: EmployeeList,
+            component: No6,
           },
         ],
       },

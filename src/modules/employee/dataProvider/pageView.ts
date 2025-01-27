@@ -1,7 +1,6 @@
 import { computed, ref } from "vue";
-import type { EmployeeIndexResponse } from "../../../types/employee";
-import useEmployeeApi from "../api/apiEmployee";
 import { uuid } from "vue-uuid";
+import { useEmployeeApi, type EmployeeIndexResponse } from "../../../composables/api/employeeApi";
 
 // export interface IEmployeeMasterData {
 //   employeeData: ComputedRef<EmployeeIndexResponse>;

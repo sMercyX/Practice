@@ -31,7 +31,7 @@
 import { ref } from "vue";
 import InputText from "../Input/InputText.vue";
 import { postItem } from "../../utils/fetch";
-import type { TeamPositionRequest } from "../../types/teamPositions";
+import type { TeamPositionRequest } from "../../composables/api/teamApi";
 
 const props = defineProps<{
   id: string;

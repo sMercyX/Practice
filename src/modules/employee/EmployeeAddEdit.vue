@@ -37,11 +37,11 @@
         <div class="breakHalf">
           <div class="groupUp">
             <label for="team_id">Team <span>*</span></label>
-            <Dropdown v-model="selectedTeam" :list="teams" />
+            <Dropdown v-model="form.teamId" :list="teams" />
           </div>
           <div class="groupUp">
             <label for="position_id">Position <span>*</span></label>
-            <Dropdown v-model="selectedPosition" :list="postions" />
+            <Dropdown v-model="form.positionId" :list="postions" />
           </div>
         </div>
 
@@ -53,24 +53,21 @@
           </button>
         </div>
         <div class="phone-list">
-          <InputText
-            v-model:input="form.phones[0].phoneNumber"
-            :required="true"
-          />
           <div
-            v-if="form.phones.length > 1"
-            v-for="(phone, index) in form.phones.slice(1)"
+            v-for="(phone, index) in form.phones"
             :key="index + 1"
             class="phone-item"
           >
             <InputText v-model:input="phone.phoneNumber" :required="true" />
             <button
+            v-if="index > 0"
               class="remove-button"
               type="button"
               @click="removePhone(index)"
             >
               &minus;
             </button>
+            
           </div>
         </div>
       </form>
@@ -79,12 +76,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed  } from "vue";
 import Dropdown from "../../components/Dropdown/Dropdown.vue";
 import InputText from "../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
-import { uuid } from "vue-uuid";
-import type { EmployeeIndexResponse } from "../../types/employee";
 import usePageEdit from "./dataProvider/pageEdit";
 import useMasterData from "./dataProvider/masterData";
 
@@ -96,8 +91,6 @@ const { handleSubmit, loadEmployeeDetail, form, addPhone, removePhone } =
 // const { firstname, lastname, email, phones } = pageEditDataProvider.rawData.value;
 // const employeeData = pageEditDataProvider.employeeData;
 
-const selectedTeam = ref<string>("");
-const selectedPosition = ref<string>("");
 const router = useRouter();
 const route = useRoute();
 

@@ -35,17 +35,10 @@
 
     <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
-  <!-- 
-  <Form1
-    v-if="isFormOpen"
-    :data="tableState.data"
-    :id="idToEditDelete"
-    :header="header"
-    @back="close"
-  /> -->
+ 
   <ModalForm1
     ref="modalFormgggggggggggggg"
-    :data="tableState.data"
+    :data-provider="manageTeamDataProvider"
     :header="header"
   ></ModalForm1>
 
@@ -53,18 +46,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, useTemplateRef, type InjectionKey, provide } from "vue";
+import { ref, computed, watch, useTemplateRef } from "vue";
 import type { PaginationResponse } from "../../types/types.ts";
 import SearchBar from "../../components/SearchInput/SearchBar.vue";
 
 import Table from "../../components/atoms/Table.vue";
 import type { Header } from "../../types/tableTypes.ts";
 import Pagination from "../../components/Pagination/Pagination.vue";
-import type { TeamResponse } from "../../types/teamPositions.ts";
 import ModalDelete from "../../components/atoms/ModalDelete.vue";
 import usePageIndexTeam from "./dataProvider/pageIndexTeam.ts";
 import ModalForm1 from "../../components/atoms/ModalForm1.vue";
-import type { IModalEditMaster } from "../../types/modalForm1.ts";
+import useManageTeam from "./dataProvider/pageEditTeam.ts";
+import type { TeamResponse } from "../../composables/api/teamApi.ts";
+
 
 const pageIndexDataProvider = usePageIndexTeam();
 
@@ -93,8 +87,10 @@ const oepnModalForm = (id:string) => {
   modalForm.value?.openModal(id);
 };
 
+const manageTeamDataProvider = useManageTeam()
+
 const handleNewPageData = (
-  data: PaginationResponse<TeamResponse<string>[]>
+  data: PaginationResponse<TeamResponse[]>
 ) => {
   tableState.pageIndex = data.pageIndex;
   tableState.pageSize = data.pageSize;

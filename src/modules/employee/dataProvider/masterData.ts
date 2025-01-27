@@ -1,5 +1,5 @@
-import useTeamApi from "../../team/api/apiTeam";
-import usePositionApi from "../../position/api/apiPosition";
+import { usePositionApi } from "../../../composables/api/positionApi";
+import { useTeamApi } from "../../../composables/api/teamApi";
 import type { DropdownModel } from "../../../types/types";
 import { computed, reactive, type ComputedRef } from "vue";
 

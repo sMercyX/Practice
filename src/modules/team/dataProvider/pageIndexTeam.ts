@@ -1,18 +1,17 @@
 import { computed, reactive, ref } from "vue";
-import type { EmployeeIndexRequest } from "../../../types/employee";
 import type { PaginationResponse, TableState } from "../../../types/types";
-import type { TeamResponse } from "../../../types/teamPositions";
-import useTeamApi from "../api/apiTeam";
+import { useTeamApi, type TeamResponse } from "../../../composables/api/teamApi";
+import type { EmployeeIndexRequest } from "../../../composables/api/employeeApi";
 
 export default function usePageIndexTeam() {
-  const rawData = ref<PaginationResponse<TeamResponse<string>[]>>({
+  const rawData = ref<PaginationResponse<TeamResponse[]>>({
     pageIndex: 0,
     rowCount: 0,
     pageSize: 0,
     data: [],
   });
 
-  const tableState: TableState<EmployeeIndexRequest, TeamResponse<string>[]> =
+  const tableState: TableState<EmployeeIndexRequest, TeamResponse[]> =
     reactive({
       pageIndex: 0,
       pageSize: 10,
@@ -36,7 +35,7 @@ export default function usePageIndexTeam() {
   const loadTeam = async () => {
     try {
       const response = await teamApi
-        .fetchDataTeam({
+        .getIndex({
           pageIndex: tableState.pageIndex,
           pageSize: tableState.pageSize,
           search: tableState.search,
