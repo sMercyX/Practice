@@ -2,7 +2,7 @@
   <div class="Head">
     <h2>Position ( {{ sumPosition }} )</h2>
     <div class="createEmployeeButton">
-      <button class="createButton" @click="openForm">
+      <button class="createButton" @click="oepnModalForm('')">
         <span>&plus;</span> Create
       </button>
     </div>
@@ -20,7 +20,7 @@
         <strong>{{ header["Name"] }}</strong>
       </template>
       <template #AddEdit="{ row }">
-        <button @click="openFormEdit(row.positionId!)">Edit</button>
+        <button @click="oepnModalForm(row.positionId!)">Edit</button>
         <button @click="openFormDelete(row.positionId!)">Delete</button>
       </template>
     </Table>
@@ -28,30 +28,34 @@
     <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
 
-  <Form1
+  <!-- <Form1
     v-if="isFormOpen"
     :data="tableState.data"
     :id="idToEditDelete"
     :header="header"
     @back="close"
-  />
-
+  /> -->
+  <ModalForm1
+    ref="modalForm"
+    :data="tableState.data"
+    :header="header"
+  ></ModalForm1>
   <ModalDelete ref="modalDelete"></ModalDelete>
   
   
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, useTemplateRef } from "vue";
 import type { PaginationResponse } from "../../types/types.ts";
 import SearchBar from "../../components/SearchInput/SearchBar.vue";
 import Table from "../../components/atoms/Table.vue";
 import type { Header } from "../../types/tableTypes.ts";
 import Pagination from "../../components/Pagination/Pagination.vue";
-import Form1 from "../../components/atoms/Form1.vue";
 import type { PositionResponse } from "../../types/teamPositions.ts";
 import ModalDelete from "../../components/atoms/ModalDelete.vue";
 import usePageIndexPosition from "./dataProvider/pageIndexPosition.ts";
+import ModalForm1 from "../../components/atoms/ModalForm1.vue";
 
 const pageIndexDataProvider = usePageIndexPosition();
 
@@ -67,19 +71,6 @@ const selectedHeaders = ref<Header[]>([
 ]);
 const header = ref<string>("position");
 
-const idToEditDelete = ref<string>("");
-const isFormOpen = ref<boolean>(false);
-const isDeleteOpen = ref<boolean>(false);
-
-const openFormEdit = (id: string) => {
-  idToEditDelete.value = id;
-  isFormOpen.value = !isFormOpen.value;
-};
-
-const openForm = () => {
-  isFormOpen.value = true;
-};
-
 const modalDelete = ref<InstanceType<typeof ModalDelete>>(null!);
 const openFormDelete = async (id: string) => {
   const confirm = await modalDelete.value.openModal();
@@ -89,11 +80,11 @@ const openFormDelete = async (id: string) => {
   }
 };
 
-const close = () => {
-  idToEditDelete.value = "";
-  isFormOpen.value = false;
-  isDeleteOpen.value = false;
+const modalForm = useTemplateRef('modalForm')
+const oepnModalForm = (id:string) => {
+  modalForm.value?.openModal(id);
 };
+
 
 const handleNewPageData = (
   data: PaginationResponse<PositionResponse<string>[]>

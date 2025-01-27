@@ -38,7 +38,7 @@ export default function usePositionApi() {
 
   const getDetailPosition = async (
     PositionId: string
-  ): Promise<TeamPositionRequest> => {
+  ): Promise<PositionResponse<string>> => {
     const response = await getItems(
       `${import.meta.env.VITE_BASE_URL}/Position/GetDetail?id=${PositionId}`
     );

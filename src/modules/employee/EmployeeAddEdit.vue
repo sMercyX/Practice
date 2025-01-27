@@ -18,24 +18,20 @@
         <h2>Basic Info</h2>
       </div>
 
-      <form
-        @submit.prevent="handleSubmit(formData)"
-        class="Content"
-        id="myForm"
-      >
+      <form @submit.prevent="handleSubmit()" class="Content" id="myForm">
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
-            <InputText v-model:input="dataa.firstname" :required="true" />
+            <InputText v-model:input="form.firstname" :required="true" />
           </div>
           <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
-            <InputText v-model:input="dataa.lastname" :required="true" />
+            <InputText v-model:input="form.lastname" :required="true" />
           </div>
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
-          <InputText v-model:input="dataa.email" :required="true" />
+          <InputText v-model:input="form.email" :required="true" />
         </div>
 
         <div class="breakHalf">
@@ -58,12 +54,12 @@
         </div>
         <div class="phone-list">
           <InputText
-            v-model:input="dataa.phones[0].phoneNumber"
+            v-model:input="form.phones[0].phoneNumber"
             :required="true"
           />
           <div
-            v-if="dataa.phones.length > 1"
-            v-for="(phone, index) in dataa.phones.slice(1)"
+            v-if="form.phones.length > 1"
+            v-for="(phone, index) in form.phones.slice(1)"
             :key="index + 1"
             class="phone-item"
           >
@@ -80,12 +76,10 @@
       </form>
     </div>
   </div>
-  <button @click="console.log(dataa)">click</button>
-  <button @click="console.log(formData)">click</button>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import Dropdown from "../../components/Dropdown/Dropdown.vue";
 import InputText from "../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -97,79 +91,35 @@ import useMasterData from "./dataProvider/masterData";
 const masterDataProvider = useMasterData();
 const { teams, postions } = masterDataProvider;
 const pageEditDataProvider = usePageEdit();
-const { handleSubmit, loadEmployeeDetail, employeeId } = pageEditDataProvider;
+const { handleSubmit, loadEmployeeDetail, form, addPhone, removePhone } =
+  pageEditDataProvider;
 // const { firstname, lastname, email, phones } = pageEditDataProvider.rawData.value;
 // const employeeData = pageEditDataProvider.employeeData;
-
-const dataa = ref<EmployeeIndexResponse>({
-  dateOfBirth: "",
-  phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
-} as EmployeeIndexResponse);
-
-const addPhone = () => {
-  dataa.value.phones.push({ phoneId: uuid.v1(), phoneNumber: "" });
-};
-
-const removePhone = (index: number) => {
-  dataa.value.phones.splice(index + 1, 1);
-};
 
 const selectedTeam = ref<string>("");
 const selectedPosition = ref<string>("");
 const router = useRouter();
 const route = useRoute();
 
-const isEditing = ref<boolean>(false);
+const employeeId = computed(() => {
+  return route.params.employeeId as string;
+});
+const isEditing = computed(() => {
+  return !!route.params.employeeId;
+});
 
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute });
 };
 
-const formData = ref<EmployeeIndexResponse>({
-  ...dataa.value,
-  teamId: selectedTeam.value,
-  positionId: selectedPosition.value,
-});
-
 (async () => {
-  employeeId.value = route.params.employeeId as string;
-  await Promise.all([masterDataProvider.loadMasterData()]);
+  const pMaster = Promise.all([masterDataProvider.loadMasterData()]);
   if (employeeId.value) {
-    isEditing.value = true;
-    const response = await Promise.all([loadEmployeeDetail(employeeId.value)]);
-    dataa.value = response[0];
-    dataa.value = { ...response[0], employeeId: employeeId.value };
-
-    selectedTeam.value = response[0].teamId;
-    selectedPosition.value = response[0].positionId;
+    await loadEmployeeDetail(employeeId.value);
   }
-})();
-watch(
-  () => [
-    dataa.value.firstname,
-    dataa.value.lastname,
-    dataa.value.email,
-    dataa.value.phones,
-    selectedTeam.value,
-    selectedPosition.value,
-  ],
-  () =>
-    (formData.value = {
-      ...dataa.value,
-      teamId: selectedTeam.value,
-      positionId: selectedPosition.value,
-    })
-);
-// watch(
-//   () => dataa.value.firstname,
 
-//   () =>
-//     (formData.value = {
-//       ...dataa.value,
-//       teamId: selectedTeam.value,
-//       positionId: selectedPosition.value,
-//     })
-// );
+  await pMaster;
+})();
 </script>
 
 <style scoped>

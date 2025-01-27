@@ -9,8 +9,8 @@ export interface TeamIndexRequest {
   teamId?: string;
 }
 export interface PositionIndexRequest {
-    positionId?: string;
-  }
+  positionId?: string;
+}
 
 export interface TeamPositionRequest {
   name: string;
