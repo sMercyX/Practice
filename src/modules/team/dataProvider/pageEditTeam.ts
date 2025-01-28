@@ -1,7 +1,6 @@
 import { computed, ref } from "vue"
 import type { IFormMaster, IModalEditMaster } from "../../../types/modalForm1"
 import { useTeamApi } from "../../../composables/api/teamApi"
-import usePageIndexTeam from "./pageIndexTeam"
 
 export default function useManageTeam(): IModalEditMaster {
   const form = ref<IFormMaster>(createDefaultForm())
@@ -24,7 +23,6 @@ export default function useManageTeam(): IModalEditMaster {
       form.value = createDefaultForm()
     }
   }
-  const pageIndex = usePageIndexTeam()
 
   const OnSubmit = async (): Promise<void> => {
     if (form.value.id) {
@@ -32,8 +30,6 @@ export default function useManageTeam(): IModalEditMaster {
     } else {
       await teamApi.createTeam(form.value)
     }
-
-    await pageIndex.loadTeam()
   }
 
   return {

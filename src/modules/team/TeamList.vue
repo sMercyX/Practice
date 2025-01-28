@@ -58,7 +58,8 @@ import { editMasterDataProviderKey } from "../../types/modalForm1.ts"
 
 const pageIndexDataProvider = usePageIndexTeam()
 
-const { tableState, deleteItem, handleNewPageData } = pageIndexDataProvider
+const { tableState, deleteItem, handleNewPageData, loadTeam } =
+  pageIndexDataProvider
 const sumTeam = computed(() => tableState.rowCount)
 const rawData = ref(pageIndexDataProvider.rawData)
 
@@ -79,8 +80,11 @@ const openFormDelete = async (id: string) => {
 }
 
 const modalForm = useTemplateRef("modalFormgggggggggggggg")
-const oepnModalForm = (id: string) => {
-  modalForm.value?.openModal(id)
+const oepnModalForm = async (id: string) => {
+  const confirm = await modalForm.value?.openModal(id)
+  if (confirm) {
+    await loadTeam()
+  }
 }
 
 const manageTeamDataProvider = useManageTeam()

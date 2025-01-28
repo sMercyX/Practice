@@ -45,24 +45,35 @@ const { form, loadData, onSubmit } = inject(editMasterDataProviderKey)!
 const isEditing = computed(() => {
   return !!form.value.id
 })
+let promise: Promise<boolean>
+let _resolve!: (value: boolean | PromiseLike<boolean>) => void
+let _reject!: (reason?: any) => void
+
 
 function openModal(id: string) {
   isOpen.value = true
   loadData(id)
+  return (promise = new Promise((resolve, reject) => {
+    _resolve = resolve
+    _reject = reject
+  }))
 }
 function closeModal() {
+  _resolve(false)
   isOpen.value = false
 }
+const handleSubmit = async() => {
+  await onSubmit()
+  _resolve(true)
+  isOpen.value = false
+}
+
 defineExpose({
   openModal,
+  handleSubmit
 })
 
 const header = ref<string>(props.header)
-
-const handleSubmit = () => {
-  onSubmit()
-  isOpen.value = false
-}
 </script>
 
 <style scoped>

@@ -45,6 +45,7 @@ export default function usePageIndexPosition() {
         })
         .then((x) => x)
       rawData.value = response
+
     } catch (error) {
       console.error("Error loading data:", error)
     }
@@ -59,12 +60,13 @@ export default function usePageIndexPosition() {
     tableState.pageIndex = data.pageIndex
     tableState.pageSize = data.pageSize
   }
-
+  
   watch(
     [
       () => tableState.pageIndex,
       () => tableState.pageSize,
       () => tableState.search.text,
+      () => tableState.rowCount,
     ],
     async () => {
       await loadPosition()

@@ -10,7 +10,14 @@
   <hr />
   <div class="searchMenu">
     <div class="left">
-      <SearchBar header="SearchBar" v-model:input="searchPosition" />
+      <!-- <SearchBar header="SearchBar" v-model:input="searchPosition" /> -->
+      <SearchBar
+        header="SearchBar"
+        :input="tableState.search.text"
+        @keyup="
+          tableState.search.text = ($event.target as HTMLInputElement).value
+        "
+      />
     </div>
     <div class="right"></div>
   </div>
@@ -30,6 +37,8 @@
 
   <ModalForm1 ref="modalForm" :header="header"></ModalForm1>
   <ModalDelete ref="modalDelete"></ModalDelete>
+
+  <button @click="console.log(tableState.data)">click</button>
 </template>
 
 <script setup lang="ts">
@@ -48,11 +57,11 @@ import { editMasterDataProviderKey } from "../../types/modalForm1.ts"
 
 const pageIndexDataProvider = usePageIndexPosition()
 
-const { tableState, deleteItem, handleNewPageData } = pageIndexDataProvider
+const { tableState, deleteItem, handleNewPageData, loadPosition } =
+  pageIndexDataProvider
 const sumPosition = computed(() => tableState.rowCount)
 const rawData = ref(pageIndexDataProvider.rawData)
 
-const searchPosition = ref<string>("")
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Description", Key: "description" },
@@ -70,8 +79,11 @@ const openFormDelete = async (id: string) => {
 }
 
 const modalForm = useTemplateRef("modalForm")
-const oepnModalForm = (id: string) => {
-  modalForm.value?.openModal(id)
+const oepnModalForm = async (id: string) => {
+  const confirm = await modalForm.value?.openModal(id)
+  if (confirm) {
+    await loadPosition()
+  }
 }
 
 const managePositionDataProvider = useMangePosition()
