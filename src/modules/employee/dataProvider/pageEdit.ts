@@ -14,17 +14,7 @@ export default function usePageEdit() {
     teamId: "",
     positionId: "",
   });
-
-  // const state = reactive<{form : EmployeeIndexResponse}>({form:{   employeeId: "",
-  //   firstname: "",
-  //   lastname: "",
-  //   email: "",
-  //   dateOfBirth: "",
-  //   phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
-  //   teamId: "",
-  //   positionId: "",}})
-
-  // const employeeData = reactive<EmployeeIndexResponse>(state.form);
+  
   const addPhone = () => {
     rawData.value.phones.push({ phoneId: uuid.v1(), phoneNumber: "" });
   };

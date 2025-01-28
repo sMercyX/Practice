@@ -28,21 +28,20 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import InputText from "../Input/InputText.vue";
 import Modal from "./Modal.vue";
-import {
-  type IModalEditMaster,
-} from "../../types/modalForm1";
+import { editMasterDataProviderKey } from "../../types/modalForm1";
+
 
 const props = defineProps<{
   header: string;
-  dataProvider: IModalEditMaster;
 }>();
 const isOpen = ref<boolean>(false);
 
-const dataProvider = props.dataProvider;
-const form = dataProvider.form;
+// const dataProvider = props.dataProvider;
+// const form = dataProvider.form;
+const {form , loadData , onSubmit} = inject(editMasterDataProviderKey)!
 
 const isEditing = computed(() => {
   return !!form.value.id;
@@ -50,9 +49,10 @@ const isEditing = computed(() => {
 
 function openModal(id: string) {
   isOpen.value = true;
-  dataProvider.loadData(id);
+  loadData(id);
 }
 function closeModal() {
+
   isOpen.value = false;
 }
 defineExpose({
@@ -62,7 +62,7 @@ defineExpose({
 const header = ref<string>(props.header);
 
 const handleSubmit = () => {
-  dataProvider.onSubmit();
+  onSubmit();
   isOpen.value = false;
 };
 </script>

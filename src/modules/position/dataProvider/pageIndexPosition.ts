@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import type { PaginationResponse, TableState } from "../../../types/types";
 import { usePositionApi, type PositionResponse } from "../../../composables/api/positionApi";
 import type { EmployeeIndexRequest } from "../../../composables/api/employeeApi";
@@ -52,11 +52,29 @@ export default function usePageIndexPosition() {
     await loadPosition();
   };
 
+  const handleNewPageData = (
+    data: PaginationResponse<PositionResponse[]>
+  ) => {
+    tableState.pageIndex = data.pageIndex;
+    tableState.pageSize = data.pageSize;
+  };
+  
+  watch(
+    [
+      () => tableState.pageIndex,
+      () => tableState.pageSize,
+      () => tableState.search.text,
+    ],
+    async () => {
+      await loadPosition();
+    }
+  );
   return {
     loadPosition,
     deleteItem,
     resetFilters,
     tableState,
     rawData,
+    handleNewPageData
   };
 }

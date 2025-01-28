@@ -56,7 +56,9 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
   const resetFilters = () => {
     tableState.search = createDefaultSearch();
   };
+
   const employeeApi = useEmployeeApi();
+
   const loadEmployee = async () => {
     try {
       const response = await employeeApi
@@ -83,7 +85,7 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
     tableState.pageIndex = data.pageIndex;
     tableState.pageSize = data.pageSize;
   };
-  
+
   watch(
     [
       () => tableState.pageIndex,
@@ -96,6 +98,7 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
       await loadEmployee();
     }
   );
+  
   return {
     loadEmployee,
     deleteItem,

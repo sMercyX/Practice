@@ -60,14 +60,13 @@
           >
             <InputText v-model:input="phone.phoneNumber" :required="true" />
             <button
-            v-if="index > 0"
+              v-if="index > 0"
               class="remove-button"
               type="button"
               @click="removePhone(index)"
             >
               &minus;
             </button>
-            
           </div>
         </div>
       </form>
@@ -76,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed  } from "vue";
+import { computed } from "vue";
 import Dropdown from "../../components/Dropdown/Dropdown.vue";
 import InputText from "../../components/Input/InputText.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -86,10 +85,7 @@ import useMasterData from "./dataProvider/masterData";
 const masterDataProvider = useMasterData();
 const { teams, postions } = masterDataProvider;
 const pageEditDataProvider = usePageEdit();
-const { handleSubmit, loadEmployeeDetail, form, addPhone, removePhone } =
-  pageEditDataProvider;
-// const { firstname, lastname, email, phones } = pageEditDataProvider.rawData.value;
-// const employeeData = pageEditDataProvider.employeeData;
+const { handleSubmit, loadEmployeeDetail, form, addPhone, removePhone } = pageEditDataProvider;
 
 const router = useRouter();
 const route = useRoute();
@@ -110,7 +106,6 @@ const navigateTo = (nameRoute: string) => {
   if (employeeId.value) {
     await loadEmployeeDetail(employeeId.value);
   }
-
   await pMaster;
 })();
 </script>

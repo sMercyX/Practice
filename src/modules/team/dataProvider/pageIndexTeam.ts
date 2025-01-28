@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import type { PaginationResponse, TableState } from "../../../types/types";
 import { useTeamApi, type TeamResponse } from "../../../composables/api/teamApi";
 import type { EmployeeIndexRequest } from "../../../composables/api/employeeApi";
@@ -51,6 +51,22 @@ export default function usePageIndexTeam() {
     await teamApi.deleteTeam(id);
     await loadTeam();
   };
+  const handleNewPageData = (
+    data: PaginationResponse<TeamResponse[]>
+  ) => {
+    tableState.pageIndex = data.pageIndex;
+    tableState.pageSize = data.pageSize;
+  };
+  watch(
+    [
+      () => tableState.pageIndex,
+      () => tableState.pageSize,
+      () => tableState.search.text,
+    ],
+    async () => {
+      await loadTeam();
+    }
+  );
 
   return {
     loadTeam,
@@ -58,5 +74,6 @@ export default function usePageIndexTeam() {
     resetFilters,
     tableState,
     rawData,
+    handleNewPageData
   };
 }

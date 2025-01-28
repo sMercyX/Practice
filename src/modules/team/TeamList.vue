@@ -35,10 +35,9 @@
 
     <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
- 
+
   <ModalForm1
     ref="modalFormgggggggggggggg"
-    :data-provider="manageTeamDataProvider"
     :header="header"
   ></ModalForm1>
 
@@ -46,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, useTemplateRef } from "vue";
+import { ref, computed, useTemplateRef, provide } from "vue";
 import type { PaginationResponse } from "../../types/types.ts";
 import SearchBar from "../../components/SearchInput/SearchBar.vue";
 
@@ -58,11 +57,11 @@ import usePageIndexTeam from "./dataProvider/pageIndexTeam.ts";
 import ModalForm1 from "../../components/atoms/ModalForm1.vue";
 import useManageTeam from "./dataProvider/pageEditTeam.ts";
 import type { TeamResponse } from "../../composables/api/teamApi.ts";
-
+import { editMasterDataProviderKey } from "../../types/modalForm1.ts";
 
 const pageIndexDataProvider = usePageIndexTeam();
 
-const { tableState, deleteItem } = pageIndexDataProvider;
+const { tableState, deleteItem, handleNewPageData } = pageIndexDataProvider;
 const sumTeam = computed(() => tableState.rowCount);
 const rawData = ref(pageIndexDataProvider.rawData);
 
@@ -82,34 +81,17 @@ const openFormDelete = async (id: string) => {
   }
 };
 
-const modalForm = useTemplateRef('modalFormgggggggggggggg')
-const oepnModalForm = (id:string) => {
+const modalForm = useTemplateRef("modalFormgggggggggggggg");
+const oepnModalForm = (id: string) => {
   modalForm.value?.openModal(id);
 };
 
-const manageTeamDataProvider = useManageTeam()
-
-const handleNewPageData = (
-  data: PaginationResponse<TeamResponse[]>
-) => {
-  tableState.pageIndex = data.pageIndex;
-  tableState.pageSize = data.pageSize;
-};
+const manageTeamDataProvider = useManageTeam();
+provide(editMasterDataProviderKey, manageTeamDataProvider);
 
 (async () => {
   await Promise.all([pageIndexDataProvider.loadTeam()]);
 })();
-
-watch(
-  [
-    () => tableState.pageIndex,
-    () => tableState.pageSize,
-    () => tableState.search.text,
-  ],
-  async () => {
-    await pageIndexDataProvider.loadTeam();
-  }
-);
 </script>
 
 <style scoped>
