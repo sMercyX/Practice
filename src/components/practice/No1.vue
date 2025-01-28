@@ -1,29 +1,49 @@
 <template>
-  <container>
+  <div>
     <button type="button" @click="count--">&minus;</button>
     <p>count : {{ count }}</p>
     <button type="button" @click="count++">&plus;</button>
-  </container>
-  <Test :data="ab" @data="console.log($event)">
+  </div>
+  <Test :data="ab" v-on:data="console.log($event)">
     <template #="{ value }"> {{ value }} </template>
   </Test>
-
-  <button @click="openBox()">open</button>
+  <!-- 
+  <button @click="publishEvent()">++</button>
+  <button @click="start()">start</button>
+  <button @click="stop()">stop</button> -->
   <Box1 ref="modalBox"></Box1>
+  <Box1e ref="modalBox"></Box1e>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { provide, ref } from "vue"
 import Test from "./FixTest.vue"
 import Box1 from "./box/box1.vue"
+import Box1e from "./box copy/b1.vue"
+import mitt from "mitt"
+import { eventBusKey, type EventList } from "../../types/eventButKey"
+
+const eventBus = mitt<EventList>()
+provide(eventBusKey, eventBus)
+
+// function publishEvent() {
+//   eventBus.emit('countUppp')
+// }
 
 const count = ref<number>(0)
+// function countUp() {
 
-const modalBox = ref<InstanceType<typeof Box1>>(null!)
-const openBox = () => {
-  modalBox.value.openModal()
-}
+//   count.value++
 
+// }
+// function start() {
+
+// eventBus.on('adsdfgghhjj',countUp)
+// }
+
+// function stop() {
+//   eventBus.off('adsdfgghhjj')
+// }
 interface AB {
   a: string
 }

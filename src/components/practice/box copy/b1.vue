@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import Box2 from "./box2.vue"
+import Box2 from "./b2.vue"
 
 
 </script>

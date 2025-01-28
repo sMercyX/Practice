@@ -28,10 +28,11 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { computed, inject, ref } from "vue"
+import { computed, inject, provide, ref } from "vue"
 import InputText from "../Input/InputText.vue"
 import Modal from "./Modal.vue"
 import { editMasterDataProviderKey } from "../../types/modalForm1"
+import { eventBusKey } from "../../types/eventButKey"
 
 const props = defineProps<{
   header: string
@@ -45,32 +46,25 @@ const { form, loadData, onSubmit } = inject(editMasterDataProviderKey)!
 const isEditing = computed(() => {
   return !!form.value.id
 })
-let promise: Promise<boolean>
-let _resolve!: (value: boolean | PromiseLike<boolean>) => void
-let _reject!: (reason?: any) => void
 
+const eventBus = inject(eventBusKey)!
 
 function openModal(id: string) {
   isOpen.value = true
   loadData(id)
-  return (promise = new Promise((resolve, reject) => {
-    _resolve = resolve
-    _reject = reject
-  }))
 }
 function closeModal() {
-  _resolve(false)
   isOpen.value = false
 }
-const handleSubmit = async() => {
+const handleSubmit = async () => {
   await onSubmit()
-  _resolve(true)
   isOpen.value = false
+  eventBus.emit("deleteTeamPosition")
 }
 
 defineExpose({
   openModal,
-  handleSubmit
+  handleSubmit,
 })
 
 const header = ref<string>(props.header)

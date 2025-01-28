@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, useTemplateRef, provide } from "vue"
+import { ref, computed, useTemplateRef, provide, inject } from "vue"
 import type { PaginationResponse } from "../../types/types.ts"
 import SearchBar from "../../components/SearchInput/SearchBar.vue"
 
@@ -55,6 +55,7 @@ import ModalForm1 from "../../components/atoms/ModalForm1.vue"
 import useManageTeam from "./dataProvider/pageEditTeam.ts"
 import type { TeamResponse } from "../../composables/api/teamApi.ts"
 import { editMasterDataProviderKey } from "../../types/modalForm1.ts"
+import { eventBusKey } from "../../types/eventButKey.ts"
 
 const pageIndexDataProvider = usePageIndexTeam()
 
@@ -79,12 +80,14 @@ const openFormDelete = async (id: string) => {
   }
 }
 
+const eventBus = inject(eventBusKey)!
+
 const modalForm = useTemplateRef("modalFormgggggggggggggg")
-const oepnModalForm = async (id: string) => {
-  const confirm = await modalForm.value?.openModal(id)
-  if (confirm) {
-    await loadTeam()
-  }
+const oepnModalForm = (id: string) => {
+  modalForm.value?.openModal(id)
+  eventBus.on("deleteTeamPosition", () => {
+  loadTeam()
+})
 }
 
 const manageTeamDataProvider = useManageTeam()

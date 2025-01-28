@@ -2,20 +2,21 @@
   <div class="box4">
     <!-- <Count ref="c" /> -->
     <!-- <button type="button" @click="addCountttt()">&plus;</button> -->
-    <button type="button" @click="publishEvent">&plus;</button>
+    {{ count }}
+    <!-- {{ foo.count }} -->
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Emitter, EventType } from "mitt"
-import { inject } from "vue"
+import { inject, ref } from "vue"
 import { eventBusKey } from "../../../types/eventButKey"
 
-const eventBus = inject(eventBusKey)!
+const count = ref<number>(0)
 
-function publishEvent() {
-  eventBus.emit("countUppp", Math.random() * 100)
-}
+const eventBus = inject(eventBusKey)!
+eventBus.on("countUppp", (e) => {
+  count.value = e
+})
 </script>
 
 <style scoped>

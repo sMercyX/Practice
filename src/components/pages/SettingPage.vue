@@ -23,11 +23,17 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router"
+import { eventBusKey, type EventList } from "../../types/eventButKey"
+import mitt from "mitt"
+import { provide } from "vue"
 
 const router = useRouter()
 const navigateTo = (nameRoute: string) => {
   router.push({ name: nameRoute })
 }
+
+const eventBus = mitt<EventList>()
+provide(eventBusKey, eventBus)
 </script>
 
 <style scoped>
