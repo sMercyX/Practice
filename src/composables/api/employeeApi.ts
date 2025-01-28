@@ -26,10 +26,6 @@ export interface EmployeeIndexRequest {
     phoneId: string;
     phoneNumber: string;
   }
-  
- 
-  
-
 
 // EmployeeApi
 export function useEmployeeApi() {

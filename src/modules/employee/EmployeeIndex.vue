@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import type { PaginationResponse } from "../../types/types.ts";
 import Dropdown from "../../components/Dropdown/Dropdown.vue";
 import SearchBar from "../../components/SearchInput/SearchBar.vue";
@@ -70,7 +70,7 @@ const pageIndexDataProvider = usePageIndex(masterDataProvider);
 
 const router = useRouter();
 
-const { tableState, resetFilters } = pageIndexDataProvider;
+const { tableState, resetFilters , handleNewPageData } = pageIndexDataProvider;
 const sumEmployee = computed(() => tableState.rowCount);
 const rawData = ref(pageIndexDataProvider.rawData);
 
@@ -104,12 +104,6 @@ const navigateToView = (data: EmployeeIndexResponse) => {
   });
 };
 
-const handleNewPageData = (
-  data: PaginationResponse<EmployeeIndexResponse[]>
-) => {
-  tableState.pageIndex = data.pageIndex;
-  tableState.pageSize = data.pageSize;
-};
 
 (async () => {
   await Promise.all([
@@ -118,18 +112,6 @@ const handleNewPageData = (
   ]);
 })();
 
-watch(
-  [
-    () => tableState.pageIndex,
-    () => tableState.pageSize,
-    () => tableState.search.positionId,
-    () => tableState.search.teamId,
-    () => tableState.search.text,
-  ],
-  async () => {
-    await pageIndexDataProvider.loadEmployee();
-  }
-);
 </script>
 
 <style scoped>

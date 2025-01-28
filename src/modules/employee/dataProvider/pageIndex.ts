@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import type {
   EmployeeWithDetail,
 } from "../../../types/employee";
@@ -76,11 +76,32 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
     await employeeApi.deleteEmployee(id);
     await loadEmployee();
   };
+
+  const handleNewPageData = (
+    data: PaginationResponse<EmployeeIndexResponse[]>
+  ) => {
+    tableState.pageIndex = data.pageIndex;
+    tableState.pageSize = data.pageSize;
+  };
+  
+  watch(
+    [
+      () => tableState.pageIndex,
+      () => tableState.pageSize,
+      () => tableState.search.positionId,
+      () => tableState.search.teamId,
+      () => tableState.search.text,
+    ],
+    async () => {
+      await loadEmployee();
+    }
+  );
   return {
     loadEmployee,
     deleteItem,
     resetFilters,
     tableState,
     rawData,
+    handleNewPageData
   };
 }
