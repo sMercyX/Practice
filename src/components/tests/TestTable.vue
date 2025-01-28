@@ -28,44 +28,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch } from "vue"
 import {
   teamList,
   postionList,
   employeeList,
-} from "../../assets/data/firstData";
-import type { Employ1Details } from "../../types/types";
-import Dropdown from "./atoms/Dropdown.vue";
-import SearchBar from "./atoms/SearchBar.vue";
+} from "../../assets/data/firstData"
+import type { Employ1Details } from "../../types/types"
+import Dropdown from "./atoms/Dropdown.vue"
+import SearchBar from "./atoms/SearchBar.vue"
 
-import Table from "./atoms/Table.vue";
-import type { Header } from "../../types/tableTypes.ts";
+import Table from "./atoms/Table.vue"
+import type { Header } from "../../types/tableTypes.ts"
 
-const teams = ref(teamList);
-const postions = ref(postionList);
-const employees = ref(employeeList);
-const selectedTeam = ref<number>(0);
-const selectedPosition = ref<number>(0);
-const searchEmployee = ref<string>("");
-const sumEmployee = computed(() => selectedEmployees.value.length);
+const teams = ref(teamList)
+const postions = ref(postionList)
+const employees = ref(employeeList)
+const selectedTeam = ref<number>(0)
+const selectedPosition = ref<number>(0)
+const searchEmployee = ref<string>("")
+const sumEmployee = computed(() => selectedEmployees.value.length)
 const selectedHeaders = ref<Header[]>([
   { Name: "FirstName", Key: "first_name" },
   { Name: "Email", Key: "email" },
   { Name: "Team", Key: "team_name" },
   { Name: "Position", Key: "position_name" },
-]);
+])
 
-const selectedEmployees = ref<Employ1Details[]>([]);
+const selectedEmployees = ref<Employ1Details[]>([])
 
 const getTeamName = (teamId: number) => {
-  const team = teams.value.find((t) => t.id === teamId);
-  return team ? team.name : "Unknown Team";
-};
+  const team = teams.value.find((t) => t.id === teamId)
+  return team ? team.name : "Unknown Team"
+}
 
 const getPositionName = (positionId: number) => {
-  const position = postions.value.find((p) => p.id === positionId);
-  return position ? position.name : "Unknown Position";
-};
+  const position = postions.value.find((p) => p.id === positionId)
+  return position ? position.name : "Unknown Position"
+}
 
 const employeesWithDetails = computed(() =>
   employees.value
@@ -75,7 +75,7 @@ const employeesWithDetails = computed(() =>
       position_name: getPositionName(emp.position_id),
     }))
     .slice(0, 10)
-);
+)
 
 const filterEmployees = () => {
   selectedEmployees.value = employeesWithDetails.value.filter(
@@ -92,19 +92,19 @@ const filterEmployees = () => {
             .includes(searchEmployee.value.toLowerCase()) ||
           data.email.toLowerCase().includes(searchEmployee.value.toLowerCase())
         : true)
-  );
-};
+  )
+}
 
 const resetFilters = () => {
-  selectedTeam.value = 0;
-  selectedPosition.value = 0;
-  searchEmployee.value = "";
-  filterEmployees();
-};
+  selectedTeam.value = 0
+  selectedPosition.value = 0
+  searchEmployee.value = ""
+  filterEmployees()
+}
 
-watch([selectedTeam, selectedPosition, searchEmployee], filterEmployees);
+watch([selectedTeam, selectedPosition, searchEmployee], filterEmployees)
 
-filterEmployees();
+filterEmployees()
 </script>
 
 <style scoped>

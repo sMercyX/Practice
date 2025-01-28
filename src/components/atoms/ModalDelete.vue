@@ -1,64 +1,62 @@
 <template>
   <Modal :isShow="isOpen">
-      <div class="overlay">
-        <div class="Head"></div>
+    <div class="overlay">
+      <div class="Head"></div>
 
-        <div class="Content">
-          <img src="../../assets/trashFill.svg" alt="DeleteLogo" />
-          <h3><span>Delete</span></h3>
-          <p class="delete-message">
-            Are you sure you want to delete selected items ?
-          </p>
-        </div>
-
-        <div class="Footer">
-          <button class="cancel" type="button" @click="closeModal">
-            Cancel
-          </button>
-          <button class="save" type="submit" @click="onSave">Delete</button>
-        </div>
+      <div class="Content">
+        <img src="../../assets/trashFill.svg" alt="DeleteLogo" />
+        <h3><span>Delete</span></h3>
+        <p class="delete-message">
+          Are you sure you want to delete selected items ?
+        </p>
       </div>
+
+      <div class="Footer">
+        <button class="cancel" type="button" @click="closeModal">Cancel</button>
+        <button class="save" type="submit" @click="onSave">Delete</button>
+      </div>
+    </div>
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import Modal from "./Modal.vue";
+import { ref } from "vue"
+import Modal from "./Modal.vue"
 
-const isOpen = ref<boolean>(false);
+const isOpen = ref<boolean>(false)
 
-let promise: Promise<boolean>;
-let _resolve!: (value: boolean | PromiseLike<boolean>) => void;
-let _reject!: (reason?: any) => void;
+let promise: Promise<boolean>
+let _resolve!: (value: boolean | PromiseLike<boolean>) => void
+let _reject!: (reason?: any) => void
 
 function openModal() {
-  isOpen.value = true;
+  isOpen.value = true
   return (promise = new Promise((resolve, reject) => {
-    _resolve = resolve;
-    _reject = reject;
-  }));
+    _resolve = resolve
+    _reject = reject
+  }))
 }
 
 function closeModal() {
-  _resolve(false);
-  isOpen.value = false;
+  _resolve(false)
+  isOpen.value = false
 }
 
 function onSave() {
-  _resolve(true);
-  isOpen.value = false;
+  _resolve(true)
+  isOpen.value = false
 }
 
 defineExpose({
   openModal,
-});
+})
 </script>
 
 <style scoped>
 .overlay {
- background-color: white;
- padding: 20px 0;
- border-radius: 10px;
+  background-color: white;
+  padding: 20px 0;
+  border-radius: 10px;
 }
 /* .modal-content {
     background: white;

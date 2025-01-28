@@ -9,29 +9,26 @@
   </Test>
 
   <button @click="openBox()">open</button>
-  <Box1 ref="modalBox" ></Box1>
+  <Box1 ref="modalBox"></Box1>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import Test from "./FixTest.vue";
-import Box1 from "./box/box1.vue";
+import { ref } from "vue"
+import Test from "./FixTest.vue"
+import Box1 from "./box/box1.vue"
 
-const count = ref<number>(0);
+const count = ref<number>(0)
 
-
-
-const modalBox = ref<InstanceType<typeof Box1>>(null!);
+const modalBox = ref<InstanceType<typeof Box1>>(null!)
 const openBox = () => {
-  modalBox.value.openModal();
-};
-
-
-interface AB {
-  a: string;
+  modalBox.value.openModal()
 }
 
-const ab: AB = null!;
+interface AB {
+  a: string
+}
+
+const ab: AB = null!
 </script>
 
 <style scoped>

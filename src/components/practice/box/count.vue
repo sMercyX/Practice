@@ -3,16 +3,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from "vue"
 
-const count = ref(0);
-function add(){
-    count.value = count.value + 1
+const count = ref(0)
+function add() {
+  count.value = count.value + 1
 }
 defineExpose({
   count,
-  add
-});
+  add,
+})
 </script>
 
 <style scoped></style>

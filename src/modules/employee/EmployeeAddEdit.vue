@@ -75,39 +75,40 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import Dropdown from "../../components/Dropdown/Dropdown.vue";
-import InputText from "../../components/Input/InputText.vue";
-import { useRoute, useRouter } from "vue-router";
-import usePageEdit from "./dataProvider/pageEdit";
-import useMasterData from "./dataProvider/masterData";
+import { computed } from "vue"
+import Dropdown from "../../components/Dropdown/Dropdown.vue"
+import InputText from "../../components/Input/InputText.vue"
+import { useRoute, useRouter } from "vue-router"
+import usePageEdit from "./dataProvider/pageEdit"
+import useMasterData from "./dataProvider/masterData"
 
-const masterDataProvider = useMasterData();
-const { teams, postions } = masterDataProvider;
-const pageEditDataProvider = usePageEdit();
-const { handleSubmit, loadEmployeeDetail, form, addPhone, removePhone } = pageEditDataProvider;
+const masterDataProvider = useMasterData()
+const { teams, postions } = masterDataProvider
+const pageEditDataProvider = usePageEdit()
+const { handleSubmit, loadEmployeeDetail, form, addPhone, removePhone } =
+  pageEditDataProvider
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
 const employeeId = computed(() => {
-  return route.params.employeeId as string;
-});
+  return route.params.employeeId as string
+})
 const isEditing = computed(() => {
-  return !!route.params.employeeId;
-});
+  return !!route.params.employeeId
+})
 
 const navigateTo = (nameRoute: string) => {
-  router.push({ name: nameRoute });
-};
+  router.push({ name: nameRoute })
+}
 
-(async () => {
-  const pMaster = Promise.all([masterDataProvider.loadMasterData()]);
+;(async () => {
+  const pMaster = Promise.all([masterDataProvider.loadMasterData()])
   if (employeeId.value) {
-    await loadEmployeeDetail(employeeId.value);
+    await loadEmployeeDetail(employeeId.value)
   }
-  await pMaster;
-})();
+  await pMaster
+})()
 </script>
 
 <style scoped>

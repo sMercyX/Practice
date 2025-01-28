@@ -1,15 +1,13 @@
 <template>
   <template v-if="isShow">
     <div class="modal-overlay">
-      <slot > 
-
-      </slot>
+      <slot> </slot>
     </div>
   </template>
 </template>
 
 <script setup lang="ts">
-defineProps<{ isShow: boolean }>();
+defineProps<{ isShow: boolean }>()
 </script>
 
 <style scoped>

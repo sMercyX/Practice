@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { teamList, postionList } from "../../assets/data/firstData";
-import Dropdown from "../Dropdown/Dropdown.vue";
+import { ref } from "vue"
+import { teamList, postionList } from "../../assets/data/firstData"
+import Dropdown from "../Dropdown/Dropdown.vue"
 
-const teams = ref(teamList);
-const postions = ref(postionList);
-const selectedTeam = ref<number>(0);
-const selectedPosition = ref<number>(2);
+const teams = ref(teamList)
+const postions = ref(postionList)
+const selectedTeam = ref<number>(0)
+const selectedPosition = ref<number>(2)
 </script>
 
 <template>

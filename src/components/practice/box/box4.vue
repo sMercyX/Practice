@@ -9,9 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
-import { key } from "./key";
-
+import { inject } from "vue"
+import { key } from "./key"
 
 const { count, addCount } = inject(key)!
 </script>

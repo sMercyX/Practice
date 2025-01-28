@@ -12,9 +12,9 @@
       <div @click="navigateTo('no7')">No.7</div>
     </div>
     <div class="RightSide">
-      <RouterView >
-        <template #default="{ Component}">
-            <Component :is="Component"/>
+      <RouterView>
+        <template #default="{ Component }">
+          <Component :is="Component" />
         </template>
       </RouterView>
     </div>
@@ -22,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRouter } from "vue-router"
 
-const router = useRouter();
+const router = useRouter()
 const navigateTo = (nameRoute: string) => {
-  router.push({ name: nameRoute });
-};
+  router.push({ name: nameRoute })
+}
 </script>
 
 <style scoped>
@@ -52,15 +52,12 @@ const navigateTo = (nameRoute: string) => {
     text-align: left;
     transition: background 0.3s;
   }
-
-  
 }
 
 .LeftSide div:hover {
   background: #f6ecff;
   color: purple;
 }
-
 
 .RightSide {
   flex: 1;

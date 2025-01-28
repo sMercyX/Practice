@@ -14,12 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import Box2 from "./box2.vue";
-import { provide, ref } from "vue";
-import { key } from "./key";
-import Modal from "../../atoms/Modal.vue";
+import Box2 from "./box2.vue"
+import { provide, ref } from "vue"
+import { key } from "./key"
+import Modal from "../../atoms/Modal.vue"
 
-const isOpen = ref<boolean>(false);
+const isOpen = ref<boolean>(false)
 
 // let promise: Promise<boolean>;
 // let _resolve!: (value: boolean | PromiseLike<boolean>) => void;
@@ -39,25 +39,25 @@ const isOpen = ref<boolean>(false);
 // }
 
 const openModal = () => {
-  isOpen.value = true;
-};
+  isOpen.value = true
+}
 
 function closeModal() {
-  isOpen.value = false;
+  isOpen.value = false
 }
 
 defineExpose({
   openModal,
-});
+})
 
-const count = ref<number>(0);
+const count = ref<number>(0)
 function addCount() {
-  count.value = count.value + 1;
+  count.value = count.value + 1
 }
 provide(key, {
   count,
   addCount,
-});
+})
 </script>
 
 <style scoped>

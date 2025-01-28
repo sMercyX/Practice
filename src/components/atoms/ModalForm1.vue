@@ -28,43 +28,41 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { computed, inject, ref } from "vue";
-import InputText from "../Input/InputText.vue";
-import Modal from "./Modal.vue";
-import { editMasterDataProviderKey } from "../../types/modalForm1";
-
+import { computed, inject, ref } from "vue"
+import InputText from "../Input/InputText.vue"
+import Modal from "./Modal.vue"
+import { editMasterDataProviderKey } from "../../types/modalForm1"
 
 const props = defineProps<{
-  header: string;
-}>();
-const isOpen = ref<boolean>(false);
+  header: string
+}>()
+const isOpen = ref<boolean>(false)
 
 // const dataProvider = props.dataProvider;
 // const form = dataProvider.form;
-const {form , loadData , onSubmit} = inject(editMasterDataProviderKey)!
+const { form, loadData, onSubmit } = inject(editMasterDataProviderKey)!
 
 const isEditing = computed(() => {
-  return !!form.value.id;
-});
+  return !!form.value.id
+})
 
 function openModal(id: string) {
-  isOpen.value = true;
-  loadData(id);
+  isOpen.value = true
+  loadData(id)
 }
 function closeModal() {
-
-  isOpen.value = false;
+  isOpen.value = false
 }
 defineExpose({
   openModal,
-});
+})
 
-const header = ref<string>(props.header);
+const header = ref<string>(props.header)
 
 const handleSubmit = () => {
-  onSubmit();
-  isOpen.value = false;
-};
+  onSubmit()
+  isOpen.value = false
+}
 </script>
 
 <style scoped>

@@ -1,4 +1,3 @@
-// ======================
 import type {
   DropdownModel,
   PaginationRequest,
@@ -20,7 +19,7 @@ export interface TeamPositionRequest {
   description: string;
 }
 
-// tempApi.ts
+// tempApi
 export function useTeamApi() {
   const httpClient = useCrudApi();
 

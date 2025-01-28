@@ -5,9 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import Box4 from './box4.vue';
-
-
+import Box4 from "./box4.vue"
 </script>
 
 <style scoped>

@@ -14,31 +14,29 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { onMounted, ref } from "vue"
+import { useRoute, useRouter } from "vue-router"
 
-import { teamList } from "../../assets/data/firstData";
+import { teamList } from "../../assets/data/firstData"
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
-const teams = ref(teamList);
-const dataName = ref<string>("");
+const teams = ref(teamList)
+const dataName = ref<string>("")
 
 const goBack = () => {
-  router.back();
-};
+  router.back()
+}
 
 onMounted(() => {
-//   dataId.value = route.params.teamId as string || route.params.positionId as string || route.params.employeeId as string;
+  //   dataId.value = route.params.teamId as string || route.params.positionId as string || route.params.employeeId as string;
 
   dataName.value = Object.values(route.params).find(
     (value) => value !== undefined && value !== null && value !== ""
-  ) as string;
-
-});
-const IdToDelete = ref<number | null>(null);
-
+  ) as string
+})
+const IdToDelete = ref<number | null>(null)
 
 // const confirmDelete = () => {
 //   if (teamIdToDelete.value !== null) {

@@ -28,96 +28,96 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { ref } from "vue";
-import InputText from "../Input/InputText.vue";
-import { postItem } from "../../utils/fetch";
-import type { TeamPositionRequest } from "../../composables/api/teamApi";
+import { ref } from "vue"
+import InputText from "../Input/InputText.vue"
+import { postItem } from "../../utils/fetch"
+import type { TeamPositionRequest } from "../../composables/api/teamApi"
 
 const props = defineProps<{
-  id: string;
-  data: TeamPositionRequest[];
-  header: string;
-}>();
+  id: string
+  data: TeamPositionRequest[]
+  header: string
+}>()
 
-const datas = ref<TeamPositionRequest[]>([]);
+const datas = ref<TeamPositionRequest[]>([])
 
-const Name = ref<string>("");
-const Description = ref<string>("");
+const Name = ref<string>("")
+const Description = ref<string>("")
 
-const isEditing = ref<boolean>(false);
-const dataId = ref<string>();
+const isEditing = ref<boolean>(false)
+const dataId = ref<string>()
 
-const header = ref<string>(props.header);
-const headerId = ref((header.value + "Id") as keyof TeamPositionRequest);
+const header = ref<string>(props.header)
+const headerId = ref((header.value + "Id") as keyof TeamPositionRequest)
 
 const goback = () => {
-  return emit("back", false);
-};
+  return emit("back", false)
+}
 
 const emit = defineEmits<{
-  (e: "back", value: boolean): void;
-}>();
+  (e: "back", value: boolean): void
+}>()
 
 const uploadData = async (data: TeamPositionRequest) => {
   try {
     const id = await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/create`,
       data
-    );
-    datas.value.push({ ...data, [headerId.value]: id });
+    )
+    datas.value.push({ ...data, [headerId.value]: id })
   } catch (error) {
-    console.error("Error loading data:", error);
+    console.error("Error loading data:", error)
   }
-};
+}
 const updateData = async (data: TeamPositionRequest, index: number) => {
   try {
     await postItem(
       `${import.meta.env.VITE_BASE_URL}/${header.value}/update`,
       data
-    );
-    datas.value[index] = data;
+    )
+    datas.value[index] = data
   } catch (error) {
-    console.error("Error loading data:", error);
+    console.error("Error loading data:", error)
   }
-};
+}
 
 const handleSubmit = () => {
   if (isEditing.value && dataId.value) {
     const index = datas.value.findIndex(
       (e: TeamPositionRequest) => e[headerId.value] === dataId.value
-    );
+    )
     if (index !== -1) {
       const formData: TeamPositionRequest = {
         name: Name.value,
         description: Description.value,
         [headerId.value]: dataId.value,
-      };
-      updateData(formData, index);
+      }
+      updateData(formData, index)
     }
   } else {
     const formData: TeamPositionRequest = {
       name: Name.value,
       description: Description.value,
-    };
-    uploadData(formData);
+    }
+    uploadData(formData)
   }
-  goback();
-};
+  goback()
+}
 
-(() => {
-  dataId.value = props.id;
-  datas.value = props.data;
+;(() => {
+  dataId.value = props.id
+  datas.value = props.data
   if (dataId.value) {
-    isEditing.value = true;
+    isEditing.value = true
     const dataa = datas.value.find(
       (e: TeamPositionRequest) => e[headerId.value] === dataId!.value
-    );
+    )
     if (dataa) {
-      Name.value = dataa.name;
-      Description.value = dataa.description;
+      Name.value = dataa.name
+      Description.value = dataa.description
     }
   }
-})();
+})()
 </script>
 
 <style scoped>

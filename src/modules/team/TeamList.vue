@@ -36,62 +36,58 @@
     <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
 
-  <ModalForm1
-    ref="modalFormgggggggggggggg"
-    :header="header"
-  ></ModalForm1>
+  <ModalForm1 ref="modalFormgggggggggggggg" :header="header"></ModalForm1>
 
   <ModalDelete ref="modalDelete"></ModalDelete>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, useTemplateRef, provide } from "vue";
-import type { PaginationResponse } from "../../types/types.ts";
-import SearchBar from "../../components/SearchInput/SearchBar.vue";
+import { ref, computed, useTemplateRef, provide } from "vue"
+import type { PaginationResponse } from "../../types/types.ts"
+import SearchBar from "../../components/SearchInput/SearchBar.vue"
 
-import Table from "../../components/atoms/Table.vue";
-import type { Header } from "../../types/tableTypes.ts";
-import Pagination from "../../components/Pagination/Pagination.vue";
-import ModalDelete from "../../components/atoms/ModalDelete.vue";
-import usePageIndexTeam from "./dataProvider/pageIndexTeam.ts";
-import ModalForm1 from "../../components/atoms/ModalForm1.vue";
-import useManageTeam from "./dataProvider/pageEditTeam.ts";
-import type { TeamResponse } from "../../composables/api/teamApi.ts";
-import { editMasterDataProviderKey } from "../../types/modalForm1.ts";
+import Table from "../../components/atoms/Table.vue"
+import type { Header } from "../../types/tableTypes.ts"
+import Pagination from "../../components/Pagination/Pagination.vue"
+import ModalDelete from "../../components/atoms/ModalDelete.vue"
+import usePageIndexTeam from "./dataProvider/pageIndexTeam.ts"
+import ModalForm1 from "../../components/atoms/ModalForm1.vue"
+import useManageTeam from "./dataProvider/pageEditTeam.ts"
+import type { TeamResponse } from "../../composables/api/teamApi.ts"
+import { editMasterDataProviderKey } from "../../types/modalForm1.ts"
 
-const pageIndexDataProvider = usePageIndexTeam();
+const pageIndexDataProvider = usePageIndexTeam()
 
-const { tableState, deleteItem, handleNewPageData } = pageIndexDataProvider;
-const sumTeam = computed(() => tableState.rowCount);
-const rawData = ref(pageIndexDataProvider.rawData);
+const { tableState, deleteItem, handleNewPageData } = pageIndexDataProvider
+const sumTeam = computed(() => tableState.rowCount)
+const rawData = ref(pageIndexDataProvider.rawData)
 
 const selectedHeaders = ref<Header[]>([
   { Name: "TeamName", Key: "name" },
   { Name: "Description", Key: "description" },
   { Name: "Manage", Key: "manage" },
-]);
-const header = ref<string>("team");
+])
+const header = ref<string>("team")
 
-const modalDelete = ref<InstanceType<typeof ModalDelete>>(null!);
+const modalDelete = ref<InstanceType<typeof ModalDelete>>(null!)
 const openFormDelete = async (id: string) => {
-  const confirm = await modalDelete.value.openModal();
-  console.log(confirm);
+  const confirm = await modalDelete.value.openModal()
+  console.log(confirm)
   if (confirm) {
-    deleteItem(id);
+    deleteItem(id)
   }
-};
+}
 
-const modalForm = useTemplateRef("modalFormgggggggggggggg");
+const modalForm = useTemplateRef("modalFormgggggggggggggg")
 const oepnModalForm = (id: string) => {
-  modalForm.value?.openModal(id);
-};
+  modalForm.value?.openModal(id)
+}
 
-const manageTeamDataProvider = useManageTeam();
-provide(editMasterDataProviderKey, manageTeamDataProvider);
-
-(async () => {
-  await Promise.all([pageIndexDataProvider.loadTeam()]);
-})();
+const manageTeamDataProvider = useManageTeam()
+provide(editMasterDataProviderKey, manageTeamDataProvider)
+;(async () => {
+  await Promise.all([pageIndexDataProvider.loadTeam()])
+})()
 </script>
 
 <style scoped>

@@ -1,22 +1,22 @@
 export interface DropdownModel<T> {
-  text: string;
-  value: T;
+  text: string
+  value: T
 }
 
 export interface PaginationRequest<T> {
-  pageIndex: number;
-  pageSize: number;
-  search: T;
+  pageIndex: number
+  pageSize: number
+  search: T
 }
 
 export interface PagiData {
-  rowCount: number;
-  pageIndex: number;
-  pageSize: number;
+  rowCount: number
+  pageIndex: number
+  pageSize: number
 }
 
 export interface PaginationResponse<T> extends PagiData {
-  data: T;
+  data: T
 }
 
 export interface TableState<TQuery, TResponse>

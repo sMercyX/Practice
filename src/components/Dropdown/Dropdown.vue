@@ -8,19 +8,19 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import type { DropdownModel } from "../../types/types";
+import type { DropdownModel } from "../../types/types"
 
 defineProps<{
-  list: DropdownModel<T>[];
-  modelValue: T;
-}>();
+  list: DropdownModel<T>[]
+  modelValue: T
+}>()
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: T): void;
-}>();
+  (e: "update:modelValue", value: T): void
+}>()
 const updateSelected = (event: Event) => {
-  emit("update:modelValue", (event.target as HTMLInputElement).value as T);
-};
+  emit("update:modelValue", (event.target as HTMLInputElement).value as T)
+}
 </script>
 
 <style scoped></style>

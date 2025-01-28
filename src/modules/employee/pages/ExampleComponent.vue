@@ -2,25 +2,25 @@
   <div
     :style="{
       width: '50px',
-      height:'100%',
+      height: '100%',
       backgroundColor: bgColor,
     }"
   >
-  {{ count }}
+    {{ count }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from "vue"
 
-const bgColor = ref("black");
+const bgColor = ref("black")
 const count = ref(0)
 function setColor() {
-  bgColor.value = "red";
+  bgColor.value = "red"
 }
 defineExpose({
-    setColor,
-    count
+  setColor,
+  count,
 })
 </script>
 

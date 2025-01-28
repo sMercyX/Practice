@@ -72,49 +72,49 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import type { DropdownModel } from "../../types/types";
-import { useRoute, useRouter } from "vue-router";
-import useMasterData from "./dataProvider/masterData";
-import usePageView from "./dataProvider/pageView";
+import { computed, ref } from "vue"
+import type { DropdownModel } from "../../types/types"
+import { useRoute, useRouter } from "vue-router"
+import useMasterData from "./dataProvider/masterData"
+import usePageView from "./dataProvider/pageView"
 
-const masterDataProvider = useMasterData();
-const { teams, postions } = masterDataProvider;
-const pageViewDataProvider = usePageView();
-const { form } = pageViewDataProvider;
+const masterDataProvider = useMasterData()
+const { teams, postions } = masterDataProvider
+const pageViewDataProvider = usePageView()
+const { form } = pageViewDataProvider
 
-const selectedTeam = computed(() => form.value.teamId);
-const selectedPosition = computed(() => form.value.positionId);
-const router = useRouter();
-const route = useRoute();
+const selectedTeam = computed(() => form.value.teamId)
+const selectedPosition = computed(() => form.value.positionId)
+const router = useRouter()
+const route = useRoute()
 
-const employeeId = ref<string | null>(null);
+const employeeId = ref<string | null>(null)
 
 const navigateTo = (nameRoute: string) => {
-  router.push({ name: nameRoute });
-};
+  router.push({ name: nameRoute })
+}
 
-const teamName = ref<string>("");
-const positionName = ref<string>("");
+const teamName = ref<string>("")
+const positionName = ref<string>("")
 
 const getTeamPositionName = () => {
   teamName.value = teams.value.find(
     (e: DropdownModel<string>) => e.value === selectedTeam.value
-  )!.text;
+  )!.text
 
   positionName.value = postions.value.find(
     (e: DropdownModel<string>) => e.value === selectedPosition.value
-  )!.text;
-};
+  )!.text
+}
 
-(async () => {
-  employeeId.value = route.params.employeeId as string;
+;(async () => {
+  employeeId.value = route.params.employeeId as string
   await Promise.all([
     masterDataProvider.loadMasterData(),
     pageViewDataProvider.loadEmployeeDetail(employeeId.value),
-  ]);
-  getTeamPositionName();
-})();
+  ])
+  getTeamPositionName()
+})()
 </script>
 
 <style scoped>

@@ -22,11 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Employ1Details } from "../../types/types";
+import type { Employ1Details } from "../../types/types"
 
 defineProps<{
-  employee: Employ1Details[];
-}>();
+  employee: Employ1Details[]
+}>()
 </script>
 
 <style scoped>

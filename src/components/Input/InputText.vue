@@ -4,13 +4,13 @@
 
 <script setup lang="ts">
 defineProps<{
-  input: string; 
-  required:boolean
-}>();
-const emit = defineEmits(["update:input"]);
+  input: string
+  required: boolean
+}>()
+const emit = defineEmits(["update:input"])
 const updateInput = (event: Event) => {
-  emit("update:input", (event.target as HTMLInputElement).value);
-};
+  emit("update:input", (event.target as HTMLInputElement).value)
+}
 </script>
 
 <style scoped></style>

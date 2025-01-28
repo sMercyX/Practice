@@ -1,21 +1,25 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { teamList, postionList, employeeList } from "../../assets/data/firstData";
-import Card from "../practice/Card.vue";
+import { ref, computed } from "vue"
+import {
+  teamList,
+  postionList,
+  employeeList,
+} from "../../assets/data/firstData"
+import Card from "../practice/Card.vue"
 
-const teams = ref(teamList);
-const positions = ref(postionList);
-const employees = ref(employeeList);
+const teams = ref(teamList)
+const positions = ref(postionList)
+const employees = ref(employeeList)
 
 const getTeamName = (teamId: number) => {
-  const team = teams.value.find((t) => t.id === teamId);
-  return team!.name;
-};
+  const team = teams.value.find((t) => t.id === teamId)
+  return team!.name
+}
 
 const getPositionName = (positionId: number) => {
-  const position = positions.value.find((p) => p.id === positionId);
-  return position!.name;
-};
+  const position = positions.value.find((p) => p.id === positionId)
+  return position!.name
+}
 
 const employeesWithDetails = computed(() =>
   employees.value
@@ -25,7 +29,7 @@ const employeesWithDetails = computed(() =>
       position_name: getPositionName(emp.position_id),
     }))
     .slice(0, 10)
-);
+)
 </script>
 
 <template>

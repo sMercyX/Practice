@@ -1,7 +1,10 @@
-import { computed, reactive, ref, watch } from "vue";
-import type { PaginationResponse, TableState } from "../../../types/types";
-import { usePositionApi, type PositionResponse } from "../../../composables/api/positionApi";
-import type { EmployeeIndexRequest } from "../../../composables/api/employeeApi";
+import { computed, reactive, ref, watch } from "vue"
+import type { PaginationResponse, TableState } from "../../../types/types"
+import {
+  usePositionApi,
+  type PositionResponse,
+} from "../../../composables/api/positionApi"
+import type { EmployeeIndexRequest } from "../../../composables/api/employeeApi"
 
 export default function usePageIndexPosition() {
   const rawData = ref<PaginationResponse<PositionResponse[]>>({
@@ -9,7 +12,7 @@ export default function usePageIndexPosition() {
     rowCount: 0,
     pageSize: 0,
     data: [],
-  });
+  })
 
   const tableState: TableState<EmployeeIndexRequest, PositionResponse[]> =
     reactive({
@@ -20,18 +23,18 @@ export default function usePageIndexPosition() {
       search: {
         text: "",
       },
-    });
+    })
 
   function createDefaultSearch(): EmployeeIndexRequest {
     return {
       text: "",
-    };
+    }
   }
 
   const resetFilters = () => {
-    tableState.search = createDefaultSearch();
-  };
-  const positionApi = usePositionApi();
+    tableState.search = createDefaultSearch()
+  }
+  const positionApi = usePositionApi()
   const loadPosition = async () => {
     try {
       const response = await positionApi
@@ -40,25 +43,23 @@ export default function usePageIndexPosition() {
           pageSize: tableState.pageSize,
           search: tableState.search,
         })
-        .then((x) => x);
-      rawData.value = response;
+        .then((x) => x)
+      rawData.value = response
     } catch (error) {
-      console.error("Error loading data:", error);
+      console.error("Error loading data:", error)
     }
-  };
+  }
 
   const deleteItem = async (id: string) => {
-    await positionApi.deletePosition(id);
-    await loadPosition();
-  };
+    await positionApi.deletePosition(id)
+    await loadPosition()
+  }
 
-  const handleNewPageData = (
-    data: PaginationResponse<PositionResponse[]>
-  ) => {
-    tableState.pageIndex = data.pageIndex;
-    tableState.pageSize = data.pageSize;
-  };
-  
+  const handleNewPageData = (data: PaginationResponse<PositionResponse[]>) => {
+    tableState.pageIndex = data.pageIndex
+    tableState.pageSize = data.pageSize
+  }
+
   watch(
     [
       () => tableState.pageIndex,
@@ -66,15 +67,15 @@ export default function usePageIndexPosition() {
       () => tableState.search.text,
     ],
     async () => {
-      await loadPosition();
+      await loadPosition()
     }
-  );
+  )
   return {
     loadPosition,
     deleteItem,
     resetFilters,
     tableState,
     rawData,
-    handleNewPageData
-  };
+    handleNewPageData,
+  }
 }

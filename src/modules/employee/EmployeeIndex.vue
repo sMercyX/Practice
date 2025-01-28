@@ -46,72 +46,68 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import type { PaginationResponse } from "../../types/types.ts";
-import Dropdown from "../../components/Dropdown/Dropdown.vue";
-import SearchBar from "../../components/SearchInput/SearchBar.vue";
+import { ref, computed } from "vue"
+import type { PaginationResponse } from "../../types/types.ts"
+import Dropdown from "../../components/Dropdown/Dropdown.vue"
+import SearchBar from "../../components/SearchInput/SearchBar.vue"
 
-import Table from "../../components/atoms/Table.vue";
-import type { Header } from "../../types/tableTypes.ts";
-import { useRouter } from "vue-router";
-import Pagination from "../../components/Pagination/Pagination.vue";
-import type {
-  EmployeeWithDetail,
-} from "../../types/employee.ts";
+import Table from "../../components/atoms/Table.vue"
+import type { Header } from "../../types/tableTypes.ts"
+import { useRouter } from "vue-router"
+import Pagination from "../../components/Pagination/Pagination.vue"
+import type { EmployeeWithDetail } from "../../types/employee.ts"
 
-import ModalDelete from "../../components/atoms/ModalDelete.vue";
-import useMasterData from "./dataProvider/masterData.ts";
-import usePageIndex from "./dataProvider/pageIndex.ts";
-import type { EmployeeIndexResponse } from "../../composables/api/employeeApi.ts";
+import ModalDelete from "../../components/atoms/ModalDelete.vue"
+import useMasterData from "./dataProvider/masterData.ts"
+import usePageIndex from "./dataProvider/pageIndex.ts"
+import type { EmployeeIndexResponse } from "../../composables/api/employeeApi.ts"
 
-const masterDataProvider = useMasterData();
-const { teams, postions } = masterDataProvider;
-const pageIndexDataProvider = usePageIndex(masterDataProvider);
+const masterDataProvider = useMasterData()
+const { teams, postions } = masterDataProvider
+const pageIndexDataProvider = usePageIndex(masterDataProvider)
 
-const router = useRouter();
+const router = useRouter()
 
-const { tableState, resetFilters , handleNewPageData } = pageIndexDataProvider;
-const sumEmployee = computed(() => tableState.rowCount);
-const rawData = ref(pageIndexDataProvider.rawData);
+const { tableState, resetFilters, handleNewPageData } = pageIndexDataProvider
+const sumEmployee = computed(() => tableState.rowCount)
+const rawData = ref(pageIndexDataProvider.rawData)
 
-const selectedHeaders = ref<Header<EmployeeWithDetail,"manage">[]>([
+const selectedHeaders = ref<Header<EmployeeWithDetail, "manage">[]>([
   { Name: "FirstName", Key: "firstname" },
   { Name: "Email", Key: "email" },
   { Name: "Team", Key: "team_name" },
   { Name: "Position", Key: "position_name" },
   { Name: "Manage", Key: "manage" },
-]);
+])
 
-const modalDelete = ref<InstanceType<typeof ModalDelete>>(null!);
+const modalDelete = ref<InstanceType<typeof ModalDelete>>(null!)
 const openFormDelete = async (id: string) => {
-  const confirm = await modalDelete.value.openModal();
+  const confirm = await modalDelete.value.openModal()
   if (confirm) {
-    pageIndexDataProvider.deleteItem(id);
+    pageIndexDataProvider.deleteItem(id)
   }
-};
+}
 
 const navigateTo = (nameRoute: string) => {
-  router.push({ name: nameRoute });
-};
+  router.push({ name: nameRoute })
+}
 const navigateToEmployee = (employeeId: string) => {
-  router.push({ name: "editEmployee", params: { employeeId: employeeId } });
-};
+  router.push({ name: "editEmployee", params: { employeeId: employeeId } })
+}
 
 const navigateToView = (data: EmployeeIndexResponse) => {
   router.push({
     name: "viewEmployee",
     params: { employeeId: data.employeeId },
-  });
-};
+  })
+}
 
-
-(async () => {
+;(async () => {
   await Promise.all([
     pageIndexDataProvider.loadEmployee(),
     masterDataProvider.loadMasterData(),
-  ]);
-})();
-
+  ])
+})()
 </script>
 
 <style scoped>

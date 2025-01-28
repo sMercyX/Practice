@@ -1,11 +1,7 @@
-// ======================
-
 import type { PaginationRequest, PaginationResponse } from "../../types/types";
 import { useCrudApi } from "../../utils/fetch copy";
 
-
 // EmployeeInterface
-
 export interface EmployeeIndexRequest {
     teamId?: string;
     positionId?: string;

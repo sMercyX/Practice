@@ -1,30 +1,32 @@
-import { computed, reactive, ref, watch } from "vue";
-import type {
-  EmployeeWithDetail,
-} from "../../../types/employee";
-import type { PaginationResponse, TableState } from "../../../types/types";
-import { type IEmployeeMasterData } from "./masterData";
-import { useEmployeeApi, type EmployeeIndexRequest, type EmployeeIndexResponse } from "../../../composables/api/employeeApi";
+import { computed, reactive, ref, watch } from "vue"
+import type { EmployeeWithDetail } from "../../../types/employee"
+import type { PaginationResponse, TableState } from "../../../types/types"
+import { type IEmployeeMasterData } from "./masterData"
+import {
+  useEmployeeApi,
+  type EmployeeIndexRequest,
+  type EmployeeIndexResponse,
+} from "../../../composables/api/employeeApi"
 
 export default function usePageIndex(masterData: IEmployeeMasterData) {
   const getTeamName = (teamId: string) => {
-    const team = masterData.teams.value.find((t) => t.value === teamId);
-    return team ? team.text : "Unknown Team";
-  };
+    const team = masterData.teams.value.find((t) => t.value === teamId)
+    return team ? team.text : "Unknown Team"
+  }
 
   const getPositionName = (positionId: string) => {
     const position = masterData.postions.value.find(
       (t) => t.value === positionId
-    );
-    return position ? position.text : "Unknown Position";
-  };
+    )
+    return position ? position.text : "Unknown Position"
+  }
 
   const rawData = ref<PaginationResponse<EmployeeIndexResponse[]>>({
     pageIndex: 0,
     rowCount: 0,
     pageSize: 0,
     data: [],
-  });
+  })
 
   const tableState: TableState<EmployeeIndexRequest, EmployeeWithDetail[]> =
     reactive({
@@ -43,21 +45,21 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
         teamId: "",
         positionId: "",
       },
-    });
-    
+    })
+
   function createDefaultSearch(): EmployeeIndexRequest {
     return {
       positionId: "",
       teamId: "",
       text: "",
-    };
+    }
   }
 
   const resetFilters = () => {
-    tableState.search = createDefaultSearch();
-  };
+    tableState.search = createDefaultSearch()
+  }
 
-  const employeeApi = useEmployeeApi();
+  const employeeApi = useEmployeeApi()
 
   const loadEmployee = async () => {
     try {
@@ -67,24 +69,24 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
           pageSize: tableState.pageSize,
           search: tableState.search,
         })
-        .then((x) => x);
-      rawData.value = response;
+        .then((x) => x)
+      rawData.value = response
     } catch (error) {
-      console.error("Error loading data:", error);
+      console.error("Error loading data:", error)
     }
-  };
+  }
 
   const deleteItem = async (id: string) => {
-    await employeeApi.deleteEmployee(id);
-    await loadEmployee();
-  };
+    await employeeApi.deleteEmployee(id)
+    await loadEmployee()
+  }
 
   const handleNewPageData = (
     data: PaginationResponse<EmployeeIndexResponse[]>
   ) => {
-    tableState.pageIndex = data.pageIndex;
-    tableState.pageSize = data.pageSize;
-  };
+    tableState.pageIndex = data.pageIndex
+    tableState.pageSize = data.pageSize
+  }
 
   watch(
     [
@@ -95,16 +97,16 @@ export default function usePageIndex(masterData: IEmployeeMasterData) {
       () => tableState.search.text,
     ],
     async () => {
-      await loadEmployee();
+      await loadEmployee()
     }
-  );
-  
+  )
+
   return {
     loadEmployee,
     deleteItem,
     resetFilters,
     tableState,
     rawData,
-    handleNewPageData
-  };
+    handleNewPageData,
+  }
 }

@@ -20,41 +20,40 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import Modal from "./Modal.vue";
+import { onMounted, ref } from "vue"
+import Modal from "./Modal.vue"
 
 const props = defineProps<{
-  id: string;
-}>();
+  id: string
+}>()
 
-const isOpen= ref<boolean>(false)
-function openModal (){
+const isOpen = ref<boolean>(false)
+function openModal() {
   isOpen.value = true
 }
 
 function closeModal() {
-  
   isOpen.value = true
   isOpen.value = true
 }
-const dataId = ref<string>();
+const dataId = ref<string>()
 
 const goback = () => {
-  emit("back", false);
-};
+  emit("back", false)
+}
 const deleteSubmit = () => {
-  emit("back", false);
-  emit("deleteSubmit", props.id);
-};
+  emit("back", false)
+  emit("deleteSubmit", props.id)
+}
 
 const emit = defineEmits<{
-  (e: "back", value: boolean): void;
-  (e: "deleteSubmit", value: string): void;
-}>();
+  (e: "back", value: boolean): void
+  (e: "deleteSubmit", value: string): void
+}>()
 
 onMounted(async () => {
-  dataId.value = props.id;
-});
+  dataId.value = props.id
+})
 </script>
 
 <style scoped>

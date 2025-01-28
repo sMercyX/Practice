@@ -39,71 +39,70 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { ref, computed, watch } from "vue";
-import type { PaginationResponse } from "../../types/types";
+import { ref, computed, watch } from "vue"
+import type { PaginationResponse } from "../../types/types"
 
 const props = defineProps<{
-  data: PaginationResponse<T[]>;
-}>();
+  data: PaginationResponse<T[]>
+}>()
 
-const currentPage = ref<number>(props.data.pageIndex + 1);
-const pageSize = ref<number>(props.data.pageSize);
-const localData = ref([...props.data.data]);
+const currentPage = ref<number>(props.data.pageIndex + 1)
+const pageSize = ref<number>(props.data.pageSize)
+const localData = ref([...props.data.data])
 
 const pagiData = computed(() => ({
   pageIndex: currentPage.value - 1,
   pageSize: pageSize.value,
   rowCount: sumData.value,
   data: localData.value,
-}));
+}))
 
-const sumData = ref(props.data!.rowCount);
+const sumData = ref(props.data!.rowCount)
 
 const totalPages = computed(() =>
   Math.ceil(props.data!.rowCount / pageSize.value)
-);
+)
 
 const nextPage = () => {
-  currentPage.value++;
-  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
-};
+  currentPage.value++
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>)
+}
 
 const prevPage = () => {
-  currentPage.value--;
-  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
-};
+  currentPage.value--
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>)
+}
 
 const updatePageSize = (event: Event) => {
-  const target = event.target as HTMLSelectElement;
-  pageSize.value = Number(target.value);
-  currentPage.value = 1;
-  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
-};
+  const target = event.target as HTMLSelectElement
+  pageSize.value = Number(target.value)
+  currentPage.value = 1
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>)
+}
 
 const updateCurrentPage = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  currentPage.value = Number(target.value);
-  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
-};
+  const target = event.target as HTMLInputElement
+  currentPage.value = Number(target.value)
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>)
+}
 
 watch(
   () => props.data,
   () => {
-    currentPage.value = props.data!.pageIndex + 1;
-    pageSize.value = props.data!.pageSize;
-    sumData.value = props.data.rowCount;
+    currentPage.value = props.data!.pageIndex + 1
+    pageSize.value = props.data!.pageSize
+    sumData.value = props.data.rowCount
   },
   { deep: true }
-);
+)
 
 const emit = defineEmits<{
-  (e: "paginationData", pagiData: PaginationResponse<T[]>): void;
-}>();
+  (e: "paginationData", pagiData: PaginationResponse<T[]>): void
+}>()
 
-() => {
-  emit("paginationData", pagiData.value as PaginationResponse<T[]>);
-};
-
+;() => {
+  emit("paginationData", pagiData.value as PaginationResponse<T[]>)
+}
 </script>
 
 <style scoped>
