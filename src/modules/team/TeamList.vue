@@ -82,12 +82,12 @@ const openFormDelete = async (id: string) => {
 
 const eventBus = inject(eventBusKey)!
 
+eventBus.on("deleteTeamPosition", () => {
+loadTeam()
+})
 const modalForm = useTemplateRef("modalFormgggggggggggggg")
 const oepnModalForm = (id: string) => {
   modalForm.value?.openModal(id)
-  eventBus.on("deleteTeamPosition", () => {
-  loadTeam()
-})
 }
 
 const manageTeamDataProvider = useManageTeam()
