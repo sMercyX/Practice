@@ -1,4 +1,4 @@
-import mitt, { type Emitter } from "mitt"
+import mitt from "mitt"
 import type { EmployeeIndexResponse } from "../composables/api/employeeApi"
 import { teamEventBusKey, type TeamEventList } from "./teamEvent"
 import { positionEventBusKey, type PositionEventList } from "./positionEvent"

@@ -18,6 +18,17 @@ export default function usePageEdit() {
     positionId: "",
   })
 
+  const defaultData = () => ({
+    employeeId: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    dateOfBirth: "",
+    phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
+    teamId: "",
+    positionId: "",
+  })
+
   const addPhone = () => {
     rawData.value.phones.push({ phoneId: uuid.v1(), phoneNumber: "" })
   }

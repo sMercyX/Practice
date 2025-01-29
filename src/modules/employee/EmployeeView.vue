@@ -5,15 +5,12 @@
       <h2>View Employee</h2>
     </div>
     <div class="Right">
-      <button @click="navigateTo('employee')" class="cancelButton">
-        Cancel
-      </button>
-      <button type="submit" form="myForm" class="confirmButton" disabled>
-        Save
+      <button type="button" class="deleteButton" @click="openFormDelete">
+        Delete
       </button>
     </div>
   </div>
-  <div class="modal-overlay">
+  <div class="modal-overlayy">
     <div class="modal-content">
       <div class="Header">
         <img src="../../assets/editPen.svg" alt="Edit Icon" class="editIcon" />
@@ -69,19 +66,24 @@
       </div>
     </div>
   </div>
+  <ModalDelete ref="modalDelete"></ModalDelete>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, useTemplateRef } from "vue"
 import type { DropdownModel } from "../../types/types"
 import { useRoute, useRouter } from "vue-router"
 import useMasterData from "./dataProvider/masterData"
 import usePageView from "./dataProvider/pageView"
+import ModalDelete from "../../components/atoms/ModalDelete.vue"
+import usePageIndex from "./dataProvider/pageIndex"
 
 const masterDataProvider = useMasterData()
 const { teams, postions } = masterDataProvider
 const pageViewDataProvider = usePageView()
 const { form } = pageViewDataProvider
+const pageIndexDataProvider = usePageIndex(masterDataProvider)
+const { deleteItem } = pageIndexDataProvider
 
 const selectedTeam = computed(() => form.value.teamId)
 const selectedPosition = computed(() => form.value.positionId)
@@ -107,6 +109,16 @@ const getTeamPositionName = () => {
   )!.text
 }
 
+const modalDelete = useTemplateRef("modalDelete")
+const openFormDelete = async () => {
+  const confirm = await modalDelete.value?.openModal()
+  console.log(confirm)
+  if (confirm) {
+    deleteItem(employeeId.value!)
+    router.push({ name: "employee" })
+  }
+}
+
 ;(async () => {
   employeeId.value = route.params.employeeId as string
   await Promise.all([
@@ -118,6 +130,7 @@ const getTeamPositionName = () => {
 </script>
 
 <style scoped>
+
 .Top {
   display: flex;
   justify-content: space-between;
@@ -146,8 +159,8 @@ const getTeamPositionName = () => {
     display: flex;
     gap: 10px;
 
-    .confirmButton {
-      background-color: #5119f0;
+    .deleteButton {
+      background-color: #f01919;
       color: white;
     }
   }
@@ -169,7 +182,7 @@ button:hover {
   scale: 110%;
 }
 
-.modal-overlay {
+.modal-overlayy {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -206,7 +219,6 @@ button:hover {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
   input,
   select,
   button {
