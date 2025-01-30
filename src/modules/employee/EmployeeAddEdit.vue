@@ -14,7 +14,7 @@
   <div class="modal-overlay">
     <div class="modal-content">
       <div class="Header">
-        <img src="../../assets/editPen.svg" alt="Edit Icon" class="editIcon" />
+        <img src="../../assets/edit.svg" alt="Edit Icon" class="editIcon" />
         <h2>Basic Info</h2>
       </div>
 
@@ -192,7 +192,6 @@ button:hover {
     color: #5019f0;
     border-radius: 10px;
     padding: 8px;
-    width: 20px;
   }
 }
 

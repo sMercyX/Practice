@@ -1,4 +1,19 @@
-body{
-    margin: 0px;
-    padding: 0px;
+body {
+  margin: 0px;
+  padding: 0px;
 }
+
+:root {
+  /* icon */
+  --icon-color: #212121;
+  --icon-bg-color: #efedff;
+  --icon-hover-color: #5218ef;
+  --icon-disable-color: #a0abba;
+
+  /* button */
+  --button-create-main:#5119f0;
+  --button-create-hover:#3900b9;
+  --button-create-disabled:#b6b5ff;
+}
+
+

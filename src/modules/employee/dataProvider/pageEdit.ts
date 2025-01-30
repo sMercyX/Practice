@@ -14,20 +14,23 @@ export default function usePageEdit() {
     email: "",
     dateOfBirth: "",
     phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
-    teamId: "",
-    positionId: "",
+    teamId: "f80d5179-a4d3-4c38-8a89-c353fb6c1371",
+    positionId: "e34462d2-e7df-4b32-9e22-a473f7630274",
   })
 
-  const defaultData = () => ({
-    employeeId: "",
-    firstname: "",
-    lastname: "",
-    email: "",
-    dateOfBirth: "",
-    phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
-    teamId: "",
-    positionId: "",
-  })
+  const dData = () => {
+    return {
+      employeeId: "",
+      firstname: "",
+      lastname: "",
+      email: "",
+      dateOfBirth: "",
+      phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
+      teamId: "",
+      positionId: "",
+    }
+  }
+
 
   const addPhone = () => {
     rawData.value.phones.push({ phoneId: uuid.v1(), phoneNumber: "" })

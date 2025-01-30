@@ -2,9 +2,15 @@
   <div>
     <div class="Head">
       <h1>Employee ( {{ sumEmployee }} )</h1>
-      <div class="createEmployeeButton">
-        <button @click="navigateTo('createEmployee')">Create Employee</button>
-      </div>
+
+      <PrimaryButton
+        @click="navigateTo('createEmployee')"
+        text="Create"
+        size="md"
+        :disable="false"
+      >
+        <template #prefix> &plus; </template>
+      </PrimaryButton>
     </div>
 
     <div class="searchMenu">
@@ -34,9 +40,25 @@
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
-      <template #AddEdit="{ row }" class="test">
-        <button @click="navigateToEmployee(row.employeeId)">Edit</button>
-        <button @mousedown="openFormDelete(row.employeeId)">Delete</button>
+      <template #AddEdit="{ row }">
+        <IconButton
+          size="md"
+          :disable="false"
+          @click="navigateToEmployee(row.employeeId!)"
+        >
+          <template #icon>
+            <IconEdit />
+          </template>
+        </IconButton>
+        <IconButton
+          size="md"
+          :disable="false"
+          @mousedown="openFormDelete(row.employeeId!)"
+        >
+          <template #icon>
+            <IconBin />
+          </template>
+        </IconButton>
       </template>
     </Table>
     <Pagination :data="rawData" @paginationData="handleNewPageData" />
@@ -61,6 +83,11 @@ import ModalDelete from "../../components/atoms/ModalDelete.vue"
 import useMasterData from "./dataProvider/masterData.ts"
 import usePageIndex from "./dataProvider/pageIndex.ts"
 import type { EmployeeIndexResponse } from "../../composables/api/employeeApi.ts"
+import IconEdit from "../../components/Icon/IconEdit.vue"
+import IconBin from "../../components/Icon/IconBin.vue"
+import PrimaryButton from "../../components/Button/PrimaryButton.vue"
+import IconButton from "../../components/Icon/IconButton.vue"
+import Links from "../../components/Link/Links.vue"
 
 const masterDataProvider = useMasterData()
 const { teams, postions } = masterDataProvider
@@ -116,14 +143,6 @@ const navigateToView = (data: EmployeeIndexResponse) => {
   justify-content: space-between;
   align-items: center;
   margin: 0 10px;
-  button {
-    padding: 10px 20px;
-    background-color: #2bb8af;
-    color: #fff;
-    border: none;
-    align-items: center;
-    text-align: center;
-  }
 }
 .searchMenu {
   display: flex;

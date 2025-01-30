@@ -25,7 +25,9 @@
                 : "-"
             }}
             <template v-if="header.Name === 'Manage'">
-              <slot name="AddEdit" :row="row"> </slot>
+              <div class="LR">
+                <slot name="AddEdit" :row="row"> </slot>
+              </div>
             </template>
           </slot>
         </td>
@@ -62,7 +64,14 @@ td {
 .row {
   transition: all 0.3s;
 }
+
 .row:hover {
-  background-color: rgb(230, 228, 228);
+  background-color: white;
+ 
+}
+
+.LR{
+  display: flex;
+  flex-direction: row;
 }
 </style>

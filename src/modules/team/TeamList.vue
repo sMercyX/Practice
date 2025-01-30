@@ -1,11 +1,12 @@
 <template>
   <div class="Head">
     <h2>Team ( {{ sumTeam }} )</h2>
-    <div class="createEmployeeButton">
-      <button class="createButton" @click="oepnModalForm('')">
-        <span>&plus;</span> Create
-      </button>
-    </div>
+    <PrimaryButton
+      @click="oepnModalForm('')"
+      text="Create"
+      size="md"
+      :disable="false"
+    />
   </div>
   <hr />
 
@@ -28,8 +29,24 @@
       </template>
 
       <template #AddEdit="{ row }">
-        <button @click="oepnModalForm(row.teamId!)">Edit</button>
-        <button @click="openFormDelete(row.teamId!)">Delete</button>
+        <IconButton
+          size="md"
+          :disable="false"
+          @click="oepnModalForm(row.teamId!)"
+        >
+          <template #icon>
+            <IconEdit />
+          </template>
+        </IconButton>
+        <IconButton
+          size="md"
+          :disable="false"
+          @mousedown="openFormDelete(row.teamId!)"
+        >
+          <template #icon>
+            <IconBin />
+          </template>
+        </IconButton>
       </template>
     </Table>
 
@@ -56,6 +73,10 @@ import useManageTeam from "./dataProvider/pageEditTeam.ts"
 import type { TeamResponse } from "../../composables/api/teamApi.ts"
 import { editMasterDataProviderKey } from "../../types/modalForm1.ts"
 import { eventBusKey } from "../../types/eventButKey.ts"
+import IconBin from "../../components/Icon/IconBin.vue"
+import IconEdit from "../../components/Icon/IconEdit.vue"
+import PrimaryButton from "../../components/Button/PrimaryButton.vue"
+import IconButton from "../../components/Icon/IconButton.vue"
 
 const pageIndexDataProvider = usePageIndexTeam()
 
@@ -83,7 +104,7 @@ const openFormDelete = async (id: string) => {
 const eventBus = inject(eventBusKey)!
 
 eventBus.on("deleteTeamPosition", () => {
-loadTeam()
+  loadTeam()
 })
 const modalForm = useTemplateRef("modalFormgggggggggggggg")
 const oepnModalForm = (id: string) => {
@@ -108,14 +129,14 @@ provide(editMasterDataProviderKey, manageTeamDataProvider)
     padding: 0;
   }
 
-  .createButton {
+  /* .createButton {
     padding: 10px 20px;
     background-color: #2bb8af;
     color: #fff;
     border: none;
     align-items: center;
     text-align: center;
-  }
+  } */
 }
 
 .searchMenu {
@@ -169,25 +190,5 @@ p {
   margin-top: 20px;
   display: flex;
   justify-content: space-around;
-}
-.confirmDeleteButton {
-  padding: 10px;
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-.confirmDeleteButton:hover {
-  background-color: #c0392b;
-}
-.cancelButton {
-  padding: 10px;
-  background-color: #95a5a6;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-.cancelButton:hover {
-  background-color: #7f8c8d;
 }
 </style>

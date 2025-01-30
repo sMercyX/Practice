@@ -4,7 +4,7 @@
       <div class="Head"></div>
 
       <div class="Content">
-        <img src="../../assets/trashFill.svg" alt="DeleteLogo" />
+        <img src="../../assets/bin.svg" alt="DeleteLogo" />
         <h3><span>Delete</span></h3>
         <p class="delete-message">
           Are you sure you want to delete selected items ?

@@ -1,11 +1,13 @@
 <template>
   <div class="Head">
     <h2>Position ( {{ sumPosition }} )</h2>
-    <div class="createEmployeeButton">
-      <button class="createButton" @click="oepnModalForm('')">
-        <span>&plus;</span> Create
-      </button>
-    </div>
+    
+    <PrimaryButton
+        @click="oepnModalForm('')"
+        text="Create"
+        size="md"
+        :disable="false"
+      />
   </div>
   <hr />
   <div class="searchMenu">
@@ -27,8 +29,24 @@
         <strong>{{ header["Name"] }}</strong>
       </template>
       <template #AddEdit="{ row }">
-        <button @click="oepnModalForm(row.positionId!)">Edit</button>
-        <button @click="openFormDelete(row.positionId!)">Delete</button>
+        <IconButton
+          size="md"
+          :disable="false"
+          @click="oepnModalForm(row.positionId!)"
+        >
+          <template #icon>
+            <IconEdit />
+          </template>
+        </IconButton>
+        <IconButton
+          size="md"
+          :disable="false"
+          @mousedown="openFormDelete(row.positionId!)"
+        >
+          <template #icon>
+            <IconBin />
+          </template>
+        </IconButton>
       </template>
     </Table>
 
@@ -55,10 +73,14 @@ import useMangePosition from "./dataProvider/pageEditPosition.ts"
 import type { PositionResponse } from "../../composables/api/positionApi.ts"
 import { editMasterDataProviderKey } from "../../types/modalForm1.ts"
 import { eventBusKey } from "../../types/eventButKey.ts"
+import IconEdit from "../../components/Icon/IconEdit.vue"
+import IconBin from "../../components/Icon/IconBin.vue"
+import PrimaryButton from "../../components/Button/PrimaryButton.vue"
+import IconButton from "../../components/Icon/IconButton.vue"
 
 const pageIndexDataProvider = usePageIndexPosition()
 
-const { tableState, deleteItem, handleNewPageData,loadPosition } =
+const { tableState, deleteItem, handleNewPageData, loadPosition } =
   pageIndexDataProvider
 const sumPosition = computed(() => tableState.rowCount)
 const rawData = ref(pageIndexDataProvider.rawData)
@@ -81,7 +103,7 @@ const openFormDelete = async (id: string) => {
 
 const eventBus = inject(eventBusKey)!
 
-eventBus.on('deleteTeamPosition',()=>{
+eventBus.on("deleteTeamPosition", () => {
   loadPosition()
 })
 const modalForm = useTemplateRef("modalForm")
@@ -107,14 +129,14 @@ provide(editMasterDataProviderKey, managePositionDataProvider)
     padding: 0;
   }
 
-  .createButton {
+  /* .createButton {
     padding: 10px 20px;
     background-color: #2bb8af;
     color: #fff;
     border: none;
     align-items: center;
     text-align: center;
-  }
+  } */
 }
 
 .searchMenu {

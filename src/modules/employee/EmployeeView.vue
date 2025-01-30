@@ -13,20 +13,12 @@
   <div class="modal-overlayy">
     <div class="modal-content">
       <div class="Header">
-        <img src="../../assets/editPen.svg" alt="Edit Icon" class="editIcon" />
-        <h2>Basic Info</h2>
+        <h2>{{ form.firstname }} {{ form.lastname }}</h2>
       </div>
 
       <div class="Content" id="myForm">
         <div class="breakHalf">
-          <div class="groupUp">
-            <label for="first_name">First Name <span>*</span></label>
-            <p>{{ form.firstname }}</p>
-          </div>
-          <div class="groupUp">
-            <label for="last_name">Last Name <span>*</span></label>
-            <p>{{ form.lastname }}</p>
-          </div>
+       
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
@@ -201,7 +193,7 @@ button:hover {
 
 .Header {
   display: flex;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
   gap: 5px;
   font-size: 15px;
