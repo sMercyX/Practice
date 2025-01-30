@@ -1,16 +1,17 @@
 <template>
   <div class="pagination">
-    <div>
+    <div class="head">
       <p>
-        Show
-        <select v-model.number="pageSize" @change="updatePageSize($event)">
+        Show</p>
+        <!-- <select v-model.number="pageSize" @change="updatePageSize($event)">
           <option value="1">1</option>
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
           <option value="50">50</option>
-        </select>
-
+        </select> -->
+        <Dropdown :list="num" :modelValue="selectednum" :disable="false" :all="false" @update:modelValue="updatePageSize($event)" class="dropD"/>
+        <p>
         {{ (currentPage - 1) * pageSize + 1 }} -
         {{
           sumData < (currentPage - 1) * pageSize + pageSize
@@ -22,18 +23,38 @@
       </p>
     </div>
     <div class="currPage">
-      <button @click="prevPage" :disabled="currentPage === 1">&lt;</button>
-      <span
-        ><input
+      <IconButton size="sm" :disable="currentPage === 1" @click="prevPage">
+        <template #icon>
+          <IconLeftArrow />
+        </template>
+      </IconButton>
+
+      <span>
+        <!-- <input
           type="text"
           v-model="currentPage"
           @change="updateCurrentPage($event)"
+        /> -->
+        <InputText
+          class="ip"
+          :input="currentPage"
+          :required="true"
+          :disable="false"
+          :placeHolder="'1'"
+          @change="updateCurrentPage($event)"
         />
+
         / {{ totalPages }}</span
       >
-      <button @click="nextPage" :disabled="currentPage >= totalPages">
-        &gt;
-      </button>
+      <IconButton
+        size="sm"
+        :disable="currentPage >= totalPages"
+        @click="nextPage"
+      >
+        <template #icon>
+          <IconRightArrow />
+        </template>
+      </IconButton>
     </div>
   </div>
 </template>
@@ -41,14 +62,28 @@
 <script setup lang="ts" generic="T">
 import { ref, computed, watch } from "vue"
 import type { PaginationResponse } from "../../types/types"
+import IconButton from "../Icon/IconButton.vue"
+import IconRightArrow from "../Icon/IconRightArrow.vue"
+import IconLeftArrow from "../Icon/IconLeftArrow.vue"
+import InputText from "../Input/InputText.vue"
+import Dropdown from "../Dropdown/Dropdown.vue"
 
 const props = defineProps<{
   data: PaginationResponse<T[]>
 }>()
 
+const num = ref([
+{value: 1, text: '1'},
+{value: 5, text: '5'},
+{value: 10, text: '10'},
+{value: '50', text: '50'},
+])
+
+
 const currentPage = ref<number>(props.data.pageIndex + 1)
 const pageSize = ref<number>(props.data.pageSize)
 const localData = ref([...props.data.data])
+const selectednum = computed(()=>pageSize.value)
 
 const pagiData = computed(() => ({
   pageIndex: currentPage.value - 1,
@@ -73,16 +108,22 @@ const prevPage = () => {
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
 
-const updatePageSize = (event: Event) => {
-  const target = event.target as HTMLSelectElement
-  pageSize.value = Number(target.value)
+const updatePageSize = (ps:Event) => {
+  pageSize.value = Number(ps)
   currentPage.value = 1
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
+// const updatePageSize = (event: Event) => {
+//   const target = event.target as HTMLSelectElement
+//   pageSize.value = Number(target.value)
+//   currentPage.value = 1
+//   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
+// }
+
 
 const updateCurrentPage = (event: Event) => {
   const target = event.target as HTMLInputElement
-  currentPage.value = Number(target.value)
+  currentPage.value = Number(target.value) ? Number(target.value) : 1
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
 
@@ -119,17 +160,18 @@ const emit = defineEmits<{
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
 }
 .currPage {
   display: flex;
   gap: 10px;
+  color: #646d78;
+
   input {
     width: 20px;
+  }
+  .ip {
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -144,6 +186,15 @@ td {
 }
 p {
   margin: 0px;
+  color: #646d78;
+}
+.head{
+  display: flex;
+}
+.dropD{
+  width: 45px;
+  height: 20px;
+  margin: 0 2px;
 }
 </style>
 

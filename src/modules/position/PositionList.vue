@@ -16,6 +16,7 @@
       <SearchBar
         header="SearchBar"
         :input="tableState.search.text"
+        placeholder="name"
         @keyup="
           tableState.search.text = ($event.target as HTMLInputElement).value
         "
@@ -56,12 +57,10 @@
   <ModalForm1 ref="modalForm" :header="header"></ModalForm1>
   <ModalDelete ref="modalDelete"></ModalDelete>
 
-  <button @click="console.log(tableState.data)">click</button>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, useTemplateRef, provide, inject } from "vue"
-import type { PaginationResponse } from "../../types/types.ts"
 import SearchBar from "../../components/SearchInput/SearchBar.vue"
 import Table from "../../components/atoms/Table.vue"
 import type { Header } from "../../types/tableTypes.ts"
@@ -70,7 +69,6 @@ import ModalDelete from "../../components/atoms/ModalDelete.vue"
 import usePageIndexPosition from "./dataProvider/pageIndexPosition.ts"
 import ModalForm1 from "../../components/atoms/ModalForm1.vue"
 import useMangePosition from "./dataProvider/pageEditPosition.ts"
-import type { PositionResponse } from "../../composables/api/positionApi.ts"
 import { editMasterDataProviderKey } from "../../types/modalForm1.ts"
 import { eventBusKey } from "../../types/eventButKey.ts"
 import IconEdit from "../../components/Icon/IconEdit.vue"

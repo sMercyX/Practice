@@ -14,22 +14,24 @@ export default function usePageEdit() {
     email: "",
     dateOfBirth: "",
     phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
+    // teamId: "",
+    // positionId: "",
     teamId: "f80d5179-a4d3-4c38-8a89-c353fb6c1371",
     positionId: "e34462d2-e7df-4b32-9e22-a473f7630274",
   })
 
-  const dData = () => {
-    return {
-      employeeId: "",
-      firstname: "",
-      lastname: "",
-      email: "",
-      dateOfBirth: "",
-      phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
-      teamId: "",
-      positionId: "",
-    }
-  }
+  // const dData = () => {
+  //   return {
+  //     employeeId: "",
+  //     firstname: "",
+  //     lastname: "",
+  //     email: "",
+  //     dateOfBirth: "",
+  //     phones: [{ phoneId: uuid.v1(), phoneNumber: "" }],
+  //     teamId: "",
+  //     positionId: "",
+  //   }
+  // }
 
 
   const addPhone = () => {
@@ -47,12 +49,12 @@ export default function usePageEdit() {
   }
 
   const handleSubmit = async () => {
-    const form = rawData.value
+    console.log('is using')
     if (rawData.value.employeeId) {
-      employeeApi.updareEmployee(form)
-      console.log(form)
+      employeeApi.updareEmployee(rawData.value)
+      // console.log(rawData.value)
     } else {
-      employeeApi.createEmployee(form)
+      employeeApi.createEmployee(rawData.value)
     }
     router.push({ name: "employee" })
   }

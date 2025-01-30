@@ -15,6 +15,7 @@
       <SearchBar
         header="SearchBar"
         :input="tableState.search.text"
+        placeholder="name"
         @keyup="
           tableState.search.text = ($event.target as HTMLInputElement).value
         "
@@ -22,8 +23,8 @@
     </div>
     <div class="right"></div>
   </div>
-  <div>
-    <Table :headers="selectedHeaders" :data="tableState.data">
+  <div >
+    <Table  :headers="selectedHeaders" :data="tableState.data">
       <template #header="{ header }">
         <strong>{{ header["Name"] }}</strong>
       </template>
@@ -38,6 +39,7 @@
             <IconEdit />
           </template>
         </IconButton>
+
         <IconButton
           size="md"
           :disable="false"
@@ -49,9 +51,8 @@
         </IconButton>
       </template>
     </Table>
-
-    <Pagination :data="rawData" @paginationData="handleNewPageData" />
   </div>
+  <Pagination :data="rawData" @paginationData="handleNewPageData" />
 
   <ModalForm1 ref="modalFormgggggggggggggg" :header="header"></ModalForm1>
 
@@ -60,7 +61,6 @@
 
 <script setup lang="ts">
 import { ref, computed, useTemplateRef, provide, inject } from "vue"
-import type { PaginationResponse } from "../../types/types.ts"
 import SearchBar from "../../components/SearchInput/SearchBar.vue"
 
 import Table from "../../components/atoms/Table.vue"
@@ -70,7 +70,6 @@ import ModalDelete from "../../components/atoms/ModalDelete.vue"
 import usePageIndexTeam from "./dataProvider/pageIndexTeam.ts"
 import ModalForm1 from "../../components/atoms/ModalForm1.vue"
 import useManageTeam from "./dataProvider/pageEditTeam.ts"
-import type { TeamResponse } from "../../composables/api/teamApi.ts"
 import { editMasterDataProviderKey } from "../../types/modalForm1.ts"
 import { eventBusKey } from "../../types/eventButKey.ts"
 import IconBin from "../../components/Icon/IconBin.vue"
@@ -190,5 +189,11 @@ p {
   margin-top: 20px;
   display: flex;
   justify-content: space-around;
+}
+
+.tableS {
+  border: 1px solid red;
+  height: 200px;
+  overflow-y: scroll;
 }
 </style>

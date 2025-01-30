@@ -12,10 +12,18 @@
         <p>Fields Marked with an <span>*</span> are required</p>
 
         <label for="name">Team Name <span>*</span> </label>
-        <InputText v-model:input="form.name" :required="true" />
+        <InputText
+          v-model:input="form.name"
+          :required="true"
+          placeHolder="name"
+        />
 
         <label for="description">Description</label>
-        <InputText v-model:input="form.description" :required="false" />
+        <InputText
+          v-model:input="form.description"
+          :required="false"
+          placeHolder="description"
+        />
       </div>
 
       <!-- Submit Button -->
@@ -28,7 +36,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { computed, inject, provide, ref } from "vue"
+import { computed, inject, ref } from "vue"
 import InputText from "../Input/InputText.vue"
 import Modal from "./Modal.vue"
 import { editMasterDataProviderKey } from "../../types/modalForm1"
@@ -129,7 +137,10 @@ form {
   height: 40vh;
 }
 
-input,
+input {
+  width: 100%;
+}
+
 select,
 button {
   padding: 10px;

@@ -10,7 +10,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody >
       <tr class="row" v-for="(row, rowIndex) in data" :key="rowIndex">
         <!-- Flexible data rendering with slot fallback -->
         <td
@@ -49,6 +49,8 @@ defineEmits<{
   (e: "view", data: T): void
 }>()
 type K = keyof T
+
+
 </script>
 
 <style scoped>
@@ -63,15 +65,33 @@ td {
 }
 .row {
   transition: all 0.3s;
+
 }
 
 .row:hover {
   background-color: white;
+
  
 }
+
 
 .LR{
   display: flex;
   flex-direction: row;
 }
+
+/* make table have max height */
+tbody {
+  display: block;
+  height: 400px;
+  overflow-y: auto;
+}
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+
 </style>

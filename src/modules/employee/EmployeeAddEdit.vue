@@ -5,10 +5,10 @@
       <h2>{{ isEditing ? "Edit" : "Create" }} Employee</h2>
     </div>
     <div class="Right">
-      <button @click="navigateTo('employee')" class="cancelButton">
-        Cancel
-      </button>
-      <button type="submit" form="myForm" class="confirmButton">Save</button>
+      <OutlineButton text="Cancel" size="md" @click="navigateTo('employee')" />
+      <PrimaryButton text="Save" size="md" @click="handleSubmit()" />
+      <!-- <button @click="navigateTo('employee')" class="cancelButton">Cancel</button>
+      <button type="submit" form="myForm" class="confirmButton">Save</button> -->
     </div>
   </div>
   <div class="modal-overlay">
@@ -22,26 +22,38 @@
         <div class="breakHalf">
           <div class="groupUp">
             <label for="first_name">First Name <span>*</span></label>
-            <InputText v-model:input="form.firstname" :required="true" />
+            <InputText
+              v-model:input="form.firstname"
+              :required="true"
+              placeHolder="first name"
+            />
           </div>
           <div class="groupUp">
             <label for="last_name">Last Name <span>*</span></label>
-            <InputText v-model:input="form.lastname" :required="true" />
+            <InputText
+              v-model:input="form.lastname"
+              :required="true"
+              placeHolder="last name"
+            />
           </div>
         </div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
-          <InputText v-model:input="form.email" :required="true" />
+          <InputText
+            v-model:input="form.email"
+            :required="true"
+            placeHolder="email"
+          />
         </div>
 
         <div class="breakHalf">
           <div class="groupUp">
             <label for="team_id">Team <span>*</span></label>
-            <Dropdown v-model="form.teamId" :list="teams" />
+            <Dropdown class="dropD" v-model="form.teamId" :list="teams" :all="false" :disable="false"/>
           </div>
           <div class="groupUp">
             <label for="position_id">Position <span>*</span></label>
-            <Dropdown v-model="form.positionId" :list="postions" />
+            <Dropdown class="dropD" v-model="form.positionId" :list="postions" :all="false" :disable="false"/>
           </div>
         </div>
 
@@ -58,7 +70,11 @@
             :key="index + 1"
             class="phone-item"
           >
-            <InputText v-model:input="phone.phoneNumber" :required="true" />
+            <InputText
+              v-model:input="phone.phoneNumber"
+              :required="true"
+              placeHolder="phone number"
+            />
             <button
               v-if="index > 0"
               class="remove-button"
@@ -81,6 +97,8 @@ import InputText from "../../components/Input/InputText.vue"
 import { useRoute, useRouter } from "vue-router"
 import usePageEdit from "./dataProvider/pageEdit"
 import useMasterData from "./dataProvider/masterData"
+import PrimaryButton from "../../components/Button/PrimaryButton.vue"
+import OutlineButton from "../../components/Button/OutlineButton.vue"
 
 const masterDataProvider = useMasterData()
 const { teams, postions } = masterDataProvider
@@ -147,22 +165,6 @@ const navigateTo = (nameRoute: string) => {
   }
 }
 
-button {
-  background-color: #fafbfa;
-  color: rgb(0, 0, 0);
-  border: solid rgb(179, 179, 179) 1px;
-  border-radius: 5px;
-  padding: 5px 25px;
-
-  transition: all 0.3s;
-
-  cursor: pointer;
-}
-
-button:hover {
-  scale: 110%;
-}
-
 .modal-overlay {
   display: flex;
   justify-content: center;
@@ -200,10 +202,8 @@ button:hover {
   flex-direction: column;
   gap: 10px;
 
-  input,
   select,
   button {
-    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
   }
@@ -257,5 +257,9 @@ p {
   margin: 0;
   padding: 0;
   font-size: 19px;
+}
+
+.dropD{
+  width: 100%;
 }
 </style>

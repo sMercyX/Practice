@@ -15,17 +15,33 @@
 
     <div class="searchMenu">
       <div class="left">
-        <Dropdown :list="teams" v-model="tableState.search.teamId" />
-        <Dropdown :list="postions" v-model="tableState.search.positionId" />
+        <Dropdown
+          :list="teams"
+          v-model="tableState.search.teamId"
+          :all="true"
+          :disable="false"
+        />
+        <Dropdown
+          :list="postions"
+          v-model="tableState.search.positionId"
+          :all="true"
+          :disable="false"
+        />
         <SearchBar
           header="SearchBar"
           :input="tableState.search.text"
+          placeholder="name email"
           @keyup="
             tableState.search.text = ($event.target as HTMLInputElement).value
           "
         />
         <div class="resetButton">
-          <button @click="resetFilters">Reset</button>
+          <OutlineButton
+            text="Reset"
+            size="md"
+            :disable="false"
+            @click="resetFilters"
+          />
         </div>
       </div>
     </div>
@@ -41,24 +57,24 @@
         <strong>{{ header["Name"] }}</strong>
       </template>
       <template #AddEdit="{ row }">
-        <IconButton
-          size="md"
-          :disable="false"
-          @click="navigateToEmployee(row.employeeId!)"
-        >
-          <template #icon>
-            <IconEdit />
-          </template>
-        </IconButton>
-        <IconButton
-          size="md"
-          :disable="false"
-          @mousedown="openFormDelete(row.employeeId!)"
-        >
-          <template #icon>
-            <IconBin />
-          </template>
-        </IconButton>
+          <IconButton
+            size="md"
+            :disable="false"
+            @click="navigateToEmployee(row.employeeId!)"
+          >
+            <template #icon>
+              <IconEdit />
+            </template>
+          </IconButton>
+          <IconButton
+            size="md"
+            :disable="false"
+            @mousedown="openFormDelete(row.employeeId!)"
+          >
+            <template #icon>
+              <IconBin />
+            </template>
+          </IconButton>
       </template>
     </Table>
     <Pagination :data="rawData" @paginationData="handleNewPageData" />
@@ -69,7 +85,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue"
-import type { PaginationResponse } from "../../types/types.ts"
 import Dropdown from "../../components/Dropdown/Dropdown.vue"
 import SearchBar from "../../components/SearchInput/SearchBar.vue"
 
@@ -88,6 +103,7 @@ import IconBin from "../../components/Icon/IconBin.vue"
 import PrimaryButton from "../../components/Button/PrimaryButton.vue"
 import IconButton from "../../components/Icon/IconButton.vue"
 import Links from "../../components/Link/Links.vue"
+import OutlineButton from "../../components/Button/OutlineButton.vue"
 
 const masterDataProvider = useMasterData()
 const { teams, postions } = masterDataProvider
@@ -158,16 +174,11 @@ const navigateToView = (data: EmployeeIndexResponse) => {
   align-items: end;
 }
 
-table {
-  width: 100%;
-}
-
-th,
-td {
-  padding: 10px;
-  text-align: left;
-}
 p {
   margin: 0px;
+}
+.tableEm {
+  width: 100%;
+  border: red 1px solid;
 }
 </style>

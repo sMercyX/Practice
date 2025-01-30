@@ -24,6 +24,7 @@ const emit = defineEmits<{
 }>()
 
 const selectTab = (index: number) => {
+  console.log(index)
   emit("update:tabIndex", index)
 }
 </script>

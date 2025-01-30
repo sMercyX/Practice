@@ -163,6 +163,9 @@
       :tabIndex="selectedTabs"
       @update:tabIndex="changeTab"
     />
+    <h1>Input</h1>
+    <InputText :input="someThing" :required="true" :disable="false" placeHolder="brabrabra"/>
+
   </div>
 </template>
 
@@ -176,6 +179,9 @@ import IconButton from "../Icon/IconButton.vue"
 import IconEdit from "../Icon/IconEdit.vue"
 import Links from "../Link/Links.vue"
 import SwitchTabs from "../SwitchTabs/SwitchTabs.vue"
+import InputText from "../Input/InputText.vue"
+
+const someThing = ref('')
 
 function hello() {
   console.log("you clicked")
