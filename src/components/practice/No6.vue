@@ -2,94 +2,36 @@
   <div class="fc">
     <h1>Button</h1>
     <div class="g">
-      <PrimaryButton
-        text="Primary"
-        size="sm"
-        :disable="false"
-        @click="hello"
-      />
-      <PrimaryButton
-        text="Primary"
-        size="sm"
-        :disable="true"
-        @click="hello"
-      />
-      <PrimaryButton
-        text="Primary"
-        size="sm"
-        :disable="false"
-        @click="hello"
-      >
-        <template #prefix>+</template>
+      <PrimaryButton text="Primary" size="sm" :disable="false" @click="hello" />
+      <PrimaryButton text="Primary" size="sm" :disable="true" @click="hello" />
+      <PrimaryButton text="Primary" size="sm" :disable="false" @click="hello">
+        <template #prefix>
+          <IconEdit class="iconSm" />
+        </template>
       </PrimaryButton>
-      <PrimaryButton
-        text="Primary"
-        size="sm"
-        :disable="false"
-        @click="hello"
-      >
-        <template #suffix>+</template>
+      <PrimaryButton text="Primary" size="sm" :disable="false" @click="hello">
+        <template #suffix> <IconEdit class="iconSm" /> </template>
       </PrimaryButton>
     </div>
     <div class="g">
-      <PrimaryButton
-        text="Primary"
-        size="md"
-        :disable="false"
-        @click="hello"
-      />
-      <PrimaryButton
-        text="Primary"
-        size="md"
-        :disable="true"
-        @click="hello"
-      />
-      <PrimaryButton
-        text="Primary"
-        size="md"
-        :disable="false"
-        @click="hello"
-      >
-        <template #prefix>+</template>
+      <PrimaryButton text="Primary" size="md" :disable="false" @click="hello" />
+      <PrimaryButton text="Primary" size="md" :disable="true" @click="hello" />
+      <PrimaryButton text="Primary" size="md" :disable="false" @click="hello">
+        <template #prefix> <IconEdit class="iconSm" /> </template>
       </PrimaryButton>
-      <PrimaryButton
-        text="Primary"
-        size="md"
-        :disable="false"
-        @click="hello"
-      >
-        <template #suffix>+</template>
+      <PrimaryButton text="Primary" size="md" :disable="false" @click="hello">
+        <template #suffix> <IconEdit class="iconSm" /> </template>
       </PrimaryButton>
     </div>
     <h1>Button Outline</h1>
     <div class="g">
-      <OutlineButton
-        text="Outline"
-        size="sm"
-        :disable="false"
-        @click="hello"
-      />
-      <OutlineButton
-        text="Outline"
-        size="sm"
-        :disable="true"
-        @click="hello"
-      />
-      <OutlineButton
-        text="Outline"
-        size="sm"
-        :disable="false"
-        @click="hello"
-      >
-        <template #prefix>+</template>
+      <OutlineButton text="Outline" size="sm" :disable="false" @click="hello" />
+      <OutlineButton text="Outline" size="sm" :disable="true" @click="hello" />
+      <OutlineButton text="Outline" size="sm" :disable="false" @click="hello">
+        <template #prefix> <IconEdit class="iconSm" /> </template>
       </OutlineButton>
-      <OutlineButton
-        text="Outline"
-        size="sm"
-        :disable="false"
-        @click="hello"
-      >
-        <template #suffix>+</template>
+      <OutlineButton text="Outline" size="sm" :disable="false" @click="hello">
+        <template #suffix> <IconEdit class="iconSm" /> </template>
       </OutlineButton>
     </div>
     <div class="g">
@@ -103,21 +45,11 @@
         size="md"
         :disable="true"
         @click="hello"
-      /><OutlineButton
-        text="Outline"
-        size="md"
-        :disable="false"
-        @click="hello"
-      >
-        <template #prefix>+</template>
+      /><OutlineButton text="Outline" size="md" :disable="false" @click="hello">
+        <template #prefix> <IconEdit class="iconSm" /> </template>
       </OutlineButton>
-      <OutlineButton
-        text="Outline"
-        size="md"
-        :disable="false"
-        @click="hello"
-      >
-        <template #suffix>+</template>
+      <OutlineButton text="Outline" size="md" :disable="false" @click="hello">
+        <template #suffix> <IconEdit class="iconSm" /> </template>
       </OutlineButton>
     </div>
 
@@ -164,8 +96,12 @@
       @update:tabIndex="changeTab"
     />
     <h1>Input</h1>
-    <InputText :input="someThing" :required="true" :disable="false" placeHolder="brabrabra"/>
-
+    <InputText
+      :input="someThing"
+      :required="true"
+      :disable="false"
+      placeHolder="brabrabra"
+    />
   </div>
 </template>
 
@@ -181,7 +117,7 @@ import Links from "../Link/Links.vue"
 import SwitchTabs from "../SwitchTabs/SwitchTabs.vue"
 import InputText from "../Input/InputText.vue"
 
-const someThing = ref('')
+const someThing = ref("")
 
 function hello() {
   console.log("you clicked")
@@ -192,11 +128,7 @@ function logCheck(check) {
 }
 
 const selectedTabs = ref(0)
-const tabs = [
-  { header: "Tab1" },
-  { header: "Tab2" },
-  { header: "Tab3" },
-]
+const tabs = [{ header: "Tab1" }, { header: "Tab2" }, { header: "Tab3" }]
 
 function changeTab(tab) {
   selectedTabs.value = tab
@@ -217,5 +149,13 @@ function changeTab(tab) {
 .g {
   display: flex;
   gap: 5px;
+}
+.iconSm {
+  width: 12px;
+  height: 12px;
+}
+.iconMd {
+  width: 16px;
+  height: 16px;
 }
 </style>

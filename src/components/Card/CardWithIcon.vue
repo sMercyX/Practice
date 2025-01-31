@@ -5,10 +5,14 @@
         <slot name="Icon"></slot>
         <p>{{ title }}</p>
       </div>
-      <slot name="content"> </slot>
+      <slot name="content">
+        <div class="con"></div>
+      </slot>
     </div>
     <div>
-      <slot name="footer"></slot>
+      <slot name="footer">
+        <div class="foot"></div>
+      </slot>
     </div>
   </div>
 </template>
@@ -25,7 +29,7 @@ defineProps<{
   width: fit-content;
   max-width: 800px;
 
-  min-height: 225px;
+  min-height: auto;
   height: fit-content;
   max-height: 60vh;
   border-radius: 4px;
@@ -36,22 +40,29 @@ defineProps<{
   justify-content: space-between;
   gap: 1px;
 
-
   .Content {
-    width: 100%;
-    height: 80%;
+    width: fit-content;
+    height: fit-content;
     border-radius: 4px 4px 0 0;
-    padding: 10px 20px 0 20px;
+    padding: 10px 20px 10px 20px;
 
     /* border: 1px solid red; */
     .Header {
       display: flex;
       justify-content: start;
       align-items: center;
+      height: 36px;
       gap: 10px;
-
       font-size: 18px;
+      margin-bottom: 10px;
     }
   }
+}
+.con{
+  height: 118px;
+}
+.foot{
+  height: 40px;
+
 }
 </style>

@@ -75,6 +75,9 @@
             </div>
           </div>
         </template>
+        <template #footer>
+          <div></div>
+        </template>
       </CardWithIcon>
     </div>
   </div>

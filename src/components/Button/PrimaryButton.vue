@@ -5,13 +5,9 @@
     :disabled="disable"
   >
     <div class="content">
-      <div class="icon">
-        <slot name="prefix"></slot>
-      </div>
+      <slot name="prefix"></slot>
       {{ text }}
-      <div class="icon">
-        <slot name="suffix"></slot>
-      </div>
+      <slot name="suffix"></slot>
     </div>
   </button>
 </template>
@@ -31,10 +27,12 @@ defineProps<{
   color: #fff;
   border: none;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 
-  
   &:hover {
     transition: all 0.3s;
     background-color: var(--button-create-hover);

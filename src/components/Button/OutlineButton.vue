@@ -61,5 +61,7 @@ defineProps<{
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 8px;
+
 }
 </style>
