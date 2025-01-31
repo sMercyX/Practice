@@ -3,19 +3,19 @@
     <h1>Button</h1>
     <div class="g">
       <PrimaryButton
-        text="Primary Button"
+        text="Primary"
         size="sm"
         :disable="false"
         @click="hello"
       />
       <PrimaryButton
-        text="Primary Button"
+        text="Primary"
         size="sm"
         :disable="true"
         @click="hello"
       />
       <PrimaryButton
-        text="Primary Button"
+        text="Primary"
         size="sm"
         :disable="false"
         @click="hello"
@@ -23,7 +23,7 @@
         <template #prefix>+</template>
       </PrimaryButton>
       <PrimaryButton
-        text="Primary Button"
+        text="Primary"
         size="sm"
         :disable="false"
         @click="hello"
@@ -33,19 +33,19 @@
     </div>
     <div class="g">
       <PrimaryButton
-        text="Primary Button"
+        text="Primary"
         size="md"
         :disable="false"
         @click="hello"
       />
       <PrimaryButton
-        text="Primary Button"
+        text="Primary"
         size="md"
         :disable="true"
         @click="hello"
       />
       <PrimaryButton
-        text="Primary Button"
+        text="Primary"
         size="md"
         :disable="false"
         @click="hello"
@@ -53,7 +53,7 @@
         <template #prefix>+</template>
       </PrimaryButton>
       <PrimaryButton
-        text="Primary Button"
+        text="Primary"
         size="md"
         :disable="false"
         @click="hello"
@@ -64,19 +64,19 @@
     <h1>Button Outline</h1>
     <div class="g">
       <OutlineButton
-        text="Outline Button"
+        text="Outline"
         size="sm"
         :disable="false"
         @click="hello"
       />
       <OutlineButton
-        text="Outline Button"
+        text="Outline"
         size="sm"
         :disable="true"
         @click="hello"
       />
       <OutlineButton
-        text="Outline Button"
+        text="Outline"
         size="sm"
         :disable="false"
         @click="hello"
@@ -84,7 +84,7 @@
         <template #prefix>+</template>
       </OutlineButton>
       <OutlineButton
-        text="Outline Button"
+        text="Outline"
         size="sm"
         :disable="false"
         @click="hello"
@@ -94,17 +94,17 @@
     </div>
     <div class="g">
       <OutlineButton
-        text="Outline Button"
+        text="Outline"
         size="md"
         :disable="false"
         @click="hello"
       /><OutlineButton
-        text="Outline Button"
+        text="Outline"
         size="md"
         :disable="true"
         @click="hello"
       /><OutlineButton
-        text="Outline Button"
+        text="Outline"
         size="md"
         :disable="false"
         @click="hello"
@@ -112,7 +112,7 @@
         <template #prefix>+</template>
       </OutlineButton>
       <OutlineButton
-        text="Outline Button"
+        text="Outline"
         size="md"
         :disable="false"
         @click="hello"
@@ -193,9 +193,9 @@ function logCheck(check) {
 
 const selectedTabs = ref(0)
 const tabs = [
-  { header: "tab1" },
-  { header: "tab2" },
-  { header: "tab3" },
+  { header: "Tab1" },
+  { header: "Tab2" },
+  { header: "Tab3" },
 ]
 
 function changeTab(tab) {

@@ -1,17 +1,23 @@
 <template>
   <div class="pagination">
     <div class="head">
-      <p>
-        Show</p>
-        <!-- <select v-model.number="pageSize" @change="updatePageSize($event)">
+      <p>Show</p>
+      <!-- <select v-model.number="pageSize" @change="updatePageSize($event)">
           <option value="1">1</option>
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
           <option value="50">50</option>
         </select> -->
-        <Dropdown :list="num" :modelValue="selectednum" :disable="false" :all="false" @update:modelValue="updatePageSize($event)" class="dropD"/>
-        <p>
+      <Dropdown
+        :list="num"
+        :modelValue="selectednum"
+        :disable="false"
+        :all="false"
+        @update:modelValue="updatePageSize($event)"
+        class="dropD"
+      />
+      <p>
         {{ (currentPage - 1) * pageSize + 1 }} -
         {{
           sumData < (currentPage - 1) * pageSize + pageSize
@@ -73,17 +79,16 @@ const props = defineProps<{
 }>()
 
 const num = ref([
-{value: 1, text: '1'},
-{value: 5, text: '5'},
-{value: 10, text: '10'},
-{value: '50', text: '50'},
+  // {value: 1, text: '1'},
+  { value: 5, text: "5" },
+  { value: 10, text: "10" },
+  { value: "50", text: "50" },
 ])
-
 
 const currentPage = ref<number>(props.data.pageIndex + 1)
 const pageSize = ref<number>(props.data.pageSize)
 const localData = ref([...props.data.data])
-const selectednum = computed(()=>pageSize.value)
+const selectednum = computed(() => pageSize.value)
 
 const pagiData = computed(() => ({
   pageIndex: currentPage.value - 1,
@@ -108,7 +113,7 @@ const prevPage = () => {
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
 
-const updatePageSize = (ps:Event) => {
+const updatePageSize = (ps: Event) => {
   pageSize.value = Number(ps)
   currentPage.value = 1
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
@@ -119,7 +124,6 @@ const updatePageSize = (ps:Event) => {
 //   currentPage.value = 1
 //   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 // }
-
 
 const updateCurrentPage = (event: Event) => {
   const target = event.target as HTMLInputElement
@@ -157,21 +161,43 @@ const emit = defineEmits<{
 }
 
 .pagination {
+  /* width: 824px; */
+  height: 36px;
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  align-items: center;
+  padding: 0 12px;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+.head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 165.52px;
+  height: 24px;
+
+  gap: 5px;
+
 }
 .currPage {
   display: flex;
-  gap: 10px;
-  color: #646d78;
+  justify-content: center;
+  align-items: center;
+  width: 119.58px;
+  height: 24px;
 
-  input {
-    width: 20px;
-  }
+  gap: 5px;
+
+  color: #646d78;
   .ip {
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 24px;
   }
 }
 
@@ -188,12 +214,12 @@ p {
   margin: 0px;
   color: #646d78;
 }
-.head{
+.head {
   display: flex;
 }
-.dropD{
-  width: 45px;
-  height: 20px;
+.dropD {
+  width: 52px;
+  height: 24px;
   margin: 0 2px;
 }
 </style>

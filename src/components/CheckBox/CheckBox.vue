@@ -24,8 +24,8 @@ defineEmits<{
 <style scoped>
 input {
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border: 2px solid #e3e7f0;
   border-radius: 4px;
   display: flex;
@@ -58,7 +58,7 @@ input {
     transition: 0.3s all;
     border: 2px solid #5118f0;
     outline: none;
-    box-shadow: 0px 0px 0px 5px #efedff;
+    box-shadow: 0px 0px 0px 4px #efedff;
   }
 
   &:checked {

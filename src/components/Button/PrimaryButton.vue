@@ -5,9 +5,13 @@
     :disabled="disable"
   >
     <div class="content">
-      <slot name="prefix"></slot>
+      <div class="icon">
+        <slot name="prefix"></slot>
+      </div>
       {{ text }}
-      <slot name="suffix"></slot>
+      <div class="icon">
+        <slot name="suffix"></slot>
+      </div>
     </div>
   </button>
 </template>
@@ -27,6 +31,10 @@ defineProps<{
   color: #fff;
   border: none;
   cursor: pointer;
+
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+
+  
   &:hover {
     transition: all 0.3s;
     background-color: var(--button-create-hover);
@@ -37,9 +45,10 @@ defineProps<{
 }
 
 .smBtn {
-  font-size: 12px;
   width: 110px;
   height: 24px;
+  padding: 2px 12px;
+  font-size: 12px;
 }
 .mdBtn {
   font-size: 13px;
@@ -50,5 +59,7 @@ defineProps<{
   display: flex;
   justify-content: center;
   align-items: center;
+
+  gap: 8px;
 }
 </style>

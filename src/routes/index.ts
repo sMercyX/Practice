@@ -12,6 +12,7 @@ import EmployeeForm from "../modules/employee/EmployeeAddEdit.vue";
 import TeamList from "../modules/team/TeamList.vue";
 import PositionList from "../modules/position/PositionList.vue";
 import EmployeeView from "../modules/employee/EmployeeView.vue";
+import No7 from "../components/practice/No7.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -105,7 +106,7 @@ const router = createRouter({
         {
           path: "no7",
           name: "no7",
-          component: No6,
+          component: No7,
         },
       ],
     },

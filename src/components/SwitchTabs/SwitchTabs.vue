@@ -41,17 +41,20 @@ const selectTab = (index: number) => {
 }
 .content {
   display: flex;
-  width: 117px;
+  width: 117.5px;
   height: 32px;
   cursor: pointer;
   justify-content: center;
   align-items: center;
-
+  font-size: 14px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   &:hover {
     color: #5119f0;
   }
 }
 .active {
+  width: 115.5px;
+  height: 30px;
   background-color: #f2efff;
   border: 1px solid #5119f0;
   border-radius: 4px;
