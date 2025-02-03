@@ -13,7 +13,7 @@ const selectedPosition = ref<number>(2)
   <container>
     <div class="team">
       <p>Team</p>
-      <Dropdown v-model="selectedTeam" :list="teams" />
+      <Dropdown v-model="selectedTeam" :list="teams"  />
     </div>
 
     <div class="position">

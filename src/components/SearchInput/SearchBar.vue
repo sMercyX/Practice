@@ -41,6 +41,9 @@ input {
     border: 1px solid #5119f0;
     outline: none;
 
+    box-shadow: 0px 0px 0px 4px #efedff;
+
+
     &::placeholder{
       color: black;
     }

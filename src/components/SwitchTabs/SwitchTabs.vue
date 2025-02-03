@@ -13,12 +13,11 @@ interface Data {
   header: string
 }
 
-const props = defineProps<{
+defineProps<{
   data: Data[]
   tabIndex: number
 }>()
 
-console.log(props.tabIndex)
 const emit = defineEmits<{
   (e: "update:tabIndex", index: number): void
 }>()
@@ -55,6 +54,7 @@ const selectTab = (index: number) => {
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
 
+  
   &:hover {
     color: #5119f0;
   }

@@ -1,11 +1,11 @@
 <template>
   <Modal :isShow="isOpen">
-    <form @submit.prevent="handleSubmit">
+    <form>
       <div class="Head">
         <h3>
           {{ isEditing ? "Editing" : "Create" }} {{ header.toUpperCase() }}
         </h3>
-        <div class="close" @click="isOpen = false">&times;</div>
+        <div class="close" @click="isOpen = false"><span>&times;</span></div>
       </div>
       <!-- First Name -->
       <div class="Content">
@@ -16,6 +16,8 @@
           v-model:input="form.name"
           :required="true"
           placeHolder="name"
+          :disable='false'
+          class='w100'
         />
 
         <label for="description">Description</label>
@@ -23,13 +25,19 @@
           v-model:input="form.description"
           :required="false"
           placeHolder="description"
+          :disable='false'
+          class='w100'
+
         />
       </div>
 
       <!-- Submit Button -->
       <div class="Footer">
-        <button class="cancel" type="button" @click="closeModal">Cancel</button>
-        <button class="save" type="submit">Save</button>
+        <!-- <button class="cancel" type="button" @click="closeModal">Cancel</button>
+        <button class="save" type="submit">Save</button> -->
+
+        <OutlineButton text="Cancel" size="md" :disable="false"  @click="closeModal"/>
+        <PrimaryButton text="Save" size="md" :disable="false" @click="handleSubmit"/>
       </div>
     </form>
   </Modal>
@@ -41,6 +49,8 @@ import InputText from "../Input/InputText.vue"
 import Modal from "./Modal.vue"
 import { editMasterDataProviderKey } from "../../types/modalForm1"
 import { eventBusKey } from "../../types/eventButKey"
+import OutlineButton from "../Button/OutlineButton.vue"
+import PrimaryButton from "../Button/PrimaryButton.vue"
 
 const props = defineProps<{
   header: string
@@ -79,7 +89,7 @@ const header = ref<string>(props.header)
 </script>
 
 <style scoped>
-.modal-overlay {
+/* .modal-overlay {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -90,7 +100,7 @@ const header = ref<string>(props.header)
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
-}
+} */
 /* .modal-content {
   background: white;
   padding: 5px 20px;
@@ -99,6 +109,17 @@ const header = ref<string>(props.header)
   max-width: 400px;
   width: 100%;
 } */
+
+form{
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(247, 247, 247);
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  /* width: 60vw; */
+  height: 40vh;
+}
 span {
   color: red;
 }
@@ -116,6 +137,9 @@ span {
   background: white;
   padding: 20px 20px;
   height: 80%;
+  .w100{
+    width: 348px;
+  }
 }
 .Footer {
   display: flex;
@@ -126,52 +150,8 @@ span {
   gap: 4px;
   height: 20%;
 }
-form {
-  display: flex;
-  flex-direction: column;
-  background-color: rgb(247, 247, 247);
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 60vw;
-  height: 40vh;
-}
 
-input {
-  width: 100%;
-}
 
-select,
-button {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.cancel {
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
-}
-.save {
-  background-color: #612bd5;
-  color: white;
-}
-button {
-  border: none;
-  cursor: pointer;
-  width: 30%;
-  transition: all 0.3s;
-}
-
-button:hover {
-  scale: 110%;
-}
-.close {
-  display: flex;
-  justify-content: right;
-  color: red;
-  font-size: 20px;
-  cursor: pointer;
-}
 
 p {
   padding: 0;

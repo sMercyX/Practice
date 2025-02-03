@@ -5,8 +5,8 @@
       <h2>{{ isEditing ? "Edit" : "Create" }} Employee</h2>
     </div>
     <div class="Right">
-      <OutlineButton text="Cancel" size="md" @click="navigateTo('employee')" />
-      <PrimaryButton text="Save" size="md" @click="handleSubmit()" />
+      <OutlineButton text="Cancel" size="md" :disable="false" @click="navigateTo('employee')" />
+      <PrimaryButton text="Save" size="md" :disable="false" @click="handleSubmit()" />
       <!-- <button @click="navigateTo('employee')" class="cancelButton">Cancel</button>
       <button type="submit" form="myForm" class="confirmButton">Save</button> -->
     </div>
@@ -26,6 +26,7 @@
               v-model:input="form.firstname"
               :required="true"
               placeHolder="first name"
+              :disable="false"
             />
           </div>
           <div class="groupUp">
@@ -34,6 +35,7 @@
               v-model:input="form.lastname"
               :required="true"
               placeHolder="last name"
+              :disable="false"
             />
           </div>
         </div>
@@ -43,6 +45,7 @@
             v-model:input="form.email"
             :required="true"
             placeHolder="email"
+            :disable="false"
           />
         </div>
 
@@ -74,6 +77,7 @@
               v-model:input="phone.phoneNumber"
               :required="true"
               placeHolder="phone number"
+              :disable="false"
             />
             <button
               v-if="index > 0"
@@ -227,10 +231,10 @@ const navigateTo = (nameRoute: string) => {
 }
 
 .add-button {
-  border: 0px;
   cursor: pointer;
-  border: 0px none white;
+  border: none !important;
   color: #5119f0;
+  background-color:white;
 }
 .phone-list {
   display: flex;

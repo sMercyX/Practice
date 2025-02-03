@@ -98,7 +98,7 @@ const someThing = ref("")
 .g {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 span {
   color: red;

@@ -119,7 +119,7 @@
   </div>
 
   <h1>Pagination</h1>
-  <Pagination :data="rawData" />
+  <Pagination :data="rawData" class="pg"/>
 
   <h1>DropDown</h1>
   <div class="fr">
@@ -188,5 +188,9 @@ const { teams } = masterDataProvider
 .g {
   display: flex;
   gap: 5px;
+}
+
+.pg{
+  width: 800px;
 }
 </style>

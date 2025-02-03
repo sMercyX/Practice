@@ -119,7 +119,7 @@ const selectItem = (item: DropdownModel<T>) => {
   position: relative;
   width: 100%;
   background-color: #fff;
-  max-height: 130px;
+  max-height: 320px;
   overflow-y: scroll;
   ul {
     padding: 2px 8px;

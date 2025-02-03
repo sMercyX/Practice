@@ -24,13 +24,13 @@ const updateInput = (event: Event) => {
 
 <style scoped>
 input {
-  width: 148px;
+  width: 150px;
   height: 28px;
   border-radius: 4px;
   border: solid 1px #e3e7f0;
   background-color: #ffffff;
   font-size: 14px;
-  padding-left: 8px;
+  padding: 0 0 0 10px;
 
   font-family: Sarabun;
   font-size: 14px;
@@ -47,6 +47,7 @@ input {
     transition: all 0.3s;
     border: 1px solid #5119f0;
     outline: none;
+    box-shadow: 0px 0px 0px 4px #efedff;
 
     &::placeholder {
       color: black;
