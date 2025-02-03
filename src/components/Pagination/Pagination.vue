@@ -14,7 +14,7 @@
         :modelValue="selectednum"
         :disable="false"
         :all="false"
-        @update:modelValue="updatePageSize($event)"
+        @update:modelValue="updatePageSize"
         class="dropD"
       />
       <p>
@@ -82,7 +82,7 @@ const num = ref([
   // {value: 1, text: '1'},
   { value: 5, text: "5" },
   { value: 10, text: "10" },
-  { value: "50", text: "50" },
+  { value: 50, text: "50" },
 ])
 
 const currentPage = ref<number>(props.data.pageIndex + 1)
@@ -113,8 +113,8 @@ const prevPage = () => {
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
 
-const updatePageSize = (ps: Event) => {
-  pageSize.value = Number(ps)
+const updatePageSize = (newValue : string | number) => {
+  pageSize.value = Number(newValue)
   currentPage.value = 1
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }

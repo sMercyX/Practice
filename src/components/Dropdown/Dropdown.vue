@@ -15,14 +15,14 @@
     </button>
     <div class="dropdowns" v-if="isOpen">
       <ul>
-        <li v-if="all" class="content" @click="selectItem('')">
+        <li v-if="all" class="content" @click="selectItem({} as DropdownModel<T>)">
           Please Select
         </li>
         <li
           class="content"
           v-for="(item, index) in list"
           :key="index"
-          :value="item.value"
+          :value="item.value as string | number"
           :class="item.text == selectedText ? 'purple' : ''"
           @click="selectItem(item)"
         >

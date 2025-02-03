@@ -84,9 +84,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import CardWithIcon from "../Card/CardWithIcon.vue"
 import IconEdit from "../Icon/IconEdit.vue"
 import InputText from "../Input/InputText.vue"
+
+const someThing = ref('')
 </script>
 
 <style scoped>
