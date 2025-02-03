@@ -102,7 +102,6 @@ import IconEdit from "../../components/Icon/IconEdit.vue"
 import IconBin from "../../components/Icon/IconBin.vue"
 import PrimaryButton from "../../components/Button/PrimaryButton.vue"
 import IconButton from "../../components/Icon/IconButton.vue"
-import Links from "../../components/Link/Links.vue"
 import OutlineButton from "../../components/Button/OutlineButton.vue"
 
 const masterDataProvider = useMasterData()

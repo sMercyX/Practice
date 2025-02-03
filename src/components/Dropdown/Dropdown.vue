@@ -85,7 +85,6 @@ const selectItem = (item: DropdownModel<T>) => {
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
-  
 }
 .main {
   width: 100%;
@@ -134,8 +133,6 @@ const selectItem = (item: DropdownModel<T>) => {
     padding: 10px;
     border-radius: 4px;
 
-
-
     &:hover {
       transition: all 0.3s;
       background-color: #f7f8fc;
@@ -154,7 +151,9 @@ const selectItem = (item: DropdownModel<T>) => {
   transform: scale(1, 1) rotate(90deg);
 }
 .icon {
-  width: 10px;
-  height: 10px;
+  width: 5.5px;
+  height: 9px;
+  padding: 1.5px 3.25px;
+  color: #636d78;
 }
 </style>

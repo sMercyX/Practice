@@ -1,19 +1,21 @@
 <template>
   <div class="g">
-    <CardWithIcon title="Title">
+    <CardWithIcon title="Basic Info">
       <template #Icon> <IconEdit class="IconWithBg" /> </template>
     </CardWithIcon>
 
-    <CardWithIcon title="Title">
-      <template #Icon> <IconEdit class="IconWithBg" /> </template>
-      <template #footer>
-        <div class="Footers">
-          Copyright © ClickNext Co.,Ltd All Right Reserved.
-        </div>
-      </template>
-    </CardWithIcon>
+    <div class="breakHalf">
+      <CardWithIcon title="Basic Info">
+        <template #Icon> <IconEdit class="IconWithBg" /> </template>
+        <template #footer>
+          <div class="Footers">
+            Copyright © ClickNext Co.,Ltd All Right Reserved.
+          </div>
+        </template>
+      </CardWithIcon>
 
-    <CardWithIcon title="Title"> </CardWithIcon>
+      <CardWithIcon title="Title"> </CardWithIcon>
+    </div>
 
     <div class="breakHalf">
       <CardWithIcon title="Title">
@@ -84,12 +86,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from "vue"
 import CardWithIcon from "../Card/CardWithIcon.vue"
 import IconEdit from "../Icon/IconEdit.vue"
 import InputText from "../Input/InputText.vue"
 
-const someThing = ref('')
+const someThing = ref("")
 </script>
 
 <style scoped>
@@ -108,7 +110,7 @@ span {
 .breakHalf {
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: 10px;
 }
 .widthFull {
   width: 200px;

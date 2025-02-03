@@ -33,12 +33,15 @@ button {
   width: 24px;
   height: 24px;
   padding: 4px;
+  color: #636D78;
+
 
 }
 .mdIcon {
   width: 32px;
   height: 32px;
   padding: 6px;
+  color: #646D78;
 
 }
 </style>
