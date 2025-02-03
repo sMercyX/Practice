@@ -53,8 +53,6 @@ const isOpen = ref(false)
 
 const toggle = () => {
   isOpen.value = !isOpen.value
-  console.log(props.list)
-  console.log(props.modelValue)
 }
 
 const selectedText = computed(() => {
@@ -68,7 +66,6 @@ const emit = defineEmits<{
 }>()
 
 const selectItem = (item: DropdownModel<T>) => {
-  console.log(item.value)
   emit("update:modelValue", item.value)
   isOpen.value = false
 }
@@ -151,9 +148,8 @@ const selectItem = (item: DropdownModel<T>) => {
   transform: scale(1, 1) rotate(90deg);
 }
 .icon {
-  width: 5.5px;
-  height: 9px;
-  padding: 1.5px 3.25px;
+  width: 12px;
+  height: 12px;
   color: #636d78;
 }
 </style>

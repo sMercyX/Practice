@@ -18,6 +18,9 @@ button {
   border-radius: 42px;
   color: var(--icon-color);
   cursor: pointer;
+
+
+
   &:hover {
     transition: all 0.3s;
     background-color: var(--icon-bg-color);
@@ -34,9 +37,8 @@ button {
   height: 24px;
   padding: 4px;
   color: #636D78;
-
-
 }
+
 .mdIcon {
   width: 32px;
   height: 32px;

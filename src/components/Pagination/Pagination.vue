@@ -195,7 +195,7 @@ const emit = defineEmits<{
   color: #646d78;
   .ip {
     width: 20px;
-    height: 20px;
+    height: 22px;
     font-family: Sarabun;
     font-size: 12px;
     font-weight: 400;

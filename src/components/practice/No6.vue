@@ -101,31 +101,31 @@
         :input="someThing"
         :required="true"
         :disable="false"
-        placeHolder="brabrabra"
+        placeHolder="Text"
       />
       <InputText
         :input="someThing"
         :required="true"
         :disable="false"
-        placeHolder="brabrabra"
+        placeHolder="insert word"
       />
       <InputText
         :input="someThing"
         :required="true"
         :disable="true"
-        placeHolder="brabrabra"
+        placeHolder="Input Text"
       />
+    </div>
+    <h1>Pagination</h1>
+    <Pagination :data="rawData" class="pg"/>
+  
+    <h1>DropDown</h1>
+    <div class="fr">
+      <Dropdown :list="teams" v-model="tableState.search.teamId" :all="false" :disable="false" />
+      <Dropdown :list="teams" v-model="tableState.search.teamId" :all="false" :disable="true" />
     </div>
   </div>
 
-  <h1>Pagination</h1>
-  <Pagination :data="rawData" class="pg"/>
-
-  <h1>DropDown</h1>
-  <div class="fr">
-    <Dropdown :list="teams" :all="false" :disable="false" />
-    <Dropdown :list="teams" :all="false" :disable="true" />
-  </div>
 </template>
 
 <script setup>
@@ -142,6 +142,7 @@ import InputText from "../Input/InputText.vue"
 import Pagination from "../Pagination/Pagination.vue"
 import Dropdown from "../Dropdown/Dropdown.vue"
 import useMasterData from "../../modules/employee/dataProvider/masterData"
+import usePageIndex from "../../modules/employee/dataProvider/pageIndex"
 
 const someThing = ref("")
 
@@ -162,13 +163,16 @@ function changeTab(tab) {
 
 const rawData = ref({
   pageIndex: 0,
-  rowCount: 0,
+  rowCount: 10,
   pageSize: 5,
   data: [],
 })
 
 const masterDataProvider = useMasterData()
 const { teams } = masterDataProvider
+const pageIndexDataProvider = usePageIndex(masterDataProvider)
+
+const { tableState } = pageIndexDataProvider
 ;(async () => {
   await Promise.all([masterDataProvider.loadMasterData()])
 })()
