@@ -35,14 +35,17 @@ input {
   position: relative;
 
   &::before {
-    content: "✔";
+    /* content: "✔"; */
+    content: url(../Icon/correct.svg);
+    width: 11.17px;
+    height: 8.59px;
+
     font-size: 14px;
-    color: white;
     display: none;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -75%);
     z-index: 1;
   }
   &:hover {

@@ -1,6 +1,6 @@
 <template>
   <button
-    class="primartButton"
+    class="primaryButton"
     :class="size == `sm` ? `smBtn` : `mdBtn`"
     :disabled="disable"
   >
@@ -21,7 +21,7 @@ defineProps<{
 </script>
 
 <style scoped>
-.primartButton {
+.primaryButton {
   border-radius: 4px;
   background-color: var(--button-create-main);
   color: #fff;
@@ -58,6 +58,6 @@ defineProps<{
   justify-content: center;
   align-items: center;
 
-  gap: 8px;
+  gap: 4px;
 }
 </style>

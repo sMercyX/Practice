@@ -81,7 +81,7 @@
       </div>
     </div>
     <h1>Link</h1>
-    <Links text="https://www.clicknext.com/" />
+    <Links text="www.siamcommercial.com" />
     <h1>CheckBox</h1>
     <div class="fr">
       <CheckBox :checked="false" :disable="false" @checkedO="logCheck" />
@@ -96,12 +96,27 @@
       @update:tabIndex="changeTab"
     />
     <h1>Input</h1>
+    <div class="fr">
+
     <InputText
       :input="someThing"
       :required="true"
       :disable="false"
       placeHolder="brabrabra"
     />
+    <InputText
+      :input="someThing"
+      :required="true"
+      :disable="false"
+      placeHolder="brabrabra"
+    />
+    <InputText
+      :input="someThing"
+      :required="true"
+      :disable="true"
+      placeHolder="brabrabra"
+    />
+    </div>
   </div>
 </template>
 
@@ -149,13 +164,5 @@ function changeTab(tab) {
 .g {
   display: flex;
   gap: 5px;
-}
-.iconSm {
-  width: 12px;
-  height: 12px;
-}
-.iconMd {
-  width: 16px;
-  height: 16px;
 }
 </style>
