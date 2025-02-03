@@ -31,7 +31,16 @@ input {
   background-color: #ffffff;
   font-size: 14px;
   padding-left: 8px;
-  &:active::placeholder{
+
+  font-family: Sarabun;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+
+  &:active::placeholder {
     color: black;
   }
   &:focus {
@@ -39,14 +48,14 @@ input {
     border: 1px solid #5119f0;
     outline: none;
 
-    &::placeholder{
+    &::placeholder {
       color: black;
     }
   }
 
   &:disabled {
-    border: 1px solid #E3E7F0; 
-    background-color: #F7F8FC;
+    border: 1px solid #e3e7f0;
+    background-color: #f7f8fc;
   }
 }
 

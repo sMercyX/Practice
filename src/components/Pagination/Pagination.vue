@@ -113,7 +113,7 @@ const prevPage = () => {
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
 
-const updatePageSize = (newValue : string | number) => {
+const updatePageSize = (newValue: string | number) => {
   pageSize.value = Number(newValue)
   currentPage.value = 1
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
@@ -177,13 +177,11 @@ const emit = defineEmits<{
 }
 .head {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
   width: 165.52px;
   height: 24px;
-
   gap: 5px;
-
 }
 .currPage {
   display: flex;
@@ -196,8 +194,15 @@ const emit = defineEmits<{
 
   color: #646d78;
   .ip {
-    width: 32px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
+    font-family: Sarabun;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
   }
 }
 
@@ -221,6 +226,7 @@ p {
   width: 52px;
   height: 24px;
   margin: 0 2px;
+  font-size: 12px;
 }
 </style>
 

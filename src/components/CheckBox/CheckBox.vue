@@ -34,6 +34,8 @@ input {
   cursor: pointer;
   position: relative;
 
+  margin: 0;
+
   &::before {
     /* content: "✔"; */
     content: url(../Icon/correct.svg);

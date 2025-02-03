@@ -31,7 +31,13 @@ defineProps<{
   justify-content: center;
   align-items: center;
 
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: Sarabun;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 
   &:hover {
     transition: all 0.3s;

@@ -30,7 +30,13 @@ defineProps<{
   text-align: center;
   cursor: pointer;
 
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: Sarabun;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 
 
   &:hover {
@@ -48,8 +54,6 @@ defineProps<{
   width: 110px;
   height: 24px;
   padding: 2px 12px;
-
-
 }
 .mdBtn {
   font-size: 13px;
@@ -62,6 +66,5 @@ defineProps<{
   justify-content: center;
   align-items: center;
   gap: 4px;
-
 }
 </style>

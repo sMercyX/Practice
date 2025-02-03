@@ -15,7 +15,6 @@ defineProps<{
 button {
   border: none;
   background-color: transparent;
-  padding: 4px;
   border-radius: 42px;
   color: var(--icon-color);
   cursor: pointer;
@@ -33,9 +32,13 @@ button {
 .smIcon {
   width: 24px;
   height: 24px;
+  padding: 4px;
+
 }
 .mdIcon {
   width: 32px;
   height: 32px;
+  padding: 6px;
+
 }
 </style>

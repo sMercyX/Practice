@@ -17,10 +17,10 @@
       <PrimaryButton text="Primary" size="md" :disable="false" @click="hello" />
       <PrimaryButton text="Primary" size="md" :disable="true" @click="hello" />
       <PrimaryButton text="Primary" size="md" :disable="false" @click="hello">
-        <template #prefix> <IconEdit class="iconSm" /> </template>
+        <template #prefix> <IconEdit class="iconMd" /> </template>
       </PrimaryButton>
       <PrimaryButton text="Primary" size="md" :disable="false" @click="hello">
-        <template #suffix> <IconEdit class="iconSm" /> </template>
+        <template #suffix> <IconEdit class="iconMd" /> </template>
       </PrimaryButton>
     </div>
     <h1>Button Outline</h1>
@@ -46,10 +46,10 @@
         :disable="true"
         @click="hello"
       /><OutlineButton text="Outline" size="md" :disable="false" @click="hello">
-        <template #prefix> <IconEdit class="iconSm" /> </template>
+        <template #prefix> <IconEdit class="iconMd" /> </template>
       </OutlineButton>
       <OutlineButton text="Outline" size="md" :disable="false" @click="hello">
-        <template #suffix> <IconEdit class="iconSm" /> </template>
+        <template #suffix> <IconEdit class="iconMd" /> </template>
       </OutlineButton>
     </div>
 
@@ -97,26 +97,34 @@
     />
     <h1>Input</h1>
     <div class="fr">
-
-    <InputText
-      :input="someThing"
-      :required="true"
-      :disable="false"
-      placeHolder="brabrabra"
-    />
-    <InputText
-      :input="someThing"
-      :required="true"
-      :disable="false"
-      placeHolder="brabrabra"
-    />
-    <InputText
-      :input="someThing"
-      :required="true"
-      :disable="true"
-      placeHolder="brabrabra"
-    />
+      <InputText
+        :input="someThing"
+        :required="true"
+        :disable="false"
+        placeHolder="brabrabra"
+      />
+      <InputText
+        :input="someThing"
+        :required="true"
+        :disable="false"
+        placeHolder="brabrabra"
+      />
+      <InputText
+        :input="someThing"
+        :required="true"
+        :disable="true"
+        placeHolder="brabrabra"
+      />
     </div>
+  </div>
+
+  <h1>Pagination</h1>
+  <Pagination :data="rawData" />
+
+  <h1>DropDown</h1>
+  <div class="fr">
+    <Dropdown :list="teams" :all="false" :disable="false" />
+    <Dropdown :list="teams" :all="false" :disable="true" />
   </div>
 </template>
 
@@ -131,6 +139,9 @@ import IconEdit from "../Icon/IconEdit.vue"
 import Links from "../Link/Links.vue"
 import SwitchTabs from "../SwitchTabs/SwitchTabs.vue"
 import InputText from "../Input/InputText.vue"
+import Pagination from "../Pagination/Pagination.vue"
+import Dropdown from "../Dropdown/Dropdown.vue"
+import useMasterData from "../../modules/employee/dataProvider/masterData"
 
 const someThing = ref("")
 
@@ -143,11 +154,24 @@ function logCheck(check) {
 }
 
 const selectedTabs = ref(0)
-const tabs = [{ header: "Tab1" }, { header: "Tab2" }, { header: "Tab3" }]
+const tabs = [{ header: "Tab 1" }, { header: "Tab 2" }, { header: "Tab 3" }]
 
 function changeTab(tab) {
   selectedTabs.value = tab
 }
+
+const rawData = ref({
+  pageIndex: 0,
+  rowCount: 0,
+  pageSize: 5,
+  data: [],
+})
+
+const masterDataProvider = useMasterData()
+const { teams } = masterDataProvider
+;(async () => {
+  await Promise.all([masterDataProvider.loadMasterData()])
+})()
 </script>
 
 <style scoped>

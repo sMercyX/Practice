@@ -15,7 +15,11 @@
     </button>
     <div class="dropdowns" v-if="isOpen">
       <ul>
-        <li v-if="all" class="content" @click="selectItem({} as DropdownModel<T>)">
+        <li
+          v-if="all"
+          class="content"
+          @click="selectItem({} as DropdownModel<T>)"
+        >
           Please Select
         </li>
         <li
@@ -74,6 +78,14 @@ const selectItem = (item: DropdownModel<T>) => {
 .outer {
   width: 160px;
   height: 32px;
+  font-family: Sarabun;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  
 }
 .main {
   width: 100%;
@@ -85,8 +97,11 @@ const selectItem = (item: DropdownModel<T>) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
 
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
   &:focus {
     outline: none;
     border-color: #7c3aed; /* Purple focus */
@@ -116,9 +131,11 @@ const selectItem = (item: DropdownModel<T>) => {
     display: flex;
     justify-content: start;
     align-items: center;
-    font-size: 14px;
     padding: 10px;
     border-radius: 4px;
+
+
+
     &:hover {
       transition: all 0.3s;
       background-color: #f7f8fc;

@@ -46,8 +46,15 @@ const selectTab = (index: number) => {
   cursor: pointer;
   justify-content: center;
   align-items: center;
+
+  font-family: Sarabun;
   font-size: 14px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+
   &:hover {
     color: #5119f0;
   }
