@@ -35,23 +35,21 @@
         </template>
       </IconButton>
 
-      <span>
-        <!-- <input
+      <!-- <input
           type="text"
           v-model="currentPage"
           @change="updateCurrentPage($event)"
         /> -->
-        <InputText
-          class="ip"
-          :input="currentPage"
-          :required="true"
-          :disable="false"
-          :placeHolder="'1'"
-          @change="updateCurrentPage($event)"
-        />
+      <InputText
+        class="ip"
+        :input="currentPage"
+        :required="true"
+        :disable="false"
+        :placeHolder="'1'"
+        @change="updateCurrentPage($event)"
+      />
 
-        / {{ totalPages }}</span
-      >
+      <span> / {{ totalPages }}</span>
       <IconButton
         size="sm"
         :disable="currentPage >= totalPages"
@@ -168,6 +166,7 @@ const emit = defineEmits<{
   align-items: center;
   padding: 0 12px;
 
+  font-family: Sarabun;
   font-size: 12px;
   font-weight: 400;
   line-height: 18px;
@@ -181,7 +180,7 @@ const emit = defineEmits<{
   align-items: center;
   width: 165.52px;
   height: 24px;
-  gap: 5px;
+  gap: 8px;
 }
 .currPage {
   display: flex;
@@ -190,7 +189,7 @@ const emit = defineEmits<{
   width: 119.58px;
   height: 24px;
 
-  gap: 5px;
+  gap: 8px;
 
   color: #646d78;
   .ip {
