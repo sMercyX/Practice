@@ -48,23 +48,27 @@ const selectTab = (index: number) => {
 
   font-family: Sarabun;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 20px;
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
 
-  
+  background-color: #F7F8FC;
+  color: #646D78;
   &:hover {
-    color: #5119f0;
+    color: #5119F0;
   }
 }
 .active {
   width: 115.5px;
   height: 30px;
-  background-color: #f2efff;
-  border: 1px solid #5119f0;
+  background-color: #F2EFFF;
+  border: 1px solid #5119F0;
   border-radius: 4px;
-  color: #5119f0;
+  color: #5119F0;
+  font-weight: 700;
+
 }
+
 </style>

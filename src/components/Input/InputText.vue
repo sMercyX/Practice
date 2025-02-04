@@ -40,24 +40,31 @@ input {
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
 
-  &:active::placeholder {
-    color: black;
+  &::placeholder {
+    color: #a0abba;
   }
+ 
   &:focus {
     transition: all 0.3s;
     border: 1px solid #5119f0;
     outline: none;
-    box-shadow: 0px 0px 0px 4px #efedff;
-
-    &::placeholder {
-      color: black;
-    }
+    box-shadow: 0px 0px 0px 2px #efedff;
   }
-
+  &:focus::placeholder {
+    color: #A0ABBA;
+  }
   &:disabled {
     border: 1px solid #e3e7f0;
     background-color: #f7f8fc;
+    color: #A0ABBA;
+
   }
+  &:focus:disabled {
+    border: 1px solid #e3e7f0;
+    background-color: #f7f8fc;
+    color: #A0ABBA;
+  }
+  
 }
 
 /* 

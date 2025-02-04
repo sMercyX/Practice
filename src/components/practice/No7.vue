@@ -106,13 +106,19 @@ span {
 .breakDown {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 .breakHalf {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap:4px;
 }
 .widthFull {
-  width: 200px;
+  width: 264px;
+  height: 30px;
+}
+
+label{
+  height: 18px;
 }
 </style>

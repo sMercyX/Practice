@@ -75,7 +75,7 @@ input {
     }
 
     &:disabled {
-      background-color: #d3d9e3;
+      background-color: #E3E8EF;
       border: none;
       &::before {
         color: #ffffff;

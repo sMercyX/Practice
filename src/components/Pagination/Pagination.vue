@@ -1,7 +1,7 @@
 <template>
   <div class="pagination">
     <div class="head">
-      <p>Show</p>
+      <p>Show:</p>
       <!-- <select v-model.number="pageSize" @change="updatePageSize($event)">
           <option value="1">1</option>
           <option value="5">5</option>

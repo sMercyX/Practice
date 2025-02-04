@@ -47,7 +47,7 @@ defineProps<{
     width: fit-content;
     height: fit-content;
     border-radius: 4px 4px 0 0;
-    padding: 10px 20px 10px 20px;
+    padding: 20px 22px 20px 22px;
 
     font-family: Sarabun;
     font-size: 12px;
@@ -65,7 +65,7 @@ defineProps<{
       height: 36px;
       gap: 10px;
       font-size: 18px;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
 
       font-family: Kanit;
       font-size: 18px;
@@ -78,7 +78,7 @@ defineProps<{
   }
 }
 .con {
-  height: 118px;
+  height: 88px;
 }
 .foot {
   height: 40px;
