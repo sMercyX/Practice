@@ -5,9 +5,13 @@
     :disabled="disable"
   >
     <div class="content">
-      <slot name="prefix"></slot>
+      <div v-if="$slots.prefix" :class="size == 'sm' ? 'iconSm' : 'iconMd'">
+        <slot name="prefix"></slot>
+      </div>
       {{ text }}
-      <slot name="suffix"></slot>
+      <div v-if="$slots.suffix" :class="size == 'sm' ? 'iconSm' : 'iconMd'">
+        <slot name="suffix"></slot>
+      </div>
     </div>
   </button>
 </template>
@@ -66,4 +70,19 @@ defineProps<{
 
   gap: 4px;
 }
+.iconSm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+}
+.iconMd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
 </style>

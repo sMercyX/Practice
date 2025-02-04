@@ -1,15 +1,12 @@
 <template>
-  <!-- <div class="">
-    <select @change="updateSelected" :value="modelValue" placeholder="hi">
-      <option value="">ทั้งหมด</option>
-      <option v-for="(item, index) in list" :key="index" :value="item.value">
-        {{ item.text }}
-      </option>
-    </select>
-  </div> -->
-
   <div class="outer">
-    <button class="main" @click="toggle" type="button" :disabled="disable" :class="selectedText ? '' : 'mgrey'">
+    <button
+      class="main"
+      @click="toggle"
+      type="button"
+      :disabled="disable"
+      :class="{ mgrey: !selectedText }"
+    >
       {{ selectedText || "Please Select" }}
       <IconRightArrow class="icon" :class="isOpen ? 'iconUp' : 'iconDown'" />
     </button>
@@ -23,12 +20,12 @@
           Please Select
         </li>
         <li
-          class="content"
-          v-for="(item, index) in list"
-          :key="index"
-          :value="item.value as string | number"
-          :class="item.text == selectedText ? 'purple' : ''"
-          @click="selectItem(item)"
+        class="content"
+        :class="{ purple: item.text == selectedText }"
+        @click="selectItem(item)"
+        v-for="(item, index) in list"
+        :key="index"
+        :value="typeof item.value === 'number' ? item.value : String(item.value)"
         >
           {{ item.text }}
         </li>
@@ -107,7 +104,7 @@ const selectItem = (item: DropdownModel<T>) => {
   &:disabled {
     background-color: #f7f8fc;
     border: 1px solid #e3e7f0;
-    color: #A0ABBA;
+    color: #a0abba;
 
     .icon {
       color: #a0abba;
@@ -119,34 +116,38 @@ const selectItem = (item: DropdownModel<T>) => {
   border: 1px solid #e3e7f0;
   border-radius: 4px;
   position: relative;
-  width: 158px;
+  width: calc(100% - 2px);
   max-height: 248px;
   background-color: #fff;
   color: #212121;
+  margin: 0;
+  /* scrollbar-color: #e3e7f0 #e3e7f0;
+  scrollbar-width: thin; */
+  
   overflow-y: auto;
   overflow-x: hidden;
-  margin: 0;
   z-index: 1;
-  /* scrollbar-color: #e3e7f0 #e3e7f0; 
-  scrollbar-width: thin; */
-
   &::-webkit-scrollbar {
-    width: 7px;
+    width: 5px;
     height: 20px;
   }
   &::-webkit-scrollbar-thumb {
     background: #e3e7f0;
     border-radius: 12px;
     border: 2px solid #fff;
-    position: absolute;
+    border: 2px solid #fff;
+    border-left: none;
+
   }
   ul {
     padding: 8px;
     margin: 0;
   }
-  
+
   .content {
-    width: 128px;
+    /* width: 128px; */
+    /* width: calc(100% - 7px); */
+    width: auto;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -194,7 +195,7 @@ const selectItem = (item: DropdownModel<T>) => {
   height: 12px;
 }
 
-.mgrey{
-  color: #A0ABBA;
+.mgrey {
+  color: #a0abba;
 }
 </style>

@@ -39,9 +39,10 @@ input {
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
+  color: #212121;
 
   &::placeholder {
-    color: #a0abba;
+    color: #A0ABBA;
   }
  
   &:focus {

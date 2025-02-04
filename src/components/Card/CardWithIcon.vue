@@ -2,16 +2,18 @@
   <div class="box">
     <div class="Content">
       <div class="Header">
-        <slot name="Icon"></slot>
+        <div v-if="$slots.Icon" class="IconWithBg">
+          <slot name="Icon"></slot>
+        </div>
         <p>{{ title }}</p>
       </div>
       <slot name="content">
         <div class="con"></div>
       </slot>
     </div>
-    <div>
+    <div :class="{ Footers: $slots.footer}">
       <slot name="footer">
-        <div class="foot"></div>
+        <div :class="{foot:!$slots.content && !$slots.footer}"></div>
       </slot>
     </div>
   </div>
@@ -47,7 +49,7 @@ defineProps<{
     width: fit-content;
     height: fit-content;
     border-radius: 4px 4px 0 0;
-    padding: 20px 22px 20px 22px;
+    padding: 20px;
 
     font-family: Sarabun;
     font-size: 12px;
@@ -83,4 +85,28 @@ defineProps<{
 .foot {
   height: 40px;
 }
+
+.Footers {
+  width: 100%;
+  height: 39px;
+  font-size: 10px;
+  background-color: #efedff;
+  border-top: 1px solid #5119f0;
+  border-radius: 0 0 4px 4px;
+  color: #8f8f8f;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: Headline;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: var(--HeadlineSmallTracking);
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+
 </style>

@@ -1,16 +1,14 @@
 <template>
   <div class="g">
     <CardWithIcon title="Basic Info">
-      <template #Icon> <IconEdit class="IconWithBg" /> </template>
+      <template #Icon> <IconEdit/> </template>
     </CardWithIcon>
 
     <div class="breakHalf">
       <CardWithIcon title="Basic Info">
-        <template #Icon> <IconEdit class="IconWithBg" /> </template>
+        <template #Icon> <IconEdit/> </template>
         <template #footer>
-          <div class="Footers">
-            Copyright © ClickNext Co.,Ltd All Right Reserved.
-          </div>
+          <div>Copyright © ClickNext Co.,Ltd All Right Reserved.</div>
         </template>
       </CardWithIcon>
 
@@ -19,7 +17,7 @@
 
     <div class="breakHalf">
       <CardWithIcon title="Title">
-        <template #Icon> <IconEdit class="IconWithBg" /> </template>
+        <template #Icon> <IconEdit /> </template>
         <template #content>
           <div class="breakHalf">
             <div class="breakDown">
@@ -52,7 +50,7 @@
       </CardWithIcon>
 
       <CardWithIcon title="Title">
-        <template #Icon> <IconEdit class="IconWithBg" /> </template>
+        <template #Icon> <IconEdit /> </template>
         <template #content>
           <div class="breakHalf">
             <div class="breakDown">
@@ -77,9 +75,7 @@
             </div>
           </div>
         </template>
-        <template #footer>
-          <div></div>
-        </template>
+      
       </CardWithIcon>
     </div>
   </div>
@@ -111,14 +107,14 @@ span {
 .breakHalf {
   display: flex;
   flex-direction: row;
-  gap:4px;
+  gap: 8px;
 }
 .widthFull {
   width: 264px;
   height: 30px;
 }
 
-label{
+label {
   height: 18px;
 }
 </style>

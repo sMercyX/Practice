@@ -1,7 +1,4 @@
 <template>
-      <Dropdown :list="teams" v-model="tableState.search.teamId" :all="true" :disable="false" />
-      <Dropdown :list="teams" v-model="tableState.search.teamId" :all="true" :disable="true" />
-
   <div class="fc">
     <h1>Button</h1>
     <div class="g">
@@ -9,21 +6,21 @@
       <PrimaryButton text="Primary" size="sm" :disable="true" @click="hello" />
       <PrimaryButton text="Primary" size="sm" :disable="false" @click="hello">
         <template #prefix>
-          <IconEdit class="iconSm" />
+          <IconEdit />
         </template>
       </PrimaryButton>
       <PrimaryButton text="Primary" size="sm" :disable="false" @click="hello">
-        <template #suffix> <IconEdit class="iconSm" /> </template>
+        <template #suffix> <IconEdit /> </template>
       </PrimaryButton>
     </div>
     <div class="g">
       <PrimaryButton text="Primary" size="md" :disable="false" @click="hello" />
       <PrimaryButton text="Primary" size="md" :disable="true" @click="hello" />
       <PrimaryButton text="Primary" size="md" :disable="false" @click="hello">
-        <template #prefix> <IconEdit class="iconMd" /> </template>
+        <template #prefix> <IconEdit /> </template>
       </PrimaryButton>
       <PrimaryButton text="Primary" size="md" :disable="false" @click="hello">
-        <template #suffix> <IconEdit class="iconMd" /> </template>
+        <template #suffix> <IconEdit /> </template>
       </PrimaryButton>
     </div>
     <h1>Button Outline</h1>
@@ -31,10 +28,10 @@
       <OutlineButton text="Outline" size="sm" :disable="false" @click="hello" />
       <OutlineButton text="Outline" size="sm" :disable="true" @click="hello" />
       <OutlineButton text="Outline" size="sm" :disable="false" @click="hello">
-        <template #prefix> <IconEdit class="iconSm" /> </template>
+        <template #prefix> <IconEdit /> </template>
       </OutlineButton>
       <OutlineButton text="Outline" size="sm" :disable="false" @click="hello">
-        <template #suffix> <IconEdit class="iconSm" /> </template>
+        <template #suffix> <IconEdit /> </template>
       </OutlineButton>
     </div>
     <div class="g">
@@ -49,10 +46,10 @@
         :disable="true"
         @click="hello"
       /><OutlineButton text="Outline" size="md" :disable="false" @click="hello">
-        <template #prefix> <IconEdit class="iconMd" /> </template>
+        <template #prefix> <IconEdit /> </template>
       </OutlineButton>
       <OutlineButton text="Outline" size="md" :disable="false" @click="hello">
-        <template #suffix> <IconEdit class="iconMd" /> </template>
+        <template #suffix> <IconEdit /> </template>
       </OutlineButton>
     </div>
 
@@ -120,15 +117,24 @@
       />
     </div>
     <h1>Pagination</h1>
-    <Pagination :data="rawData" class="pg"/>
-  
+    <Pagination :data="rawData" class="pg" />
+
     <h1>DropDown</h1>
     <div class="fr">
-      <Dropdown :list="teams" v-model="tableState.search.teamId" :all="false" :disable="false" />
-      <Dropdown :list="teams" v-model="tableState.search.teamId" :all="false" :disable="true" />
+      <Dropdown
+        :list="teams"
+        v-model="tableState.search.teamId"
+        :all="false"
+        :disable="false"
+      />
+      <Dropdown
+        :list="teams"
+        v-model="tableState.search.teamId"
+        :all="false"
+        :disable="true"
+      />
     </div>
   </div>
-
 </template>
 
 <script setup>
@@ -197,7 +203,7 @@ const { tableState } = pageIndexDataProvider
   gap: 5px;
 }
 
-.pg{
+.pg {
   width: 800px;
 }
 </style>

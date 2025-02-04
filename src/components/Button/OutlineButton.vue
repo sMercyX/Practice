@@ -5,9 +5,13 @@
     :disabled="disable"
   >
     <div class="content">
-      <slot name="prefix"></slot>
+      <div v-if="$slots.prefix" :class="size == 'sm' ? 'iconSm' : 'iconMd'">
+        <slot name="prefix"></slot>
+      </div>
       {{ text }}
-      <slot name="suffix"></slot>
+      <div v-if="$slots.suffix" :class="size == 'sm' ? 'iconSm' : 'iconMd'">
+        <slot name="suffix"></slot>
+      </div>
     </div>
   </button>
 </template>
@@ -38,7 +42,6 @@ defineProps<{
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
 
-
   &:hover {
     transition: all 0.3s;
     background-color: #e3e7f0;
@@ -67,4 +70,13 @@ defineProps<{
   align-items: center;
   gap: 4px;
 }
+.iconSm {
+  width: 12px;
+  height: 12px;
+}
+.iconMd {
+  width: 16px;
+  height: 16px;
+}
+
 </style>

@@ -81,6 +81,7 @@ const num = ref([
   { value: 5, text: "5" },
   { value: 10, text: "10" },
   { value: 50, text: "50" },
+
 ])
 
 const currentPage = ref<number>(props.data.pageIndex + 1)
