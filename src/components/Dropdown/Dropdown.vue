@@ -9,7 +9,7 @@
   </div> -->
 
   <div class="outer">
-    <button class="main" @click="toggle" type="button" :disabled="disable">
+    <button class="main" @click="toggle" type="button" :disabled="disable" :class="selectedText ? '' : 'mgrey'">
       {{ selectedText || "Please Select" }}
       <IconRightArrow class="icon" :class="isOpen ? 'iconUp' : 'iconDown'" />
     </button>
@@ -86,6 +86,7 @@ const selectItem = (item: DropdownModel<T>) => {
 .main {
   width: 100%;
   height: 100%;
+  color: #212121;
   background-color: white;
   border: 1px solid #e3e7f0;
   border-radius: 4px;
@@ -105,8 +106,12 @@ const selectItem = (item: DropdownModel<T>) => {
 
   &:disabled {
     background-color: #f7f8fc;
-    border: #e3e7f0;
-    color: #a0abba;
+    border: 1px solid #e3e7f0;
+    color: #A0ABBA;
+
+    .icon {
+      color: #a0abba;
+    }
   }
 }
 
@@ -114,22 +119,40 @@ const selectItem = (item: DropdownModel<T>) => {
   border: 1px solid #e3e7f0;
   border-radius: 4px;
   position: relative;
-  width: 100%;
+  width: 158px;
+  max-height: 248px;
   background-color: #fff;
-  max-height: 320px;
-  overflow-y: scroll;
-  ul {
-    padding: 2px 8px;
-    margin: 2px 0;
-  }
+  color: #212121;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0;
+  z-index: 1;
+  /* scrollbar-color: #e3e7f0 #e3e7f0; 
+  scrollbar-width: thin; */
 
+  &::-webkit-scrollbar {
+    width: 7px;
+    height: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #e3e7f0;
+    border-radius: 12px;
+    border: 2px solid #fff;
+    position: absolute;
+  }
+  ul {
+    padding: 8px;
+    margin: 0;
+  }
+  
   .content {
+    width: 128px;
     display: flex;
     justify-content: start;
     align-items: center;
-    padding: 10px;
+    padding: 6px 8px;
     border-radius: 4px;
-
+    margin-bottom: 2px;
     &:hover {
       transition: all 0.3s;
       background-color: #f7f8fc;
@@ -137,19 +160,41 @@ const selectItem = (item: DropdownModel<T>) => {
   }
 }
 
+/* .dropdowns::-webkit-scrollbar {
+  width: 300px;
+} */
+/* .dropdowns::-webkit-scrollbar {
+  width: 7px;
+  height: 20px;
+  position: absolute;
+
+}
+.dropdowns::-webkit-scrollbar-thumb {
+  background: #e3e7f0;
+  border-radius: 12px;
+  border: 2px solid #fff;
+  position: absolute;
+
+} */
+
 .purple {
   color: #5119f0;
 }
 
 .iconUp {
   transform: scale(1, 1) rotate(270deg);
+  color: #212121;
 }
 .iconDown {
   transform: scale(1, 1) rotate(90deg);
+  color: #646d78;
 }
 .icon {
   width: 12px;
   height: 12px;
-  color: #636d78;
+}
+
+.mgrey{
+  color: #A0ABBA;
 }
 </style>

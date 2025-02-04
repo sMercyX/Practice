@@ -1,4 +1,7 @@
 <template>
+      <Dropdown :list="teams" v-model="tableState.search.teamId" :all="true" :disable="false" />
+      <Dropdown :list="teams" v-model="tableState.search.teamId" :all="true" :disable="true" />
+
   <div class="fc">
     <h1>Button</h1>
     <div class="g">
