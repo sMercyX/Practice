@@ -72,6 +72,7 @@ const selectItem = (item: DropdownModel<T>) => {
 .outer {
   width: 160px;
   height: 32px;
+
   font-family: Sarabun;
   font-size: 14px;
   font-weight: 400;
@@ -80,14 +81,15 @@ const selectItem = (item: DropdownModel<T>) => {
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
 }
-.main {
+button {
   width: 100%;
   height: 100%;
   color: #212121;
   background-color: white;
   border: 1px solid #e3e7f0;
   border-radius: 4px;
-  padding: 0px 5px;
+  padding: 0 8px;
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -193,6 +195,7 @@ const selectItem = (item: DropdownModel<T>) => {
 .icon {
   width: 12px;
   height: 12px;
+  margin-right: 2px ;
 }
 
 .mgrey {

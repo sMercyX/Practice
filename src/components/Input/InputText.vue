@@ -31,6 +31,7 @@ input {
   background-color: #ffffff;
   font-size: 14px;
   padding: 0 0 0 10px;
+  
 
   font-family: Sarabun;
   font-size: 14px;

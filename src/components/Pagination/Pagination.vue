@@ -10,12 +10,12 @@
           <option value="50">50</option>
         </select> -->
       <Dropdown
+        class="dropD"
         :list="num"
         :modelValue="selectednum"
         :disable="false"
         :all="false"
         @update:modelValue="updatePageSize"
-        class="dropD"
       />
       <p>
         {{ (currentPage - 1) * pageSize + 1 }} -
@@ -106,7 +106,6 @@ const nextPage = () => {
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
 
-
 const prevPage = () => {
   currentPage.value--
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
@@ -184,20 +183,24 @@ const emit = defineEmits<{
   display: flex;
   justify-content: center;
   align-items: center;
+  align-content: center;
   width: 119.58px;
   height: 24px;
 
   gap: 8px;
 
   color: #646d78;
+
   .ip {
-    width: 20px;
+    width: 30px;
     height: 22px;
+    text-align: center;
+    padding: 0;
+
     font-family: Sarabun;
     font-size: 12px;
     font-weight: 400;
     line-height: 18px;
-    text-align: left;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
   }
@@ -224,6 +227,10 @@ p {
   height: 24px;
   margin: 0 2px;
   font-size: 12px;
+
+  button {
+    padding: 1px;
+  }
 }
 </style>
 

@@ -1,12 +1,21 @@
 <template>
   <div class="g">
-    <CardWithIcon title="Basic Info">
-      <template #Icon> <IconEdit/> </template>
-    </CardWithIcon>
+    <div class="breakHalf">
+      <CardWithIcon title="Basic Info">
+        <template #Icon> <IconEdit /> </template>
+      </CardWithIcon>
+      <CardWithIcon>
+        <template #content> 
+          This is Content
+          <br>
+          Lorem ipsum dolor sit amet consectetur adipisicing.
+        </template>
+      </CardWithIcon>
+    </div>
 
     <div class="breakHalf">
       <CardWithIcon title="Basic Info">
-        <template #Icon> <IconEdit/> </template>
+        <template #Icon> <IconEdit /> </template>
         <template #footer>
           <div>Copyright © ClickNext Co.,Ltd All Right Reserved.</div>
         </template>
@@ -51,6 +60,7 @@
 
       <CardWithIcon title="Title">
         <template #Icon> <IconEdit /> </template>
+
         <template #content>
           <div class="breakHalf">
             <div class="breakDown">
@@ -75,7 +85,6 @@
             </div>
           </div>
         </template>
-      
       </CardWithIcon>
     </div>
   </div>
@@ -109,6 +118,7 @@ span {
   flex-direction: row;
   gap: 8px;
 }
+
 .widthFull {
   width: 264px;
   height: 30px;

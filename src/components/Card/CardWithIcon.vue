@@ -1,19 +1,22 @@
 <template>
   <div class="box">
     <div class="Content">
-      <div class="Header">
+      <div v-if="title || $slots.Icon" class="Header">
         <div v-if="$slots.Icon" class="IconWithBg">
           <slot name="Icon"></slot>
         </div>
         <p>{{ title }}</p>
       </div>
-      <slot name="content">
-        <div class="con"></div>
-      </slot>
+
+      <div :class="{ conFP: !title && !$slots.Icon }">
+        <slot name="content">
+          <div class="con" :class="{ conF: !title && !$slots.Icon }"></div>
+        </slot>
+      </div>
     </div>
-    <div :class="{ Footers: $slots.footer}">
+    <div :class="{ Footers: $slots.footer }">
       <slot name="footer">
-        <div :class="{foot:!$slots.content && !$slots.footer}"></div>
+        <div :class="{ foot: !$slots.content && !$slots.footer }"></div>
       </slot>
     </div>
   </div>
@@ -21,7 +24,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  title: string
+  title?: string
 }>()
 </script>
 
@@ -43,11 +46,11 @@ defineProps<{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1px;
 
   .Content {
     width: fit-content;
     height: fit-content;
+    /* min-height: 100px; */
     border-radius: 4px 4px 0 0;
     padding: 20px;
 
@@ -80,7 +83,15 @@ defineProps<{
   }
 }
 .con {
-  height: 88px;
+  height: 89px;
+}
+
+.conF {
+  height: 145px;
+}
+.conFP{
+  min-height: 185px;
+
 }
 .foot {
   height: 40px;
@@ -108,5 +119,4 @@ defineProps<{
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
 }
-
 </style>
