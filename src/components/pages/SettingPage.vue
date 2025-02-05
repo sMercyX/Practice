@@ -44,8 +44,7 @@ provide(eventBusKey, eventBus)
 
 .LeftSide {
   position: sticky;
-  top: 10vh;
-  height: 85vh;
+  height: 87vh;
   width: 160px;
   background: #F7F8FC;
   color: rgb(0, 0, 0);
@@ -72,6 +71,8 @@ provide(eventBusKey, eventBus)
 }
 
 .RightSide {
+  height: 87vh;
+
   flex: 1;
   overflow-y: auto;
   padding: 20px;
