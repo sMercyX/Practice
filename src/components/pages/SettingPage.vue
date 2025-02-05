@@ -46,23 +46,29 @@ provide(eventBusKey, eventBus)
   position: sticky;
   top: 10vh;
   height: 85vh;
-  width: 150px;
-  background: #f7f7f7;
+  width: 160px;
+  background: #F7F8FC;
   color: rgb(0, 0, 0);
   padding: 20px;
   div {
     cursor: pointer;
-    padding: 8px;
-    margin-bottom: 10px;
+
+    width: auto;
+    height: 28px;
+    padding: 6px;
+    margin-bottom: 4px;
     border-radius: 5px;
     text-align: left;
-    transition: background 0.3s;
+    transition: 0.3s;
+
+    display: flex;
+    align-items: center;
   }
 }
 
 .LeftSide div:hover {
-  background: #f6ecff;
-  color: purple;
+  background: #EFEDFF;
+  color: #5119F0;
 }
 
 .RightSide {

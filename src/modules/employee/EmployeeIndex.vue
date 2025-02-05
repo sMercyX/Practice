@@ -9,7 +9,9 @@
         size="md"
         :disable="false"
       >
-        <template #prefix> &plus; </template>
+        <template #prefix> 
+          <IconPlus />  
+        </template>
       </PrimaryButton>
     </div>
 
@@ -103,6 +105,7 @@ import IconBin from "../../components/Icon/IconBin.vue"
 import PrimaryButton from "../../components/Button/PrimaryButton.vue"
 import IconButton from "../../components/Icon/IconButton.vue"
 import OutlineButton from "../../components/Button/OutlineButton.vue"
+import IconPlus from "../../components/Icon/IconPlus.vue"
 
 const masterDataProvider = useMasterData()
 const { teams, postions } = masterDataProvider

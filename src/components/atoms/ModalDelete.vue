@@ -1,19 +1,17 @@
 <template>
   <Modal :isShow="isOpen">
     <div class="overlay">
-      <div class="Head"></div>
-
       <div class="Content">
-        <img src="../../assets/trashFill.svg" alt="DeleteLogo" />
-        <h3><span>Delete</span></h3>
+        <IconBin2 class="icon" />
+        <h3>Delete</h3>
         <p class="delete-message">
           Are you sure you want to delete selected items ?
         </p>
       </div>
 
       <div class="Footer">
-        <button class="cancel" type="button" @click="closeModal">Cancel</button>
-        <button class="save" type="submit" @click="onSave">Delete</button>
+        <OutlineButton :disable="false" size="md" text="Cancel"  @click="closeModal"/>
+        <PrimaryButton class="red" :disable="false" size="md" text="Dekete" @click="onSave"/>
       </div>
     </div>
   </Modal>
@@ -22,6 +20,9 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import Modal from "./Modal.vue"
+import IconBin2 from "../Icon/IconBin2.vue"
+import OutlineButton from "../Button/OutlineButton.vue"
+import PrimaryButton from "../Button/PrimaryButton.vue"
 
 const isOpen = ref<boolean>(false)
 
@@ -55,44 +56,56 @@ defineExpose({
 <style scoped>
 .overlay {
   background-color: white;
-  padding: 20px 0;
   border-radius: 10px;
+  width: 254px;
+  height: 214px;
+  padding: 33px;
+  font-family: Sarabun;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: center;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
-/* .modal-content {
-    background: white;
-    padding: 5px 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    width: 100%;
-  } */
-span {
-  color: red;
+.icon {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 13px;
 }
-.Head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  margin: 5px 0;
-  height: 5%;
+h3 {
+  padding: 0;
+  margin: 0;
+  color: #890007;
+
+  margin-bottom: 4px;
+
+  font-family: Kanit;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
+p {
+  margin: 0 0 24px 0;
+  padding: 0 13px;
+  font-family: Sarabun;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: center;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+
 .Content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: white;
-  padding: 20px 20px;
-  margin: 0 70px;
-  height: 80%;
 
-  img {
-    width: 80px;
-  }
-  span {
-    color: #890106;
-  }
   .delete-message {
     text-align: center;
   }
@@ -101,51 +114,15 @@ span {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 0 20px;
-  margin: 5px 0;
-  gap: 4px;
-  height: 35%;
-}
-form {
-  display: flex;
-  flex-direction: column;
-  background-color: rgb(255, 255, 255);
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 60vw;
-  height: 40vh;
+  .red{
+    background-color: #F44F58;
+  }
+  .red:hover{
+    background-color: #d4454d;
+
+  }
 }
 
-.cancel {
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
-}
-.save {
-  background-color: #f44e58;
-  color: white;
-}
-button {
-  cursor: pointer;
-  width: 30%;
-  padding: 10px;
-  border: 1px solid #e3e7f0;
-  border-radius: 5px;
-  transition: all 0.3s;
-}
-button:hover {
-  scale: 110%;
-}
 
-.close {
-  display: flex;
-  justify-content: right;
-  color: red;
-  font-size: 20px;
-  cursor: pointer;
-}
-p {
-  margin: 0;
-  padding: 0;
-}
+
 </style>

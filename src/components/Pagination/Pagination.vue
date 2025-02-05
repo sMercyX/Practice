@@ -29,7 +29,7 @@
       </p>
     </div>
     <div class="currPage">
-      <IconButton size="sm" :disable="currentPage === 1" @click="prevPage">
+      <IconButton size="sm" :disable="currentPage <= 1" @click="prevPage">
         <template #icon>
           <IconLeftArrow />
         </template>
@@ -81,7 +81,6 @@ const num = ref([
   { value: 5, text: "5" },
   { value: 10, text: "10" },
   { value: 50, text: "50" },
-
 ])
 
 const currentPage = ref<number>(props.data.pageIndex + 1)
@@ -107,6 +106,7 @@ const nextPage = () => {
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
 
+
 const prevPage = () => {
   currentPage.value--
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
@@ -117,15 +117,12 @@ const updatePageSize = (newValue: string | number) => {
   currentPage.value = 1
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }
-// const updatePageSize = (event: Event) => {
-//   const target = event.target as HTMLSelectElement
-//   pageSize.value = Number(target.value)
-//   currentPage.value = 1
-//   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
-// }
 
 const updateCurrentPage = (event: Event) => {
   const target = event.target as HTMLInputElement
+  if (Number(target.value) <= 0) {
+    return (currentPage.value = 1)
+  }
   currentPage.value = Number(target.value) ? Number(target.value) : 1
   emit("paginationData", pagiData.value as PaginationResponse<T[]>)
 }

@@ -8,7 +8,9 @@
       <div v-if="$slots.prefix" :class="size == 'sm' ? 'iconSm' : 'iconMd'">
         <slot name="prefix"></slot>
       </div>
-      {{ text }}
+      <div class="textsize" :class="size == 'sm' ? 'textSm' : 'textMd'">
+        {{ text }}
+      </div>
       <div v-if="$slots.suffix" :class="size == 'sm' ? 'iconSm' : 'iconMd'">
         <slot name="suffix"></slot>
       </div>
@@ -71,12 +73,38 @@ defineProps<{
   gap: 4px;
 }
 .iconSm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 12px;
   height: 12px;
 }
 .iconMd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 16px;
   height: 16px;
 }
 
+.textSize {
+  font-family: Sarabun;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.textSm {
+  font-size: 12px;
+}
+
+.textMd {
+  font-size: 14px;
+}
 </style>

@@ -5,92 +5,119 @@
       <h2>{{ isEditing ? "Edit" : "Create" }} Employee</h2>
     </div>
     <div class="Right">
-      <OutlineButton text="Cancel" size="md" :disable="false" @click="navigateTo('employee')" />
-      <PrimaryButton text="Save" size="md" :disable="false" @click="handleSubmit()" />
+      <OutlineButton
+        text="Cancel"
+        size="md"
+        :disable="false"
+        @click="navigateTo('employee')"
+      />
+      <PrimaryButton
+        text="Save"
+        size="md"
+        :disable="false"
+        @click="handleSubmit()"
+      />
       <!-- <button @click="navigateTo('employee')" class="cancelButton">Cancel</button>
       <button type="submit" form="myForm" class="confirmButton">Save</button> -->
     </div>
   </div>
   <div class="modal-overlay">
-    <div class="modal-content">
-      <div class="Header">
-        <img src="../../assets/edit.svg" alt="Edit Icon" class="editIcon" />
-        <h2>Basic Info</h2>
-      </div>
-
-      <form @submit.prevent="handleSubmit()" class="Content" id="myForm">
-        <div class="breakHalf">
+    <CardWithIcon title="Basic Info" class="modalCon">
+      <template #Icon>
+        <IconEdit />
+      </template>
+      <template #content>
+        <form @submit.prevent="handleSubmit()" class="Content" id="myForm">
+          <div class="breakHalf">
+            <div class="groupUp">
+              <label for="first_name">First Name <span>*</span></label>
+              <InputText
+                v-model:input="form.firstname"
+                :required="true"
+                placeHolder="first name"
+                :disable="false"
+                class="wauto"
+              />
+            </div>
+            <div class="groupUp">
+              <label for="last_name">Last Name <span>*</span></label>
+              <InputText
+                v-model:input="form.lastname"
+                :required="true"
+                placeHolder="last name"
+                :disable="false"
+              />
+            </div>
+          </div>
           <div class="groupUp">
-            <label for="first_name">First Name <span>*</span></label>
+            <label for="email">Email <span>*</span></label>
             <InputText
-              v-model:input="form.firstname"
+              v-model:input="form.email"
               :required="true"
-              placeHolder="first name"
+              placeHolder="email"
               :disable="false"
             />
           </div>
-          <div class="groupUp">
-            <label for="last_name">Last Name <span>*</span></label>
-            <InputText
-              v-model:input="form.lastname"
-              :required="true"
-              placeHolder="last name"
-              :disable="false"
-            />
-          </div>
-        </div>
-        <div class="groupUp">
-          <label for="email">Email <span>*</span></label>
-          <InputText
-            v-model:input="form.email"
-            :required="true"
-            placeHolder="email"
-            :disable="false"
-          />
-        </div>
 
-        <div class="breakHalf">
-          <div class="groupUp">
-            <label for="team_id">Team <span>*</span></label>
-            <Dropdown class="dropD" v-model="form.teamId" :list="teams" :all="false" :disable="false"/>
+          <div class="breakHalf">
+            <div class="groupUp">
+              <label for="team_id">Team <span>*</span></label>
+              <Dropdown
+                class="dropD"
+                v-model="form.teamId"
+                :list="teams"
+                :all="false"
+                :disable="false"
+              />
+            </div>
+            <div class="groupUp">
+              <label for="position_id">Position <span>*</span></label>
+              <Dropdown
+                class="dropD"
+                v-model="form.positionId"
+                :list="postions"
+                :all="false"
+                :disable="false"
+              />
+            </div>
           </div>
-          <div class="groupUp">
-            <label for="position_id">Position <span>*</span></label>
-            <Dropdown class="dropD" v-model="form.positionId" :list="postions" :all="false" :disable="false"/>
-          </div>
-        </div>
 
-        <hr />
-        <div class="breakHalf">
-          <label for="phone">Phone Numbers</label>
-          <button class="add-button" @click="addPhone" type="button">
-            &plus; Phone
-          </button>
-        </div>
-        <div class="phone-list">
-          <div
-            v-for="(phone, index) in form.phones"
-            :key="index + 1"
-            class="phone-item"
-          >
-            <InputText
-              v-model:input="phone.phoneNumber"
-              :required="true"
-              placeHolder="phone number"
-              :disable="false"
-            />
-            <button
-              v-if="index > 0"
-              class="remove-button"
-              type="button"
-              @click="removePhone(index)"
-            >
-              &minus;
+          <hr />
+          <div class="breakHalf">
+            <label for="phone">Phone Numbers</label>
+            <button class="add-button" @click="addPhone" type="button">
+              &plus; Phone
             </button>
           </div>
-        </div>
-      </form>
-    </div>
+          <div class="phone-list">
+            <div
+              v-for="(phone, index) in form.phones"
+              :key="index + 1"
+              class="phone-item"
+            >
+              <InputText
+                v-model:input="phone.phoneNumber"
+                :required="true"
+                placeHolder="phone number"
+                :disable="false"
+              />
+
+              <IconButton
+                :disable="false"
+                size="sm"
+                v-if="index > 0"
+                @click="removePhone(index)"
+              >
+                <template #icon>
+                  <IconMinus />
+                </template>
+              </IconButton>
+            </div>
+          </div>
+        </form>
+      </template>
+      
+    </CardWithIcon>
   </div>
 </template>
 
@@ -103,6 +130,10 @@ import usePageEdit from "./dataProvider/pageEdit"
 import useMasterData from "./dataProvider/masterData"
 import PrimaryButton from "../../components/Button/PrimaryButton.vue"
 import OutlineButton from "../../components/Button/OutlineButton.vue"
+import CardWithIcon from "../../components/Card/CardWithIcon.vue"
+import IconEdit from "../../components/Icon/IconEdit.vue"
+import IconButton from "../../components/Icon/IconButton.vue"
+import IconMinus from "../../components/Icon/IconMinus.vue"
 
 const masterDataProvider = useMasterData()
 const { teams, postions } = masterDataProvider
@@ -182,42 +213,35 @@ const navigateTo = (nameRoute: string) => {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  max-width: 700px;
-  width: 100%;
+  width: 580px;
+
+
 }
 
-.Header {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 5px;
-  font-size: 15px;
+.modalCon {
+  width: 600px;
+  height: 663px;
 
-  .editIcon {
-    background-color: #efedff;
-    color: #5019f0;
-    border-radius: 10px;
-    padding: 8px;
-  }
+  margin-top: 50px;
+
 }
 
 .Content {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 560px;
 
-  select,
-  button {
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  label {
+    color: #646d78;
+    margin-bottom: 4px;
   }
-
   .breakHalf {
     display: flex;
     gap: 10px;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: auto;
   }
   .groupUp {
     display: flex;
@@ -234,7 +258,7 @@ const navigateTo = (nameRoute: string) => {
   cursor: pointer;
   border: none !important;
   color: #5119f0;
-  background-color:white;
+  background-color: white;
 }
 .phone-list {
   display: flex;
@@ -253,17 +277,16 @@ const navigateTo = (nameRoute: string) => {
 span {
   color: red;
 }
-label {
-  color: #656c78;
-  font-weight: bold;
-}
+
 p {
   margin: 0;
   padding: 0;
   font-size: 19px;
 }
 
-.dropD{
+.dropD {
   width: 100%;
 }
+
+
 </style>

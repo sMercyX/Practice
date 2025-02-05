@@ -3,7 +3,8 @@
     <form>
       <div class="Head">
         <h3>
-          {{ isEditing ? "Editing" : "Create" }} {{ header.toUpperCase() }}
+          {{ isEditing ? "Editing" : "Create" }}
+          {{ header == "team" ? "Team" : "Position" }}
         </h3>
         <div class="close" @click="isOpen = false"><span>&times;</span></div>
       </div>
@@ -16,8 +17,8 @@
           v-model:input="form.name"
           :required="true"
           placeHolder="name"
-          :disable='false'
-          class='w100'
+          :disable="false"
+          class="w100"
         />
 
         <label for="description">Description</label>
@@ -25,9 +26,8 @@
           v-model:input="form.description"
           :required="false"
           placeHolder="description"
-          :disable='false'
-          class='w100'
-
+          :disable="false"
+          class="w100"
         />
       </div>
 
@@ -36,8 +36,18 @@
         <!-- <button class="cancel" type="button" @click="closeModal">Cancel</button>
         <button class="save" type="submit">Save</button> -->
 
-        <OutlineButton text="Cancel" size="md" :disable="false"  @click="closeModal"/>
-        <PrimaryButton text="Save" size="md" :disable="false" @click="handleSubmit"/>
+        <OutlineButton
+          text="Cancel"
+          size="md"
+          :disable="false"
+          @click="closeModal"
+        />
+        <PrimaryButton
+          text="Save"
+          size="md"
+          :disable="false"
+          @click="handleSubmit"
+        />
       </div>
     </form>
   </Modal>
@@ -89,36 +99,15 @@ const header = ref<string>(props.header)
 </script>
 
 <style scoped>
-/* .modal-overlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-} */
-/* .modal-content {
-  background: white;
-  padding: 5px 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 100%;
-} */
-
-form{
+form {
   display: flex;
   flex-direction: column;
   background-color: rgb(247, 247, 247);
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  width: 400px;
+  width: 480px;
   /* width: 60vw; */
-  height: 40vh;
+  height: 358px;
 }
 span {
   color: red;
@@ -127,34 +116,75 @@ span {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  margin: 5px 0;
-  height: 20%;
+  padding: 0 16px;
+  margin: 0;
+  height: 48px;
+
+  background-color: #f7f8fc;
+  border-radius: 10px;
+
+  h3 {
+    padding: 0;
+    margin: 0;
+
+    font-family: Kanit;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 26px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+  }
 }
+
 .Content {
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   background: white;
-  padding: 20px 20px;
-  height: 80%;
-  .w100{
-    width: 348px;
+  padding: 12px 16px;
+
+  font-family: Sarabun;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+
+  .w100 {
+    width: auto;
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin-bottom: 12px;
+    color: #646d78;
+  }
+
+  label {
+    margin-bottom: 4px;
+    color: #646d78;
   }
 }
 .Footer {
+  height: 42px;
   display: flex;
   justify-content: end;
   align-items: center;
   padding: 0 20px;
-  margin: 5px 0;
-  gap: 4px;
-  height: 20%;
+  border-top: 1px solid #E3E7F0;
+  border-radius:0 0 4px 4px;
+  background-color: #FFFFFF;
+
+  gap: 12px;
 }
-
-
 
 p {
   padding: 0;
   margin: 0;
+}
+.close{
+  cursor: pointer;
 }
 </style>

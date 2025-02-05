@@ -31,27 +31,29 @@ input {
   border-radius: 4px;
   border: solid 1px ;
   background-color: #ffffff;
+  border: solid 1px #e3e7f0;
+
   font-size: 14px;
   padding: 0 0 0 8px;
-  &:active::placeholder{
+
+  color: black;
+  /* &:active::placeholder{
     color: black;
-  }
+  } */
   &:focus {
     transition: all 0.3s;
     border: 1px solid #5119f0;
     outline: none;
 
     box-shadow: 0px 0px 0px 4px #efedff;
-
-
-    &::placeholder{
-      color: black;
-    }
   }
 
   &:disabled {
     border: 1px solid #E3E7F0; 
     background-color: #F7F8FC;
+  }
+  &::placeholder{
+    color: #A0ABBA;
   }
 }
 </style>

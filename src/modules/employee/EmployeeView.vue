@@ -11,15 +11,60 @@
     </div>
   </div>
   <div class="modal-overlayy">
+    <CardWithIcon
+      :title="form.firstname + ' ' + form.lastname"
+      class="modalCon"
+    >
+      <template #content>
+        <div class="Content" id="myForm">
+          <div class="breakHalf"></div>
+          <div class="groupUp">
+            <label for="email">Email <span>*</span></label>
+            <p>{{ form.email }}</p>
+          </div>
+
+          <div class="breakHalf">
+            <div class="groupUp">
+              <label for="team_id">Team <span>*</span></label>
+              <p>{{ teamName }}</p>
+            </div>
+            <div class="groupUp">
+              <label for="position_id">Position <span>*</span></label>
+              <p>{{ positionName }}</p>
+            </div>
+          </div>
+
+          <hr />
+          <div class="breakHalf">
+            <label for="phone">Phone Numbers</label>
+          </div>
+          <div class="phone-list">
+            <p>
+              {{ form.phones[0].phoneNumber }}
+            </p>
+            <div
+              v-if="form.phones.length > 1"
+              v-for="(phone, index) in form.phones.slice(1)"
+              :key="index + 1"
+              class="phone-item"
+            >
+              <p>
+                {{ phone.phoneNumber }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </template>
+    </CardWithIcon>
+  </div>
+  <!-- <div class="modal-overlayy">
     <div class="modal-content">
       <div class="Header">
         <h2>{{ form.firstname }} {{ form.lastname }}</h2>
       </div>
 
       <div class="Content" id="myForm">
-        <div class="breakHalf">
-       
-        </div>
+        <div class="breakHalf"></div>
         <div class="groupUp">
           <label for="email">Email <span>*</span></label>
           <p>{{ form.email }}</p>
@@ -57,7 +102,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <ModalDelete ref="modalDelete"></ModalDelete>
 </template>
 
@@ -69,6 +114,7 @@ import useMasterData from "./dataProvider/masterData"
 import usePageView from "./dataProvider/pageView"
 import ModalDelete from "../../components/atoms/ModalDelete.vue"
 import usePageIndex from "./dataProvider/pageIndex"
+import CardWithIcon from "../../components/Card/CardWithIcon.vue"
 
 const masterDataProvider = useMasterData()
 const { teams, postions } = masterDataProvider
@@ -122,6 +168,12 @@ const openFormDelete = async () => {
 </script>
 
 <style scoped>
+.modalCon {
+  width: 600px;
+  height: 663px;
+
+  margin-top: 50px;
+}
 
 .Top {
   display: flex;
@@ -210,30 +262,20 @@ button:hover {
 .Content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  input,
-  select,
-  button {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+  gap: 12px;
+  width: 560px;
 
   .breakHalf {
     display: flex;
     gap: 10px;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 60%;
   }
   .groupUp {
     display: flex;
     flex-direction: column;
-    width: 100%;
-
-    input {
-      width: auto;
-    }
+    width: auto;
   }
 }
 
@@ -246,16 +288,15 @@ button:hover {
 .phone-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .phone-item {
   display: flex;
+  align-items: center;
   input {
     width: 100%;
   }
-  align-items: center;
-  gap: 10px;
 }
 span {
   color: red;

@@ -35,7 +35,7 @@ defineProps<{
 
   min-height: auto;
   height: fit-content;
-  max-height: 60vh;
+  max-height: 80vh;
   border-radius: 4px;
   /* box-shadow: 3px 4px 5px 4px rgba(69, 73, 87, 0.14); */
   box-shadow: 1px 1px 6px 0px #4549571f;
