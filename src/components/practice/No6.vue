@@ -117,7 +117,7 @@
       />
     </div>
     <h1>Pagination</h1>
-    <Pagination :data="rawData" class="pg" />
+    <Pagination :data="rawData" />
 
     <h1>DropDown</h1>
     <div class="fr">
@@ -203,7 +203,5 @@ const { tableState } = pageIndexDataProvider
   gap: 5px;
 }
 
-.pg {
-  width: 800px;
-}
+
 </style>

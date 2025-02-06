@@ -79,7 +79,7 @@
           </IconButton>
       </template>
     </Table>
-    <Pagination :data="rawData" @paginationData="handleNewPageData" />
+    <Pagination :data="rawData" @paginationData="handleNewPageData" class="Pagina"/>
   </div>
   <ModalDelete ref="modalDelete"></ModalDelete>
   <RouterView />
@@ -182,5 +182,8 @@ p {
 .tableEm {
   width: 100%;
   border: red 1px solid;
+}
+.Pagina{
+  width: auto;
 }
 </style>

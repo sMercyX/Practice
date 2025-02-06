@@ -52,7 +52,7 @@
       </template>
     </Table>
   </div>
-  <Pagination :data="rawData" @paginationData="handleNewPageData" />
+  <Pagination :data="rawData" @paginationData="handleNewPageData" class="Pagina" />
 
   <ModalForm1 ref="modalFormgggggggggggggg" :header="header"></ModalForm1>
 
@@ -195,5 +195,8 @@ p {
   border: 1px solid red;
   height: 200px;
   overflow-y: scroll;
+}
+.Pagina{
+  width: auto;
 }
 </style>

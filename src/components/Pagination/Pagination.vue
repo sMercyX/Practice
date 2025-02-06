@@ -156,7 +156,7 @@ const emit = defineEmits<{
 }
 
 .pagination {
-  /* width: 824px; */
+  width: 800px;
   height: 36px;
   display: flex;
   justify-content: space-between;

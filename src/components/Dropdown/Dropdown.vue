@@ -195,7 +195,6 @@ button {
 .icon {
   width: 12px;
   height: 12px;
-  margin-right: 2px ;
 }
 
 .mgrey {

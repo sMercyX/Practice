@@ -51,7 +51,7 @@
       </template>
     </Table>
 
-    <Pagination :data="rawData" @paginationData="handleNewPageData" />
+    <Pagination :data="rawData" @paginationData="handleNewPageData" class="Pagina"/>
   </div>
 
   <ModalForm1 ref="modalForm" :header="header"></ModalForm1>
@@ -162,5 +162,8 @@ td {
 }
 p {
   margin: 0px;
+}
+.Pagina{
+  width: auto;
 }
 </style>
