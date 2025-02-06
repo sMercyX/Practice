@@ -137,7 +137,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 import OutlineButton from "../Button/OutlineButton.vue"
 import PrimaryButton from "../Button/PrimaryButton.vue"
@@ -159,14 +159,14 @@ function hello() {
   console.log("you clicked")
 }
 
-function logCheck(check) {
+function logCheck(check:any) {
   console.log(check)
 }
 
 const selectedTabs = ref(0)
 const tabs = [{ header: "Tab 1" }, { header: "Tab 2" }, { header: "Tab 3" }]
 
-function changeTab(tab) {
+function changeTab(tab:number) {
   selectedTabs.value = tab
 }
 

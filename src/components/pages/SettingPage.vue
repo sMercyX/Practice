@@ -39,12 +39,13 @@ provide(eventBusKey, eventBus)
 <style scoped>
 .container {
   display: flex;
-  height: 85vh;
+  width: 100vw;
+  height: 95vh;
 }
 
 .LeftSide {
   position: sticky;
-  height: 87vh;
+  height: 90vh;
   width: 160px;
   background: #F7F8FC;
   color: rgb(0, 0, 0);
@@ -71,7 +72,7 @@ provide(eventBusKey, eventBus)
 }
 
 .RightSide {
-  height: 87vh;
+  height: 90vh;
 
   flex: 1;
   overflow-y: auto;

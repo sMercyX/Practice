@@ -3,6 +3,7 @@
     <ul class="left">
       <li @click="navigateTo('home')">Home</li>
       <li @click="navigateTo('employee')">Employee</li>
+      <li @click="navigateTo('error')">Error</li>
     </ul>
 
     <div class="right">
@@ -24,14 +25,17 @@ const navigateTo = (nameRoute: string) => {
 .navbar {
   display: flex;
   justify-content: space-between;
-  padding: 5px 25px 5px 0px;
+  height: 5vh;
+
+  padding-right:  25px;
   align-items: center;
   background: #333;
   color: white;
-  max-height: 10vh;
 
   position: sticky;
   top: 0;
+
+  z-index: 1;
   .left {
     display: flex;
     gap: 25px;
